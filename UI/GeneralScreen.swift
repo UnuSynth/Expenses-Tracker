@@ -9,7 +9,13 @@ import SwiftUI
 
 struct GeneralScreen: View {
     var body: some View {
-        
+        NavigationStack {
+            ScrollView {
+                TotalExpensesView()
+                    .navigationTitle("Expenses")
+            }
+            .padding()
+        }
     }
 }
 

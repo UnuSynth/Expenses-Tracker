@@ -6,17 +6,20 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		8B673A102F39D235009A5C8E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B673A0D2F39D235009A5C8E /* Assets.xcassets */; };
+		8B673A112F39D235009A5C8E /* GeneralScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B673A0E2F39D235009A5C8E /* GeneralScreen.swift */; };
+		8B673A122F39D235009A5C8E /* Expenses_TrackerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B673A0F2F39D235009A5C8E /* Expenses_TrackerApp.swift */; };
+		8B673A182F3B6AC7009A5C8E /* TotalExpensesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B673A172F3B6AC2009A5C8E /* TotalExpensesView.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
+		8B673A0D2F39D235009A5C8E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8B673A0E2F39D235009A5C8E /* GeneralScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralScreen.swift; sourceTree = "<group>"; };
+		8B673A0F2F39D235009A5C8E /* Expenses_TrackerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expenses_TrackerApp.swift; sourceTree = "<group>"; };
+		8B673A172F3B6AC2009A5C8E /* TotalExpensesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalExpensesView.swift; sourceTree = "<group>"; };
 		8B98489F2F39B9BC00FF6785 /* Expenses Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Expenses Tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		8B9848A12F39B9BC00FF6785 /* Expenses Tracker */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Expenses Tracker";
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		8B98489C2F39B9BB00FF6785 /* Frameworks */ = {
@@ -29,10 +32,37 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8B673A132F3B638F009A5C8E /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				8B673A172F3B6AC2009A5C8E /* TotalExpensesView.swift */,
+				8B673A0E2F39D235009A5C8E /* GeneralScreen.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		8B673A142F3B63E5009A5C8E /* App */ = {
+			isa = PBXGroup;
+			children = (
+				8B673A152F3B63EE009A5C8E /* Assets */,
+				8B673A0F2F39D235009A5C8E /* Expenses_TrackerApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		8B673A152F3B63EE009A5C8E /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				8B673A0D2F39D235009A5C8E /* Assets.xcassets */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
 		8B9848962F39B9BB00FF6785 = {
 			isa = PBXGroup;
 			children = (
-				8B9848A12F39B9BC00FF6785 /* Expenses Tracker */,
+				8B673A142F3B63E5009A5C8E /* App */,
+				8B673A132F3B638F009A5C8E /* UI */,
 				8B9848A02F39B9BC00FF6785 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -59,9 +89,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				8B9848A12F39B9BC00FF6785 /* Expenses Tracker */,
 			);
 			name = "Expenses Tracker";
 			packageProductDependencies = (
@@ -109,6 +136,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B673A102F39D235009A5C8E /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +147,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B673A112F39D235009A5C8E /* GeneralScreen.swift in Sources */,
+				8B673A182F3B6AC7009A5C8E /* TotalExpensesView.swift in Sources */,
+				8B673A122F39D235009A5C8E /* Expenses_TrackerApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -259,8 +290,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -291,8 +321,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
