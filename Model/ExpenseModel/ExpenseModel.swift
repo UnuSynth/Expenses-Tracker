@@ -9,36 +9,18 @@ import Foundation
 struct ExpenseModel {
     let date: Date
     let amount: Double
-    let category: String
+    let category: Category
     let notes: Notes?
-}
-
-
-extension ExpenseModel {
-    enum Category: String, CaseIterable, Identifiable {
-        case groceries
-        case lunch
-        case clothes
-        case sport
-        
-        var id: String { self.rawValue }
-        
-        var displayName: String {
-            switch self {
-            case .groceries:
-                return "🛒 Groceries"
-            case .lunch:
-                return "🍽️ Lunch"
-            case .clothes:
-                return "👗 Clothes"
-            case .sport:
-                return "🏀 Sport"
-            }
-        }
-    }
     
-    struct Notes {
-        let description: String?
-        let image: String?
+    init(
+        date: Date,
+        amount: Double,
+        category: Category,
+        notes: Notes? = nil
+    ) {
+        self.date = date
+        self.amount = amount
+        self.category = category
+        self.notes = notes
     }
 }

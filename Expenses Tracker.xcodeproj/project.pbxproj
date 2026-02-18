@@ -15,6 +15,10 @@
 		8B673A212F4340CE009A5C8E /* HomeViewExpensesTodayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B673A202F4340BE009A5C8E /* HomeViewExpensesTodayCell.swift */; };
 		8B673A272F4461D0009A5C8E /* AddExpenseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B673A262F4461CC009A5C8E /* AddExpenseView.swift */; };
 		8B673A422F4477EC009A5C8E /* ExpenseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B673A242F445807009A5C8E /* ExpenseModel.swift */; };
+		8BA5F3D52F4575E60090971F /* AddExpenseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA5F3D42F4575E10090971F /* AddExpenseViewModel.swift */; };
+		8BA5F3D72F45972B0090971F /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA5F3D62F45972B0090971F /* Date+Extension.swift */; };
+		8BA5F3DC2F45AB0B0090971F /* ExpenseModel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA5F3DB2F45AB030090971F /* ExpenseModel+Extension.swift */; };
+		8BA5F3DF2F45AB7C0090971F /* HomeViewExpensesTodayCell+Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA5F3DE2F45AB710090971F /* HomeViewExpensesTodayCell+Model.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +31,10 @@
 		8B673A242F445807009A5C8E /* ExpenseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseModel.swift; sourceTree = "<group>"; };
 		8B673A262F4461CC009A5C8E /* AddExpenseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExpenseView.swift; sourceTree = "<group>"; };
 		8B98489F2F39B9BC00FF6785 /* Expenses Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Expenses Tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8BA5F3D42F4575E10090971F /* AddExpenseViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExpenseViewModel.swift; sourceTree = "<group>"; };
+		8BA5F3D62F45972B0090971F /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
+		8BA5F3DB2F45AB030090971F /* ExpenseModel+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ExpenseModel+Extension.swift"; sourceTree = "<group>"; };
+		8BA5F3DE2F45AB710090971F /* HomeViewExpensesTodayCell+Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeViewExpensesTodayCell+Model.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				8B673A202F4340BE009A5C8E /* HomeViewExpensesTodayCell.swift */,
+				8BA5F3DE2F45AB710090971F /* HomeViewExpensesTodayCell+Model.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -113,6 +122,7 @@
 			isa = PBXGroup;
 			children = (
 				8B673A242F445807009A5C8E /* ExpenseModel.swift */,
+				8BA5F3DB2F45AB030090971F /* ExpenseModel+Extension.swift */,
 			);
 			path = ExpenseModel;
 			sourceTree = "<group>";
@@ -120,6 +130,7 @@
 		8B673A252F4461AB009A5C8E /* AddExpense */ = {
 			isa = PBXGroup;
 			children = (
+				8BA5F3D42F4575E10090971F /* AddExpenseViewModel.swift */,
 				8B673A262F4461CC009A5C8E /* AddExpenseView.swift */,
 			);
 			path = AddExpense;
@@ -128,6 +139,7 @@
 		8B9848962F39B9BB00FF6785 = {
 			isa = PBXGroup;
 			children = (
+				8BA5F3D82F4599700090971F /* Core */,
 				8B673A142F3B63E5009A5C8E /* App */,
 				8B673A222F4457E9009A5C8E /* Model */,
 				8B673A132F3B638F009A5C8E /* UI */,
@@ -141,6 +153,30 @@
 				8B98489F2F39B9BC00FF6785 /* Expenses Tracker.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		8BA5F3D82F4599700090971F /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				8BA5F3D92F4599760090971F /* Foundation */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		8BA5F3D92F4599760090971F /* Foundation */ = {
+			isa = PBXGroup;
+			children = (
+				8BA5F3DA2F4599800090971F /* Date */,
+			);
+			path = Foundation;
+			sourceTree = "<group>";
+		};
+		8BA5F3DA2F4599800090971F /* Date */ = {
+			isa = PBXGroup;
+			children = (
+				8BA5F3D62F45972B0090971F /* Date+Extension.swift */,
+			);
+			path = Date;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -218,8 +254,12 @@
 			files = (
 				8B673A422F4477EC009A5C8E /* ExpenseModel.swift in Sources */,
 				8B673A112F39D235009A5C8E /* ExpensesTrackerViewer.swift in Sources */,
+				8BA5F3DC2F45AB0B0090971F /* ExpenseModel+Extension.swift in Sources */,
 				8B673A182F3B6AC7009A5C8E /* HomeView.swift in Sources */,
+				8BA5F3DF2F45AB7C0090971F /* HomeViewExpensesTodayCell+Model.swift in Sources */,
+				8BA5F3D52F4575E60090971F /* AddExpenseViewModel.swift in Sources */,
 				8B673A272F4461D0009A5C8E /* AddExpenseView.swift in Sources */,
+				8BA5F3D72F45972B0090971F /* Date+Extension.swift in Sources */,
 				8B673A212F4340CE009A5C8E /* HomeViewExpensesTodayCell.swift in Sources */,
 				8B673A122F39D235009A5C8E /* Expenses_TrackerApp.swift in Sources */,
 			);

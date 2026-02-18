@@ -10,11 +10,11 @@ import SwiftUI
 struct AddExpenseView: View {
     @Environment(\.dismiss) var dismiss
     
-    @State private var date: Date = .now
-    @State private var time: Date = .now
-    @State private var amount: String = ""
-    @State private var category: ExpenseModel.Category = .groceries
-    @State private var notes: String = ""
+    @State var viewModel: ViewModel
+    
+    init(viewModel: ViewModel = ViewModelImplementation()) {
+        self.viewModel = viewModel
+    }
     
     var body: some View {
         NavigationStack {
@@ -27,6 +27,7 @@ struct AddExpenseView: View {
                 
                 ToolbarItem(placement: .confirmationAction) {
                     Button(role: .confirm) {
+                        viewModel.saveExpense()
                         dismiss()
                     }
                 }
@@ -38,26 +39,26 @@ struct AddExpenseView: View {
         Form {
             DatePicker(
                 "Date",
-                selection: $date,
+                selection: $viewModel.date,
                 displayedComponents: .date
             )
             
             DatePicker(
                 "Time",
-                selection: $time,
+                selection: $viewModel.date,
                 displayedComponents: .hourAndMinute
             )
             
             LabeledContent {
-                TextField("", text: $amount)
+                TextField("", text: $viewModel.amount)
                     .keyboardType(.decimalPad)
                     .multilineTextAlignment(.trailing)
             } label: {
                 Text("Amount")
             }
             
-            Picker("Category", selection: $category) {
-                ForEach(ExpenseModel.Category.allCases) { category in
+            Picker("Category", selection: $viewModel.category) {
+                ForEach(viewModel.getCategories()) { category in
                     Text(category.displayName)
                         .tag(category)
                 }
@@ -65,7 +66,7 @@ struct AddExpenseView: View {
             .pickerStyle(.automatic)
             
             LabeledContent {
-                TextField("", text: $notes)
+                TextField("", text: $viewModel.notes)
                     .multilineTextAlignment(.trailing)
                     .lineLimit(5...10)
             } label: {
