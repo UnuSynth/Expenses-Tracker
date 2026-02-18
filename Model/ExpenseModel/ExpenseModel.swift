@@ -4,17 +4,23 @@
 //
 //  Created by Amantay Abdyshev on 17/2/26.
 //
+import Foundation
 
-struct Expense {
+struct ExpenseModel {
     let date: Date
     let amount: Double
-    let category: String
-    let notes: ExpenseNotes?
-}
-
-extension Expense {
-    struct ExpenseNotes {
-        let description: String?
-        let image: Image?
+    let category: Category
+    let notes: Notes?
+    
+    init(
+        date: Date,
+        amount: Double,
+        category: Category,
+        notes: Notes? = nil
+    ) {
+        self.date = date
+        self.amount = amount
+        self.category = category
+        self.notes = notes
     }
 }

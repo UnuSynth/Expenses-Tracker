@@ -10,27 +10,12 @@ import SwiftUI
 struct ExpensesTrackerViewer: View {
     @State private var search: String = ""
     var body: some View {
-        TabView {
-            Tab("First", systemImage: "1.circle") {
-//                NavigationStack {
-//                    HomeView()
-//                        .padding(.horizontal, 16)
-//                        .background(.background.secondary)
-//                        .navigationTitle("Expenses Tracker")
-//                }
-            }
-            
-            Tab("Second", systemImage: "2.circle") {
-                
-            }
-            
-            Tab("", systemImage: "plus", role: .search) {
-                NavigationStack {
-                    
-                }
-            }
+        NavigationStack {
+            HomeView()
+                .padding(.horizontal, 16)
+                .background(.background.secondary)
+                .navigationTitle("Expenses Tracker")
         }
-        .searchable(text: $search)
     }
 }
 

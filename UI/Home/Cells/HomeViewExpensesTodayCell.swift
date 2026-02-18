@@ -45,19 +45,3 @@ struct HomeViewExpensesTodayCell: View {
         }
     }
 }
-
-extension HomeViewExpensesTodayCell {
-    struct Model {
-        let amount: Double
-        let currency: String
-        let timeStr: String
-        
-        static func mock() -> Self {
-            .init(
-                amount: 2600,
-                currency: "som",
-                timeStr: "3:31 PM"
-            )
-        }
-    }
-}

@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct HomeView: View {
+    @State private var showingAddExpenseSheet = false
+
     var body: some View {
         ScrollView {
             HomeViewExpensesTodayCell()
@@ -19,6 +21,24 @@ struct HomeView: View {
                         )
                     )
                 )
+        }
+        .toolbar {
+            ToolbarItemGroup(
+                placement: .bottomBar
+            ) {
+                Button(
+                    "",
+                    systemImage: "plus",
+                    action:  {
+                        showingAddExpenseSheet = true
+                    }
+                )
+            }
+        }
+        .sheet(isPresented: $showingAddExpenseSheet) {
+            AddExpenseView()
+                .presentationDetents([.large])
+                .presentationDragIndicator(.hidden)
         }
     }
 }
