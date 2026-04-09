@@ -8,6 +8,7 @@
 import Foundation
 import SwiftData
 
+@MainActor
 protocol ExpensesDBManagerProtocol {
     func saveExpense(_ expense: ExpenseModel)
 }

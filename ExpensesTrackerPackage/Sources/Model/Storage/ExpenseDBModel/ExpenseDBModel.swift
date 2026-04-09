@@ -9,8 +9,8 @@ import Foundation
 import SwiftData
 
 @Model
-class ExpenseDBModel {
-    var id: UUID = UUID()
+public class ExpenseDBModel {
+    public var id: UUID = UUID()
     
     var date: Date
     var amount: Double

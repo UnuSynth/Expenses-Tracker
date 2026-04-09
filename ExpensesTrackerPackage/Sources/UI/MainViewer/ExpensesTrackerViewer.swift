@@ -7,8 +7,10 @@
 
 import SwiftUI
 
-struct ExpensesTrackerViewer: View {
-    var body: some View {
+public struct ExpensesTrackerViewer: View {
+    public init() { }
+    
+    public var body: some View {
         NavigationStack {
             HomeView()
                 .padding(.horizontal, 16)

@@ -17,6 +17,7 @@ extension AddExpenseView {
         var datesRange: ClosedRange<Date> { get }
         var categories: [ExpenseModel.Category] { get }
         
+        @MainActor
         func saveExpense()
     }
     

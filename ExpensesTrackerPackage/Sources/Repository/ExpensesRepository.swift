@@ -8,6 +8,7 @@
 import Foundation
 
 protocol ExpensesRepositoryProtocol {
+    @MainActor
     func save(expense: ExpenseModel)
 }
 

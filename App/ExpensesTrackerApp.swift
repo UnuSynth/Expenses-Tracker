@@ -7,9 +7,10 @@
 
 import SwiftUI
 import SwiftData
+import ExpensesTrackerPackage
 
 @main
-struct Expenses_TrackerApp: App {
+struct ExpensesTrackerApp: App {
     var body: some Scene {
         WindowGroup {
             ExpensesTrackerViewer()
