@@ -6,13 +6,33 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct HomeView: View {
-    @State private var showingAddExpenseSheet = false
+    @State private var viewModel: ViewModel
+    
+    @Query private var todayExpenses: [ExpenseDBModel]
+    
+    init(
+        viewModel: ViewModel = ViewModelImpl(repository: ExpensesRepository(expensesDBManager: try! ExpensesDBManager()))
+    ) {
+        let todayDates = Calendar.Period.day.dates
+        let startDate = todayDates.start
+        let endDate = todayDates.end
+        
+        _todayExpenses = Query(
+            filter: #Predicate<ExpenseDBModel> {
+                $0.date >= startDate && $0.date < endDate
+            }
+        )
+        self.viewModel = viewModel
+    }
 
     var body: some View {
         ScrollView {
-            HomeViewExpensesTodayCell()
+            HomeViewExpensesTodayCell(
+                model: viewModel.prepareTodayExpensesModel(expenses: todayExpenses)
+            )
                 .background(
                     .white,
                     in: .rect(
@@ -29,13 +49,11 @@ struct HomeView: View {
                 Button(
                     "",
                     systemImage: "plus",
-                    action:  {
-                        showingAddExpenseSheet = true
-                    }
+                    action: viewModel.addExpenseButtonTapped
                 )
             }
         }
-        .sheet(isPresented: $showingAddExpenseSheet) {
+        .sheet(isPresented: $viewModel.showingAddExpenseSheet) {
             AddExpenseView()
                 .presentationDetents([.large])
                 .presentationDragIndicator(.hidden)

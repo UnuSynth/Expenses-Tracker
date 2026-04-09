@@ -8,7 +8,11 @@
 import SwiftUI
 
 struct HomeViewExpensesTodayCell: View {
-    private let model: Model = .mock()
+    private var model: Model
+    
+    init(model: Model) {
+        self.model = model
+    }
     
     var body: some View {
         VStack(alignment: .leading) {

@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct ExpensesTrackerViewer: View {
-    @State private var search: String = ""
     var body: some View {
         NavigationStack {
             HomeView()

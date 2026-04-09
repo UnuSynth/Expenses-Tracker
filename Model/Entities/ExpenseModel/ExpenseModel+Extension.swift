@@ -17,23 +17,23 @@ extension ExpenseModel {
         var displayName: String {
             switch self {
             case .groceries:
-                return "🛒 Groceries"
+                return "Groceries 🛒"
             case .lunch:
-                return "🍽️ Lunch"
+                return "Lunch 🍽️"
             case .clothes:
-                return "👗 Clothes"
+                return "Clothes 👗"
             case .sport:
-                return "🏀 Sport"
+                return "Sport 🏀"
             }
         }
     }
     
     struct Notes {
-        let description: String?
+        let desc: String?
         let image: String?
         
-        init(description: String? = nil, image: String? = nil) {
-            self.description = description
+        init(desc: String? = nil, image: String? = nil) {
+            self.desc = desc
             self.image = image
         }
     }

@@ -12,67 +12,96 @@ struct AddExpenseView: View {
     
     @State var viewModel: ViewModel
     
-    init(viewModel: ViewModel = ViewModelImplementation()) {
+    init(viewModel: ViewModel = ViewModelImpl(repository: ExpensesRepository(expensesDBManager: try! ExpensesDBManager()))) {
         self.viewModel = viewModel
     }
     
     var body: some View {
         NavigationStack {
-            form.toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button(role: .close) {
-                        dismiss()
+            form
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button(role: .close) {
+                            dismiss()
+                        }
+                    }
+                    
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button(role: .confirm) {
+                            viewModel.saveExpense()
+                            dismiss()
+                        }
+                        .disabled(!viewModel.isValid)
                     }
                 }
-                
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(role: .confirm) {
-                        viewModel.saveExpense()
-                        dismiss()
-                    }
-                }
-            }
         }
     }
     
     private var form: some View {
         Form {
-            DatePicker(
-                "Date",
-                selection: $viewModel.date,
-                displayedComponents: .date
-            )
-            
-            DatePicker(
-                "Time",
-                selection: $viewModel.date,
-                displayedComponents: .hourAndMinute
-            )
-            
-            LabeledContent {
-                TextField("", text: $viewModel.amount)
-                    .keyboardType(.decimalPad)
-                    .multilineTextAlignment(.trailing)
-            } label: {
-                Text("Amount")
-            }
-            
-            Picker("Category", selection: $viewModel.category) {
-                ForEach(viewModel.getCategories()) { category in
-                    Text(category.displayName)
-                        .tag(category)
+            Section {
+                DatePicker(
+                    "Date",
+                    selection: $viewModel.date,
+                    in: viewModel.datesRange,
+                    displayedComponents: .date
+                )
+                
+                DatePicker(
+                    "Time",
+                    selection: $viewModel.date,
+                    displayedComponents: .hourAndMinute
+                )
+                
+                LabeledContent {
+                    TextField("", text: $viewModel.amountString)
+                        .foregroundStyle(.primary)
+                        .keyboardType(.decimalPad)
+                        .multilineTextAlignment(.trailing)
+                } label: {
+                    Text("Amount")
+                }
+                
+                Picker("Category", selection: $viewModel.category) {
+                    ForEach(viewModel.categories) { category in
+                        Text(category.displayName)
+                            .tag(category)
+                    }
+                }
+                .pickerStyle(.menu)
+                
+                LabeledContent {
+                    TextEditor(text: $viewModel.notes)
+                        .foregroundStyle(.primary)
+                        .multilineTextAlignment(.trailing)
+                } label: {
+                    Text("Notes")
                 }
             }
-            .pickerStyle(.automatic)
-            
-            LabeledContent {
-                TextField("", text: $viewModel.notes)
-                    .multilineTextAlignment(.trailing)
-                    .lineLimit(5...10)
-            } label: {
-                Text("Notes")
+            header: {
+                header
             }
         }
+        .foregroundStyle(.secondary)
+        .font(.callout)
+    }
+    
+    private var header: some View {
+        VStack(alignment: .center) {
+            Image(systemName: "creditcard.fill")
+                .resizable()
+                .frame(width: 64, height: 48)
+                .scaledToFill()
+                .padding(.bottom, 16)
+            
+            
+            Text("Expense")
+                .font(.title.bold())
+                .foregroundStyle(.primary)
+            
+        }
+        .containerRelativeFrame(.horizontal)
+        .padding()
     }
 }
 
