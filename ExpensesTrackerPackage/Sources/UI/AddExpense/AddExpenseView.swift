@@ -12,7 +12,7 @@ struct AddExpenseView: View {
     
     @State var viewModel: ViewModel
     
-    init(viewModel: ViewModel = ViewModelImpl(repository: ExpensesRepository(expensesDBManager: try! ExpensesDBManager()))) {
+    init(viewModel: ViewModel) {
         self.viewModel = viewModel
     }
     
@@ -106,5 +106,7 @@ struct AddExpenseView: View {
 }
 
 #Preview {
-    AddExpenseView()
+    AddExpenseView(
+        viewModel: AddExpenseView.BaseViewModelImpl()
+    )
 }

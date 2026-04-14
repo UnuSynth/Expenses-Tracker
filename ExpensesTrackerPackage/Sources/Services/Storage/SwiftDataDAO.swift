@@ -8,7 +8,7 @@
 import Foundation
 import SwiftData
 
-@MainActor
+//@MainActor
 protocol SwiftDataDAOProtocol {
     func save<T: PersistentModel>(model: T, force: Bool)
     func get<T: PersistentModel>(

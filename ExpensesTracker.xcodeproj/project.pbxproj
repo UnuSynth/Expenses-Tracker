@@ -103,7 +103,7 @@
 			packageProductDependencies = (
 				8B6439F72F87C42F0080BC99 /* ExpensesTrackerPackage */,
 			);
-			productName = "ExpensesTracker";
+			productName = ExpensesTracker;
 			productReference = 8B98489F2F39B9BC00FF6785 /* ExpensesTracker.app */;
 			productType = "com.apple.product-type.application";
 		};

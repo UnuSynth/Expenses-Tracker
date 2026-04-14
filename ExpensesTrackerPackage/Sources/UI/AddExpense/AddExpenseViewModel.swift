@@ -21,11 +21,12 @@ extension AddExpenseView {
         func saveExpense()
     }
     
+    // BaseViewModelImpl is used to mock real view model functionality
     @Observable
-    final class ViewModelImpl: ViewModel {
+    class BaseViewModelImpl: ViewModel {
         var date: Date = .now
         var amountString: String = ""
-        private var amountDouble: Double? {
+        fileprivate var amountDouble: Double? {
             amountString.toDouble()
         }
         var category: ExpenseModel.Category = .groceries
@@ -45,13 +46,18 @@ extension AddExpenseView {
             ExpenseModel.Category.allCases
         }
         
+        func saveExpense() { }
+    }
+    
+    @Observable
+    final class ViewModelImpl: BaseViewModelImpl {
         private let repository: ExpensesRepositoryProtocol
         
         init(repository: ExpensesRepositoryProtocol) {
             self.repository = repository
         }
         
-        func saveExpense() {
+        override func saveExpense() {
             let expense = ExpenseModel(
                 date: date,
                 amount: amountDouble ?? 0,
@@ -63,4 +69,3 @@ extension AddExpenseView {
         }
     }
 }
-

@@ -12,7 +12,7 @@ public struct ExpensesTrackerViewer: View {
     
     public var body: some View {
         NavigationStack {
-            HomeView()
+            HomeView(viewModel: SharedContainer.resolve(HomeView.ViewModel.self) ?? HomeView.MockViewModel())
                 .padding(.horizontal, 16)
                 .background(.background.secondary)
                 .navigationTitle("Expenses Tracker")

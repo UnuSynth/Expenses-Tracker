@@ -16,8 +16,7 @@ protocol ExpensesDBManagerProtocol {
 final class ExpensesDBManager: ExpensesDBManagerProtocol {
     private let dao: SwiftDataDAOProtocol
     
-    init() throws {
-        let container = try ModelContainer(for: ExpenseDBModel.self)
+    init(container: ModelContainer) {
         let context = ModelContext(container)
         self.dao = SwiftDataDAO(context: context)
     }

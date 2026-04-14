@@ -23,3 +23,7 @@ final class ExpensesRepository: ExpensesRepositoryProtocol {
         expensesDBManager.saveExpense(expense)
     }
 }
+
+final class ExpensesRepositoryMock: ExpensesRepositoryProtocol {
+    func save(expense: ExpenseModel) { }
+}

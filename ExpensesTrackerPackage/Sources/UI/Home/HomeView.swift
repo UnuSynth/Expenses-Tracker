@@ -13,9 +13,7 @@ struct HomeView: View {
     
     @Query private var todayExpenses: [ExpenseDBModel]
     
-    init(
-        viewModel: ViewModel = ViewModelImpl(repository: ExpensesRepository(expensesDBManager: try! ExpensesDBManager()))
-    ) {
+    init(viewModel: ViewModel) {
         let todayDates = Calendar.Period.day.dates
         let startDate = todayDates.start
         let endDate = todayDates.end
@@ -54,13 +52,15 @@ struct HomeView: View {
             }
         }
         .sheet(isPresented: $viewModel.showingAddExpenseSheet) {
-            AddExpenseView()
-                .presentationDetents([.large])
-                .presentationDragIndicator(.hidden)
+            AddExpenseView(
+                viewModel: viewModel.prepareAddExpenseViewModel()
+            )
+            .presentationDetents([.large])
+            .presentationDragIndicator(.hidden)
         }
     }
 }
 
 #Preview {
-    HomeView()
+    HomeView(viewModel: HomeView.MockViewModel())
 }
