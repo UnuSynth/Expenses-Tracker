@@ -10,6 +10,7 @@ import SwiftData
 
 struct HomeView: View {
     @State private var viewModel: ViewModel
+    @State private var showTransactionsHistory: Bool = false
     
     @Query private var todayExpenses: [ExpenseDBModel]
     
@@ -28,17 +29,21 @@ struct HomeView: View {
 
     var body: some View {
         ScrollView {
-            HomeViewExpensesTodayCell(
-                model: viewModel.prepareTodayExpensesModel(expenses: todayExpenses)
-            )
-                .background(
-                    .white,
-                    in: .rect(
-                        corners: .concentric(
-                            minimum: 16
+            NavigationLink(destination: TransactionsHistoryView(viewModel: viewModel.prepareTransactionsHistoryViewModel())) {
+                HomeViewExpensesTodayCell(
+                    model: viewModel.prepareTodayExpensesModel(expenses: todayExpenses)
+                )
+                    .background(
+                        .white,
+                        in: .rect(
+                            corners: .concentric(
+                                minimum: 16
+                            )
                         )
                     )
-                )
+            }
+            .buttonStyle(.plain)
+            
         }
         .toolbar {
             ToolbarItemGroup(

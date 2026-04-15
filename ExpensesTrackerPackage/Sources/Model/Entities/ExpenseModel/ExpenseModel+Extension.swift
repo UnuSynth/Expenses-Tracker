@@ -5,6 +5,8 @@
 //  Created by Amantay Abdyshev on 18/2/26.
 //
 
+import SwiftUI
+
 extension ExpenseModel {
     enum Category: String, CaseIterable, Identifiable {
         case groceries
@@ -24,6 +26,24 @@ extension ExpenseModel {
                 return "Clothes 👗"
             case .sport:
                 return "Sport 🏀"
+            }
+        }
+        
+        var icon: String {
+            switch self {
+            case .groceries: return "cart.fill"
+            case .lunch: return "fork.knife"
+            case .clothes: return "tshirt.fill"
+            case .sport: return "figure.run"
+            }
+        }
+        
+        var color: Color {
+            switch self {
+            case .groceries: return .orange
+            case .lunch: return .red
+            case .clothes: return .purple
+            case .sport: return .green
             }
         }
     }

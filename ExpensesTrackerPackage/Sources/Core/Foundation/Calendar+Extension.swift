@@ -56,3 +56,16 @@ extension Calendar {
         dateInterval(of: .day, for: date)?.end ?? date
     }
 }
+
+extension Date {
+    func isSameDay(as other: Date?) -> Bool {
+        guard let other else { return false }
+        return Calendar.current.isDate(self, inSameDayAs: other)
+    }
+    
+    var relativeLabel: String {
+        if Calendar.current.isDateInToday(self) { return "Today" }
+        if Calendar.current.isDateInYesterday(self) { return "Yesterday" }
+        return self.formatted(.dateTime.weekday(.wide).month(.abbreviated).day())
+    }
+}

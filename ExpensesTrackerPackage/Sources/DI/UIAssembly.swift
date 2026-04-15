@@ -19,5 +19,10 @@ class UIAssembly: Assembly {
             AddExpenseView.ViewModel.self,
             initializer: AddExpenseView.ViewModelImpl.init
         )
+        
+        container.autoregister(
+            TransactionsHistoryView.ViewModel.self,
+            initializer: TransactionsHistoryView.ViewModelImpl.init
+        )
     }
 }

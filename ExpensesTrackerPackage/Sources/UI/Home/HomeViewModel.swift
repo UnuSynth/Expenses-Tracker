@@ -14,6 +14,7 @@ extension HomeView {
         func addExpenseButtonTapped()
         func prepareTodayExpensesModel(expenses: [ExpenseDBModel]) -> HomeViewExpensesTodayCell.Model
         func prepareAddExpenseViewModel() -> AddExpenseView.ViewModel
+        func prepareTransactionsHistoryViewModel() -> TransactionsHistoryView.ViewModel
     }
     
     @Observable
@@ -41,6 +42,10 @@ extension HomeView {
         func prepareAddExpenseViewModel() -> AddExpenseView.ViewModel {
             SharedContainer.resolve(AddExpenseView.ViewModel.self) ?? AddExpenseView.BaseViewModelImpl()
         }
+        
+        func prepareTransactionsHistoryViewModel() -> TransactionsHistoryView.ViewModel {
+            SharedContainer.resolve(TransactionsHistoryView.ViewModel.self) ?? TransactionsHistoryView.ViewModelImpl(repository: repository)
+        }
     }
     
     // MARK: - Mock ViewModel
@@ -56,6 +61,9 @@ extension HomeView {
         }
         func prepareAddExpenseViewModel() -> AddExpenseView.ViewModel {
             return AddExpenseView.BaseViewModelImpl()
+        }
+        func prepareTransactionsHistoryViewModel() -> TransactionsHistoryView.ViewModel {
+            return TransactionsHistoryView.MockViewModel()
         }
     }
 }
