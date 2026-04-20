@@ -174,6 +174,7 @@ struct TransactionsHistoryView: View {
                     .gesture(
                         DragGesture(minimumDistance: 0)
                             .onChanged { value in
+                                debugPrint("drag position changed")
                                 guard let plotFrame = proxy.plotFrame else { return }
                                 let origin = geo[plotFrame].origin
                                 let location = CGPoint(
@@ -181,16 +182,14 @@ struct TransactionsHistoryView: View {
                                     y: value.location.y - origin.y
                                 )
                                 if let date: Date = proxy.value(atX: location.x) {
-                                    let closest = viewModel.chartData.min(by: {
-                                        abs($0.date.timeIntervalSince(date)) <
-                                        abs($1.date.timeIntervalSince(date))
-                                    })
+                                    debugPrint("user selected date: \(date)")
                                     withAnimation(.spring(response: 0.2)) {
-                                        viewModel.selectedBarDate = closest?.date
+                                        viewModel.selectedBarDate = date
                                     }
                                 }
                             }
                             .onEnded { _ in
+                                debugPrint("drag ended")
                                 withAnimation(.spring(response: 0.3)) {
                                     viewModel.selectedBarDate = nil
                                 }
@@ -201,12 +200,15 @@ struct TransactionsHistoryView: View {
     }
 
     private func barColor(for date: Date) -> Color {
+        debugPrint("bar color change for date: \(date)")
+        debugPrint("selected bar date: \(viewModel.selectedBarDate)")
         if let selected = viewModel.selectedBarDate {
+            debugPrint("isSameDay: \(date.isSameDay(as: selected))")
             return date.isSameDay(as: selected)
-                ? Color.accentColor
-                : Color.accentColor.opacity(0.4)
+                ? Color.orange
+                : Color.orange.opacity(0.4)
         }
-        return Color.accentColor
+        return Color.orange
     }
 
     // MARK: - Stats Row
