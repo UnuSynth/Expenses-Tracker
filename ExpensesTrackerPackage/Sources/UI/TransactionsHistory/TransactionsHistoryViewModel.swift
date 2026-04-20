@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 extension TransactionsHistoryView {
     enum TimePeriod: String, CaseIterable {
@@ -96,6 +97,8 @@ extension TransactionsHistoryView {
         var lowestDay: Double { get }
         var groupedTransactions: [ExpenseGroup] { get }
         
+        func barColor(for date: Date) -> Color
+        
         @MainActor
         func loadExpenses()
     }
@@ -160,39 +163,6 @@ extension TransactionsHistoryView {
             }
             
             return points
-        }
-        
-        // MARK: - Summary
-        
-        var summaryTitle: String {
-            if let selected = selectedBarDate {
-                return selected.formatted(.dateTime.weekday(.wide).month().day())
-            }
-            return selectedPeriod.rangeLabel
-        }
-        
-        var summaryAmount: Double {
-            if let selected = selectedBarDate {
-                return chartData.first { $0.date.isSameDay(as: selected) }?.total ?? 0
-            }
-            return chartData.reduce(0) { $0 + $1.total }
-        }
-        
-        // MARK: - Statistics
-        
-        var averageAmount: Double {
-            let nonZero = chartData.filter { $0.total > 0 }
-            guard !nonZero.isEmpty else { return 0 }
-            return nonZero.reduce(0) { $0 + $1.total } / Double(nonZero.count)
-        }
-        
-        var highestDay: Double {
-            chartData.max(by: { $0.total < $1.total })?.total ?? 0
-        }
-        
-        var lowestDay: Double {
-            let nonZero = chartData.filter { $0.total > 0 }
-            return nonZero.min(by: { $0.total < $1.total })?.total ?? 0
         }
         
         // MARK: - Grouped Transactions
@@ -271,7 +241,7 @@ extension TransactionsHistoryView {
                 for i in 0..<expensesPerDay {
                     let hour = 8 + i * 4
                     let expenseDate = calendar.date(bySettingHour: hour, minute: 30, second: 0, of: date) ?? date
-                    let amount = Double.random(in: 5...120)
+                    let amount = Double.random(in: 5...10000)
                     let category = categories[(dayOffset + i) % categories.count]
                     let note = notes[(dayOffset + i) % notes.count]
                     
@@ -331,35 +301,6 @@ extension TransactionsHistoryView {
             return points
         }
         
-        var summaryTitle: String {
-            if let selected = selectedBarDate {
-                return selected.formatted(.dateTime.weekday(.wide).month().day())
-            }
-            return selectedPeriod.rangeLabel
-        }
-        
-        var summaryAmount: Double {
-            if let selected = selectedBarDate {
-                return chartData.first { $0.date.isSameDay(as: selected) }?.total ?? 0
-            }
-            return chartData.reduce(0) { $0 + $1.total }
-        }
-        
-        var averageAmount: Double {
-            let nonZero = chartData.filter { $0.total > 0 }
-            guard !nonZero.isEmpty else { return 0 }
-            return nonZero.reduce(0) { $0 + $1.total } / Double(nonZero.count)
-        }
-        
-        var highestDay: Double {
-            chartData.max(by: { $0.total < $1.total })?.total ?? 0
-        }
-        
-        var lowestDay: Double {
-            let nonZero = chartData.filter { $0.total > 0 }
-            return nonZero.min(by: { $0.total < $1.total })?.total ?? 0
-        }
-        
         var groupedTransactions: [ExpenseGroup] {
             let calendar = Calendar.current
             let range = selectedPeriod.dateRange
@@ -380,5 +321,56 @@ extension TransactionsHistoryView {
         }
         
         func loadExpenses() { }
+    }
+}
+
+// MARK: - ViewModel Extension (Shared Implementation)
+extension TransactionsHistoryView.ViewModel {
+    var summaryTitle: String {
+        if let selected = selectedBarDate {
+            switch selectedPeriod {
+            case .day:
+                return selected.formatted(.dateTime.hour().minute())
+            case .week, .month:
+                return selected.formatted(.dateTime.month().day())
+            case .sixMonths:
+                return selected.formatted(.dateTime.month(.wide))
+            case .year:
+                return selected.formatted(.dateTime.year())
+            }
+        }
+        return selectedPeriod.rangeLabel
+    }
+    
+    var summaryAmount: Double {
+        if let selected = selectedBarDate {
+            return chartData.first { $0.date.matches(selected, by: selectedPeriod.calendarComponent) }?.total ?? 0
+        }
+        return chartData.reduce(0) { $0 + $1.total }
+    }
+    
+    var averageAmount: Double {
+        let nonZero = chartData.filter { $0.total > 0 }
+        guard !nonZero.isEmpty else { return 0 }
+        return nonZero.reduce(0) { $0 + $1.total } / Double(nonZero.count)
+    }
+    
+    var highestDay: Double {
+        chartData.max(by: { $0.total < $1.total })?.total ?? 0
+    }
+    
+    var lowestDay: Double {
+        let nonZero = chartData.filter { $0.total > 0 }
+        return nonZero.min(by: { $0.total < $1.total })?.total ?? 0
+    }
+    
+    func barColor(for date: Date) -> Color {
+        if let selected = selectedBarDate {
+            let isSelected = date.matches(selected, by: selectedPeriod.calendarComponent)
+            return isSelected
+                ? Color.orange
+                : Color.orange.opacity(0.4)
+        }
+        return Color.orange
     }
 }

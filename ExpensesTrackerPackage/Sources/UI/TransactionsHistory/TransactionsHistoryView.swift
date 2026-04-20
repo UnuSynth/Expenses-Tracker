@@ -144,7 +144,8 @@ struct TransactionsHistoryView: View {
                 .foregroundStyle(barColor(for: item.date))
                 .clipShape(RoundedRectangle(cornerRadius: 3))
                 .annotation(position: .top, spacing: 4) {
-                    if item.date.isSameDay(as: viewModel.selectedBarDate) {
+                    if let selectedDate = viewModel.selectedBarDate,
+                       item.date.matches(selectedDate, by: viewModel.selectedPeriod.calendarComponent) {
                         Text(item.total, format: .currency(code: "USD"))
                             .font(.caption.weight(.semibold))
                             .padding(.horizontal, 8)
@@ -166,6 +167,7 @@ struct TransactionsHistoryView: View {
         }
         .frame(height: 180)
         .animation(.spring(response: 0.4), value: viewModel.selectedPeriod)
+        .animation(.linear(duration: 0.1), value: viewModel.selectedBarDate)
         .chartOverlay { proxy in
             GeometryReader { geo in
                 Rectangle()
@@ -174,7 +176,6 @@ struct TransactionsHistoryView: View {
                     .gesture(
                         DragGesture(minimumDistance: 0)
                             .onChanged { value in
-                                debugPrint("drag position changed")
                                 guard let plotFrame = proxy.plotFrame else { return }
                                 let origin = geo[plotFrame].origin
                                 let location = CGPoint(
@@ -182,15 +183,13 @@ struct TransactionsHistoryView: View {
                                     y: value.location.y - origin.y
                                 )
                                 if let date: Date = proxy.value(atX: location.x) {
-                                    debugPrint("user selected date: \(date)")
-                                    withAnimation(.spring(response: 0.2)) {
+                                    withAnimation(.linear(duration: 0.1)) {
                                         viewModel.selectedBarDate = date
                                     }
                                 }
                             }
                             .onEnded { _ in
-                                debugPrint("drag ended")
-                                withAnimation(.spring(response: 0.3)) {
+                                withAnimation(.linear(duration: 0.15)) {
                                     viewModel.selectedBarDate = nil
                                 }
                             }
@@ -200,15 +199,7 @@ struct TransactionsHistoryView: View {
     }
 
     private func barColor(for date: Date) -> Color {
-        debugPrint("bar color change for date: \(date)")
-        debugPrint("selected bar date: \(viewModel.selectedBarDate)")
-        if let selected = viewModel.selectedBarDate {
-            debugPrint("isSameDay: \(date.isSameDay(as: selected))")
-            return date.isSameDay(as: selected)
-                ? Color.orange
-                : Color.orange.opacity(0.4)
-        }
-        return Color.orange
+        viewModel.barColor(for: date)
     }
 
     // MARK: - Stats Row
