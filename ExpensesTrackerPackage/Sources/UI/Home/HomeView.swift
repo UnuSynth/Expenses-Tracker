@@ -8,10 +8,13 @@
 import SwiftUI
 import SwiftData
 
+private enum HomeDestination: Hashable {
+    case transactionsHistory
+}
+
 struct HomeView: View {
     @State private var viewModel: ViewModel
-    @State private var showTransactionsHistory: Bool = false
-    
+
     @Query private var todayExpenses: [ExpenseDBModel]
     
     init(viewModel: ViewModel) {
@@ -29,31 +32,23 @@ struct HomeView: View {
 
     var body: some View {
         ScrollView {
-            NavigationLink(destination: TransactionsHistoryView(viewModel: viewModel.prepareTransactionsHistoryViewModel())) {
+            NavigationLink(value: HomeDestination.transactionsHistory) {
                 HomeViewExpensesTodayCell(
                     model: viewModel.prepareTodayExpensesModel(expenses: todayExpenses)
                 )
-                    .background(
-                        .white,
-                        in: .rect(
-                            corners: .concentric(
-                                minimum: 16
-                            )
-                        )
-                    )
+                .background(
+                    .white,
+                    in: .rect(corners: .concentric(minimum: 16))
+                )
             }
             .buttonStyle(.plain)
-            
+        }
+        .navigationDestination(for: HomeDestination.self) { _ in
+            TransactionsHistoryView(viewModel: viewModel.prepareTransactionsHistoryViewModel())
         }
         .toolbar {
-            ToolbarItemGroup(
-                placement: .bottomBar
-            ) {
-                Button(
-                    "",
-                    systemImage: "plus",
-                    action: viewModel.addExpenseButtonTapped
-                )
+            ToolbarItemGroup(placement: .bottomBar) {
+                Button("Add Expense", systemImage: "plus", action: viewModel.addExpenseButtonTapped)
             }
         }
         .sheet(isPresented: $viewModel.showingAddExpenseSheet) {

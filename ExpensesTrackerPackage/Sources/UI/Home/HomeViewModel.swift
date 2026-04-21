@@ -8,7 +8,8 @@
 import Foundation
 
 extension HomeView {
-    protocol ViewModel {
+    @MainActor
+    protocol ViewModel: AnyObject, Observable {
         var showingAddExpenseSheet: Bool { get set }
         
         func addExpenseButtonTapped()
@@ -18,6 +19,7 @@ extension HomeView {
     }
     
     @Observable
+    @MainActor
     class ViewModelImpl: ViewModel {
         var showingAddExpenseSheet: Bool = false
         
@@ -49,6 +51,8 @@ extension HomeView {
     }
     
     // MARK: - Mock ViewModel
+    @Observable
+    @MainActor
     class MockViewModel: ViewModel {
         var showingAddExpenseSheet: Bool = true
         func addExpenseButtonTapped() { }

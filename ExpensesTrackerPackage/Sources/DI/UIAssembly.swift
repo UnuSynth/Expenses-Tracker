@@ -8,7 +8,8 @@
 import Swinject
 import SwinjectAutoregistration
 
-class UIAssembly: Assembly {
+@MainActor
+final class UIAssembly: @preconcurrency Assembly {
     func assemble(container: Container) {
         container.autoregister(
             HomeView.ViewModel.self,

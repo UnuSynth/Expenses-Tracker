@@ -8,7 +8,8 @@
 import Foundation
 
 extension AddExpenseView {
-    protocol ViewModel {
+    @MainActor
+    protocol ViewModel: AnyObject, Observable {
         var date: Date { get set }
         var amountString: String { get set }
         var category: ExpenseModel.Category { get set }
@@ -23,6 +24,7 @@ extension AddExpenseView {
     
     // BaseViewModelImpl is used to mock real view model functionality
     @Observable
+    @MainActor
     class BaseViewModelImpl: ViewModel {
         var date: Date = .now
         var amountString: String = ""
@@ -50,6 +52,7 @@ extension AddExpenseView {
     }
     
     @Observable
+    @MainActor
     final class ViewModelImpl: BaseViewModelImpl {
         private let repository: ExpensesRepositoryProtocol
         

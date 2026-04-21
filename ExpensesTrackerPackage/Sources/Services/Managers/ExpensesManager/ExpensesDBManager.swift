@@ -15,6 +15,7 @@ protocol ExpensesDBManagerProtocol {
     func fetchAllExpenses() throws -> [ExpenseModel]
 }
 
+@MainActor
 final class ExpensesDBManager: ExpensesDBManagerProtocol {
     private let dao: SwiftDataDAOProtocol
     

@@ -90,8 +90,9 @@ struct AddExpenseView: View {
         VStack(alignment: .center) {
             Image(systemName: "creditcard.fill")
                 .resizable()
+                .scaledToFit()
                 .frame(width: 64, height: 48)
-                .scaledToFill()
+                .accessibilityHidden(true)
                 .padding(.bottom, 16)
             
             
