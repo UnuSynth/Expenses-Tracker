@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-struct TransactionsHistoryView: View {
-    @State var viewModel: ViewModel
+struct HistoryView: View {
+    @State var viewModel: HistoryViewModel
 
-    init(viewModel: ViewModel) {
+    init(viewModel: HistoryViewModel) {
         self.viewModel = viewModel
     }
 
@@ -63,6 +63,6 @@ struct TransactionsHistoryView: View {
 
 #Preview {
     NavigationStack {
-        TransactionsHistoryView(viewModel: TransactionsHistoryView.MockViewModel())
+        HistoryView(viewModel: HistoryMockViewModel())
     }
 }

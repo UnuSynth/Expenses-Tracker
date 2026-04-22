@@ -10,9 +10,9 @@ import SwiftUI
 struct AddExpenseView: View {
     @Environment(\.dismiss) var dismiss
     
-    @State var viewModel: ViewModel
+    @State var viewModel: AddExpenseViewModel
     
-    init(viewModel: ViewModel) {
+    init(viewModel: AddExpenseViewModel) {
         self.viewModel = viewModel
     }
     
@@ -108,6 +108,6 @@ struct AddExpenseView: View {
 
 #Preview {
     AddExpenseView(
-        viewModel: AddExpenseView.BaseViewModelImpl()
+        viewModel: AddExpenseMockViewModel()
     )
 }

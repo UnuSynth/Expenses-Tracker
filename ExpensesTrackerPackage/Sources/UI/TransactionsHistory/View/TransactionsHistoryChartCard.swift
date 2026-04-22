@@ -7,8 +7,8 @@ import SwiftUI
 import Charts
 
 struct TransactionsHistoryChartCard: View {
-    let viewModel: any TransactionsHistoryView.ViewModel
-
+    let viewModel: any HistoryViewModel
+    
     var body: some View {
         VStack(spacing: 8) {
             timePeriodSelector
@@ -20,14 +20,14 @@ struct TransactionsHistoryChartCard: View {
         .background(.background)
         .clipShape(RoundedRectangle(cornerRadius: 14))
     }
-
+    
     // MARK: - Period Selector
-
+    
     private var timePeriodSelector: some View {
         HStack(spacing: 0) {
-            ForEach(TransactionsHistoryView.TimePeriod.allCases, id: \.self) { period in
+            ForEach(HistoryTimePeriod.allCases, id: \.self) { period in
                 Button(period.rawValue) {
-                    withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+                    withAnimation(.linear(duration: 0.3)) {
                         viewModel.selectedPeriod = period
                         viewModel.selectedBarDate = nil
                     }
@@ -45,9 +45,9 @@ struct TransactionsHistoryChartCard: View {
         .padding(3)
         .background(Color(.systemFill), in: RoundedRectangle(cornerRadius: 10))
     }
-
+    
     // MARK: - Chart
-
+    
     private var expenseChart: some View {
         Chart {
             RuleMark(y: .value("Average", viewModel.averageAmount))
@@ -58,7 +58,7 @@ struct TransactionsHistoryChartCard: View {
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
-
+            
             ForEach(viewModel.chartData) { item in
                 BarMark(
                     x: .value("Date", item.dateStart, unit: viewModel.selectedPeriod.calendarComponent),
@@ -89,10 +89,7 @@ struct TransactionsHistoryChartCard: View {
             plotArea.background(.clear)
         }
         .frame(height: 180)
-        .animation(.spring(response: 0.4), value: viewModel.selectedPeriod)
         .animation(.linear(duration: 0.1), value: viewModel.selectedBarDate)
-        // GeometryReader is required here to translate gesture coordinates
-        // into the chart's plot frame coordinate space.
         .chartOverlay { proxy in
             GeometryReader { geo in
                 Rectangle()
@@ -107,7 +104,8 @@ struct TransactionsHistoryChartCard: View {
                                     x: value.location.x - origin.x,
                                     y: value.location.y - origin.y
                                 )
-                                if let date: Date = proxy.value(atX: location.x) {
+                                if let date: Date = proxy.value(atX: location.x),
+                                   !viewModel.isSameBarDateSelected(date) {
                                     withAnimation(.linear(duration: 0.1)) {
                                         viewModel.selectedBarDate = date
                                     }
@@ -122,9 +120,9 @@ struct TransactionsHistoryChartCard: View {
             }
         }
     }
-
+    
     // MARK: - Stats Row
-
+    
     private var statsRow: some View {
         HStack(spacing: 0) {
             statTile(label: "Average", value: viewModel.averageAmount)
@@ -135,7 +133,7 @@ struct TransactionsHistoryChartCard: View {
         }
         .padding(.vertical, 12)
     }
-
+    
     private func statTile(label: String, value: Double) -> some View {
         VStack(spacing: 2) {
             Text(label)
@@ -149,5 +147,5 @@ struct TransactionsHistoryChartCard: View {
 }
 
 #Preview {
-    TransactionsHistoryChartCard(viewModel: TransactionsHistoryView.MockViewModel())
+    TransactionsHistoryChartCard(viewModel: HistoryMockViewModel())
 }

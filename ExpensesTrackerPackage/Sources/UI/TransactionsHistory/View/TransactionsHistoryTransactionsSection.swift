@@ -6,7 +6,7 @@
 import SwiftUI
 
 struct TransactionsHistoryTransactionsSection: View {
-    let groups: [TransactionsHistoryView.ExpenseGroup]
+    let groups: [ExpenseGroup]
     @State private var showAllTransactions = false
 
     var body: some View {
@@ -51,7 +51,7 @@ struct TransactionsHistoryTransactionsSection: View {
         .clipShape(RoundedRectangle(cornerRadius: 14))
     }
 
-    private func transactionGroupSection(group: TransactionsHistoryView.ExpenseGroup) -> some View {
+    private func transactionGroupSection(group: ExpenseGroup) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             Text(group.label)
                 .font(.footnote.weight(.semibold))

@@ -13,11 +13,11 @@ private enum HomeDestination: Hashable {
 }
 
 struct HomeView: View {
-    @State private var viewModel: ViewModel
+    @State private var viewModel: HomeViewModel
 
     @Query private var todayExpenses: [ExpenseDBModel]
     
-    init(viewModel: ViewModel) {
+    init(viewModel: HomeViewModel) {
         let todayDates = Calendar.Period.day.dates
         let startDate = todayDates.start
         let endDate = todayDates.end
@@ -44,12 +44,27 @@ struct HomeView: View {
             .buttonStyle(.plain)
         }
         .navigationDestination(for: HomeDestination.self) { _ in
-            TransactionsHistoryView(viewModel: viewModel.prepareTransactionsHistoryViewModel())
+            HistoryView(viewModel: viewModel.prepareTransactionsHistoryViewModel())
         }
         .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    viewModel.partnerButtonTapped()
+                } label: {
+                    Image(systemName: "person.crop.circle.fill")
+                        .font(.system(size: 22))
+                        .foregroundStyle(.secondary)
+                        .frame(width: 28, height: 28)
+                        .clipShape(.circle)
+                }
+                .accessibilityLabel("View partner")
+            }
             ToolbarItemGroup(placement: .bottomBar) {
                 Button("Add Expense", systemImage: "plus", action: viewModel.addExpenseButtonTapped)
             }
+        }
+        .sheet(isPresented: $viewModel.showPartnerSheet) {
+            PartnerLinkView()
         }
         .sheet(isPresented: $viewModel.showingAddExpenseSheet) {
             AddExpenseView(
@@ -62,5 +77,5 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView(viewModel: HomeView.MockViewModel())
+    HomeView(viewModel: HomeMockViewModel())
 }

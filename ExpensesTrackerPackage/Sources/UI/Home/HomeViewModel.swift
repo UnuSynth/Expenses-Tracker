@@ -7,67 +7,74 @@
 
 import Foundation
 
-extension HomeView {
-    @MainActor
-    protocol ViewModel: AnyObject, Observable {
-        var showingAddExpenseSheet: Bool { get set }
-        
-        func addExpenseButtonTapped()
-        func prepareTodayExpensesModel(expenses: [ExpenseDBModel]) -> HomeViewExpensesTodayCell.Model
-        func prepareAddExpenseViewModel() -> AddExpenseView.ViewModel
-        func prepareTransactionsHistoryViewModel() -> TransactionsHistoryView.ViewModel
-    }
+@MainActor
+protocol HomeViewModel: AnyObject, Observable {
+    var showPartnerSheet: Bool { get set }
+    var showingAddExpenseSheet: Bool { get set }
     
-    @Observable
-    @MainActor
-    class ViewModelImpl: ViewModel {
-        var showingAddExpenseSheet: Bool = false
-        
-        private let repository: ExpensesRepositoryProtocol
-        
-        init(repository: ExpensesRepositoryProtocol) {
-            self.repository = repository
-        }
-        
-        func addExpenseButtonTapped() {
-            showingAddExpenseSheet = true
-        }
+    func partnerButtonTapped()
+    func addExpenseButtonTapped()
+    func prepareTodayExpensesModel(expenses: [ExpenseDBModel]) -> HomeViewExpensesTodayCell.Model
+    func prepareAddExpenseViewModel() -> AddExpenseViewModel
+    func prepareTransactionsHistoryViewModel() -> HistoryViewModel
+}
 
-        func prepareTodayExpensesModel(expenses: [ExpenseDBModel]) -> HomeViewExpensesTodayCell.Model {
-            .init(
-                amount: expenses.reduce(.zero) { $0 + $1.amount },
-                currency: "mock",
-                timeStr: "mock"
-            )
-        }
-        
-        func prepareAddExpenseViewModel() -> AddExpenseView.ViewModel {
-            SharedContainer.resolve(AddExpenseView.ViewModel.self) ?? AddExpenseView.BaseViewModelImpl()
-        }
-        
-        func prepareTransactionsHistoryViewModel() -> TransactionsHistoryView.ViewModel {
-            SharedContainer.resolve(TransactionsHistoryView.ViewModel.self) ?? TransactionsHistoryView.ViewModelImpl(repository: repository)
-        }
+@Observable
+@MainActor
+class HomeViewModelImpl: HomeViewModel {
+    var showPartnerSheet: Bool = false
+    var showingAddExpenseSheet: Bool = false
+    
+    private let repository: ExpensesRepositoryProtocol
+    
+    init(repository: ExpensesRepositoryProtocol) {
+        self.repository = repository
     }
     
-    // MARK: - Mock ViewModel
-    @Observable
-    @MainActor
-    class MockViewModel: ViewModel {
-        var showingAddExpenseSheet: Bool = true
-        func addExpenseButtonTapped() { }
-        func prepareTodayExpensesModel(expenses: [ExpenseDBModel]) -> HomeViewExpensesTodayCell.Model {
-            .init(
-                amount: 1000.56,
-                currency: "mock",
-                timeStr: "mock"
-            )
-        }
-        func prepareAddExpenseViewModel() -> AddExpenseView.ViewModel {
-            return AddExpenseView.BaseViewModelImpl()
-        }
-        func prepareTransactionsHistoryViewModel() -> TransactionsHistoryView.ViewModel {
-            return TransactionsHistoryView.MockViewModel()
-        }
+    func partnerButtonTapped() {
+        showPartnerSheet = true
+    }
+    
+    func addExpenseButtonTapped() {
+        showingAddExpenseSheet = true
+    }
+    
+    func prepareTodayExpensesModel(expenses: [ExpenseDBModel]) -> HomeViewExpensesTodayCell.Model {
+        .init(
+            amount: expenses.reduce(.zero) { $0 + $1.amount },
+            currency: "mock",
+            timeStr: "mock"
+        )
+    }
+    
+    func prepareAddExpenseViewModel() -> AddExpenseViewModel {
+        SharedContainer.resolve(AddExpenseViewModel.self) ?? AddExpenseMockViewModel()
+    }
+    
+    func prepareTransactionsHistoryViewModel() -> HistoryViewModel {
+        SharedContainer.resolve(HistoryViewModel.self) ?? HistoryViewModelImpl(repository: repository)
+    }
+}
+
+// MARK: - Mock ViewModel
+@Observable
+@MainActor
+class HomeMockViewModel: HomeViewModel {
+    var showPartnerSheet: Bool = false
+    var showingAddExpenseSheet: Bool = true
+    func partnerButtonTapped() { }
+    func addExpenseButtonTapped() { }
+    func prepareTodayExpensesModel(expenses: [ExpenseDBModel]) -> HomeViewExpensesTodayCell.Model {
+        .init(
+            amount: 1000.56,
+            currency: "mock",
+            timeStr: "mock"
+        )
+    }
+    func prepareAddExpenseViewModel() -> AddExpenseViewModel {
+        return AddExpenseMockViewModel()
+    }
+    func prepareTransactionsHistoryViewModel() -> HistoryViewModel {
+        return HistoryMockViewModel()
     }
 }
