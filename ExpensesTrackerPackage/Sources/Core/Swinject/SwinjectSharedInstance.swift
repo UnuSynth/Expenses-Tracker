@@ -13,6 +13,7 @@ nonisolated(unsafe) public let SharedContainer = SwinjectSharedInstance.diContai
 public enum SwinjectSharedInstance {
     nonisolated(unsafe) public static let diContainer: Container = .init()
     
+    @MainActor
     public static func setupDIContainer(with modelContainer: ModelContainer) {
         diContainer.register(ModelContainer.self) { _ in
             modelContainer

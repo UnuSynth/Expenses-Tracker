@@ -8,16 +8,22 @@
 import Swinject
 import SwinjectAutoregistration
 
-class UIAssembly: Assembly {
+@MainActor
+final class UIAssembly: @preconcurrency Assembly {
     func assemble(container: Container) {
         container.autoregister(
-            HomeView.ViewModel.self,
-            initializer: HomeView.ViewModelImpl.init
+            HomeViewModel.self,
+            initializer: HomeViewModelImpl.init
         )
         
         container.autoregister(
-            AddExpenseView.ViewModel.self,
-            initializer: AddExpenseView.ViewModelImpl.init
+            AddExpenseViewModel.self,
+            initializer: AddExpenseViewModelImpl.init
+        )
+        
+        container.autoregister(
+            HistoryViewModel.self,
+            initializer: HistoryMockViewModel.init
         )
     }
 }

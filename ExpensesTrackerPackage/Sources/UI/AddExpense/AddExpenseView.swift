@@ -10,9 +10,9 @@ import SwiftUI
 struct AddExpenseView: View {
     @Environment(\.dismiss) var dismiss
     
-    @State var viewModel: ViewModel
+    @State var viewModel: AddExpenseViewModel
     
-    init(viewModel: ViewModel) {
+    init(viewModel: AddExpenseViewModel) {
         self.viewModel = viewModel
     }
     
@@ -90,8 +90,9 @@ struct AddExpenseView: View {
         VStack(alignment: .center) {
             Image(systemName: "creditcard.fill")
                 .resizable()
+                .scaledToFit()
                 .frame(width: 64, height: 48)
-                .scaledToFill()
+                .accessibilityHidden(true)
                 .padding(.bottom, 16)
             
             
@@ -107,6 +108,6 @@ struct AddExpenseView: View {
 
 #Preview {
     AddExpenseView(
-        viewModel: AddExpenseView.BaseViewModelImpl()
+        viewModel: AddExpenseMockViewModel()
     )
 }

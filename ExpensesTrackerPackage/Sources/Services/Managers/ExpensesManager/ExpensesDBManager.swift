@@ -11,8 +11,11 @@ import SwiftData
 @MainActor
 protocol ExpensesDBManagerProtocol {
     func saveExpense(_ expense: ExpenseModel)
+    
+    func fetchAllExpenses() throws -> [ExpenseModel]
 }
 
+@MainActor
 final class ExpensesDBManager: ExpensesDBManagerProtocol {
     private let dao: SwiftDataDAOProtocol
     
@@ -26,5 +29,10 @@ final class ExpensesDBManager: ExpensesDBManagerProtocol {
             model: ExpenseDBModel(model: expense),
             force: true
         )
+    }
+    
+    func fetchAllExpenses() throws -> [ExpenseModel] {
+        let dbModels: [ExpenseDBModel] = try dao.get(model: ExpenseDBModel.self)
+        return dbModels.map { $0.toEntity() }
     }
 }

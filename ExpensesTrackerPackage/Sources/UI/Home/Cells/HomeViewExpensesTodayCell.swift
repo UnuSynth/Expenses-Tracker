@@ -34,14 +34,15 @@ struct HomeViewExpensesTodayCell: View {
                     .foregroundStyle(.secondary)
                 Image(systemName: "chevron.forward")
                     .foregroundStyle(.secondary)
+                    .accessibilityHidden(true)
             }
             
         }
     }
     
     private var lowerSection: some View {
-        HStack() {
-            Text(model.amount.description)
+        HStack {
+            Text(model.amount, format: .number.precision(.fractionLength(2)))
                 .font(.title2.bold())
             Text(model.currency)
                 .font(.footnote.bold())
