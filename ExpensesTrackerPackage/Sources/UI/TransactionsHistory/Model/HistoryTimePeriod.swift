@@ -11,7 +11,6 @@ enum HistoryTimePeriod: String, CaseIterable {
     case day = "D"
     case week = "W"
     case month = "M"
-    case sixMonths = "6M"
     case year = "Y"
     
     var rangeLabel: String {
@@ -19,7 +18,6 @@ enum HistoryTimePeriod: String, CaseIterable {
         case .day: return "Today"
         case .week: return "This Week"
         case .month: return "This Month"
-        case .sixMonths: return "Last 6 Months"
         case .year: return "This Year"
         }
     }
@@ -29,7 +27,6 @@ enum HistoryTimePeriod: String, CaseIterable {
         case .day: return .hour
         case .week: return .day
         case .month: return .day
-        case .sixMonths: return .weekOfYear
         case .year: return .month
         }
     }
@@ -51,8 +48,6 @@ enum HistoryTimePeriod: String, CaseIterable {
             start = calendar.date(
                 from: calendar.dateComponents([.year, .month], from: now)
             ) ?? now
-        case .sixMonths:
-            start = calendar.date(byAdding: .month, value: -6, to: calendar.startOfDay(for: now)) ?? now
         case .year:
             start = calendar.date(byAdding: .month, value: -12, to: calendar.startOfDay(for: now)) ?? now
         }

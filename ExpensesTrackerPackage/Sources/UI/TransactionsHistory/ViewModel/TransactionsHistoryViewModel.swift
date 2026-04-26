@@ -37,8 +37,6 @@ extension HistoryViewModel {
                 return "\(selected.formatted(.dateTime.day().month())), \(selected.formatted(.dateTime.hour(.twoDigits(amPM: .abbreviated)))) - \(end.formatted(.dateTime.hour(.twoDigits(amPM: .abbreviated))))"
             case .week, .month:
                 return selected.formatted(.dateTime.day().month().year())
-            case .sixMonths:
-                return "\(selected.formatted(.dateTime.day())) - \(end.formatted(.dateTime.day().month().year()))"
             case .year:
                 return selected.formatted(.dateTime.month().year())
             }

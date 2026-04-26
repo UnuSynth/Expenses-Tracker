@@ -68,7 +68,6 @@ final class AddExpenseViewModelImpl: AddExpenseViewModel {
     }
 }
 
-// BaseViewModelImpl is used to mock real view model functionality
 @Observable
 @MainActor
 class AddExpenseMockViewModel: AddExpenseViewModel {

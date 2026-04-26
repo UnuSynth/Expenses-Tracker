@@ -8,9 +8,14 @@
 import SwiftUI
 
 struct AddExpenseView: View {
+    private enum FocusField {
+        case amount
+    }
+    
     @Environment(\.dismiss) var dismiss
     
     @State var viewModel: AddExpenseViewModel
+    @FocusState private var focus: FocusField?
     
     init(viewModel: AddExpenseViewModel) {
         self.viewModel = viewModel
@@ -19,6 +24,7 @@ struct AddExpenseView: View {
     var body: some View {
         NavigationStack {
             form
+                .task { focus = .amount }
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
                         Button(role: .close) {
@@ -58,6 +64,7 @@ struct AddExpenseView: View {
                         .foregroundStyle(.primary)
                         .keyboardType(.decimalPad)
                         .multilineTextAlignment(.trailing)
+                        .focused($focus, equals: .amount)
                 } label: {
                     Text("Amount")
                 }
