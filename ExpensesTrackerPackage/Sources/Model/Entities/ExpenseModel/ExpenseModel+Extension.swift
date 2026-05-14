@@ -19,13 +19,13 @@ extension ExpenseModel {
         var displayName: String {
             switch self {
             case .groceries:
-                return "Groceries 🛒"
+                return "Groceries"
             case .lunch:
-                return "Lunch 🍽️"
+                return "Lunch"
             case .clothes:
-                return "Clothes 👗"
+                return "Clothes"
             case .sport:
-                return "Sport 🏀"
+                return "Sport"
             }
         }
         
