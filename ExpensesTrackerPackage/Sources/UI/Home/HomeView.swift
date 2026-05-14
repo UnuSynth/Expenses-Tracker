@@ -15,36 +15,31 @@ private enum HomeDestination: Hashable {
 struct HomeView: View {
     @State private var viewModel: HomeViewModel
 
-    @Query private var todayExpenses: [ExpenseDBModel]
+    @Query(sort: \ExpenseDBModel.date, order: .reverse) private var expenses: [ExpenseDBModel]
     
     init(viewModel: HomeViewModel) {
-        let todayDates = Calendar.Period.day.dates
-        let startDate = todayDates.start
-        let endDate = todayDates.end
-        
-        _todayExpenses = Query(
-            filter: #Predicate<ExpenseDBModel> {
-                $0.date >= startDate && $0.date < endDate
-            }
-        )
         self.viewModel = viewModel
     }
 
     var body: some View {
         ScrollView {
             NavigationLink(value: HomeDestination.transactionsHistory) {
-                HomeViewExpensesTodayCell(
-                    model: viewModel.prepareTodayExpensesModel(expenses: todayExpenses)
+                SpendingHeroCard(
+                    model: viewModel.prepareSpendingHeroModel(expenses: expenses)
                 )
-                .background(
-                    .white,
-                    in: .rect(corners: .concentric(minimum: 16))
-                )
+                .padding([.horizontal, .top], 16)
             }
             .buttonStyle(.plain)
+            
+            HighlightsStrip(
+                transactions: Array(expenses.map { $0.toEntity() })
+            )
+            .padding(.top, 24)
         }
-        .navigationDestination(for: HomeDestination.self) { _ in
-            HistoryView(viewModel: viewModel.prepareTransactionsHistoryViewModel())
+        .navigationDestination(for: HomeDestination.self) { destination in
+            if case .transactionsHistory = destination {
+                HistoryView(viewModel: viewModel.prepareTransactionsHistoryViewModel())
+            }
         }
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
