@@ -8,7 +8,7 @@
 import Foundation
 
 extension Calendar {
-    enum Period {
+    enum Period: Hashable {
         case day
         case week
         case month

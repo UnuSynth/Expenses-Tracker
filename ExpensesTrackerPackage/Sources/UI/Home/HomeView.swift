@@ -24,10 +24,10 @@ struct HomeView: View {
     var body: some View {
         ScrollView {
             NavigationLink(value: HomeDestination.transactionsHistory) {
-                SpendingHeroCard(
-                    model: viewModel.prepareSpendingHeroModel(expenses: expenses)
-                )
-                .padding([.horizontal, .top], 16)
+//                SpendingHeroCard(
+//                    model: viewModel.prepareSpendingHeroModel(expenses: expenses)
+//                )
+//                .padding([.horizontal, .top], 16)
             }
             .buttonStyle(.plain)
             
