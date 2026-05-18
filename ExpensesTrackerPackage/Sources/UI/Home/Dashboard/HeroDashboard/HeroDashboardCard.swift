@@ -46,7 +46,7 @@ struct HeroDashboardCard: View {
             Text(model.total.formatted(currency: "USD"))
             
             SpendingProportionalBar(
-                segments: model.categories.map { $0.toSpendingBarSegment() },
+                segments: model.chips.map { $0.toSpendingBarSegment() },
                 total: model.total
             )
             .frame(height: 10)

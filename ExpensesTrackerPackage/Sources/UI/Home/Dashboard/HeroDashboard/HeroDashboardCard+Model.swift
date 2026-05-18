@@ -4,12 +4,16 @@
 //
 //  Created by Amantay Abdyshev on 18/2/26.
 //
+
+import Foundation
+
 struct HeroDashboardModel {
     let dateTitle: String
     let total: Double
-    let categories: [Category]
+    let chips: [ChipModel]
     
-    struct Category {
+    struct ChipModel: Identifiable {
+        let id = UUID()
         let total: Double
         let category: ExpenseModel.Category
         
