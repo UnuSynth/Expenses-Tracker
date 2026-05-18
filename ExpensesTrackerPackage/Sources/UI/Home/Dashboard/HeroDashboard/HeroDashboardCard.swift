@@ -50,6 +50,8 @@ struct HeroDashboardCard: View {
                 total: model.total
             )
             .frame(height: 10)
+            
+            ExpenseCategoryGrid(chips: model.chips)
         }
         .sheet(isPresented: $showDateRangePicker) {
             DateRangePicker(
@@ -71,16 +73,16 @@ struct HeroDashboardCard: View {
     let model = HeroDashboardModel(
         dateTitle: "Today",
         total: 500,
-        categories: [
-            HeroDashboardModel.Category(
+        chips: [
+            HeroDashboardModel.ChipModel(
                 total: 200,
                 category: .groceries
             ),
-            HeroDashboardModel.Category(
+            HeroDashboardModel.ChipModel(
                 total: 150,
                 category: .lunch
             ),
-            HeroDashboardModel.Category(
+            HeroDashboardModel.ChipModel(
                 total: 150,
                 category: .clothes
             )
