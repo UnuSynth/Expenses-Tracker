@@ -13,10 +13,10 @@ struct HeroDashboardCard: View {
     @State private var showDateRangePicker = false
     @State private var selectedPeriod: Calendar.Period = .day
     
-    var cases: [Calendar.Period] { [.day, .week, .month, .year] }
+    var availablePickerPeriods: [Calendar.Period] { [.day, .week, .month, .year] }
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 16) {
             HStack {
                 Text(model.dateTitle.uppercased())
                     .font(.headline.bold())
@@ -26,7 +26,7 @@ struct HeroDashboardCard: View {
                 
                 Menu {
                     Picker("", selection: $selectedPeriod) {
-                        ForEach(cases, id: \.self) { period in
+                        ForEach(availablePickerPeriods, id: \.self) { period in
                             Text(period.description)
                         }
                     }

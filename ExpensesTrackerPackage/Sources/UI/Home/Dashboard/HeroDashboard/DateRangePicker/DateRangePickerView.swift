@@ -54,7 +54,7 @@ struct DateRangePicker: View {
         NavigationStack {
             MultiDatePicker("", selection: datesBinding, in: bounds ?? defaultBounds)
                 .padding()
-                .navigationTitle("Custom Period")
+                .navigationTitle("\(startDate?.formatted(date: .abbreviated, time: .omitted) ?? "") - \(endDate?.formatted(date: .abbreviated, time: .omitted) ?? "")")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
