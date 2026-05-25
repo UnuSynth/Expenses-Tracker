@@ -40,7 +40,10 @@ struct SpendingProportionalBar: View {
                     let isLast = index == segments.count - 1
                     
                     ZStack {
-                        if isFirst {
+                        if isFirst, isLast {
+                            RoundedRectangle(cornerRadius: cornerRadius)
+                                .fill(segment.color)
+                        } else if isFirst {
                             // Round left corners only
                             UnevenRoundedRectangle(
                                 topLeadingRadius: cornerRadius,

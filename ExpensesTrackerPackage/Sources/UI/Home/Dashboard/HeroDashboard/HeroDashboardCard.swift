@@ -18,7 +18,7 @@ struct HeroDashboardCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
-                Text(model.dateTitle.uppercased())
+                Text(selectedPeriod.description.uppercased())
                     .font(.headline.bold())
                     .foregroundStyle(.secondary)
                 
@@ -36,14 +36,21 @@ struct HeroDashboardCard: View {
                     }
                 } label: {
                     Button(selectedPeriod.datesDescription, systemImage: selectedPeriod.systemImage) { }
-                        .padding(8)
                 }
-                .font(.headline)
+                .font(.callout.weight(.medium))
                 .foregroundStyle(.indigo)
+                .padding(.vertical, 8)
+                .padding(.horizontal, 12)
+                .background(.indigo.opacity(0.15), in: .capsule)
                 .glassEffect()
             }
             
-            Text(model.total.formatted(currency: "USD"))
+            TotalMoney(
+                money: .init(
+                    amount: model.total,
+                    currency: .usd
+                )
+            )
             
             SpendingProportionalBar(
                 segments: model.chips.map { $0.toSpendingBarSegment() },
@@ -53,6 +60,7 @@ struct HeroDashboardCard: View {
             
             ExpenseCategoryGrid(chips: model.chips)
         }
+        .padding(16)
         .sheet(isPresented: $showDateRangePicker) {
             DateRangePicker(
                 selectedPeriod: $selectedPeriod,
@@ -71,19 +79,17 @@ struct HeroDashboardCard: View {
 
 #Preview {
     let model = HeroDashboardModel(
-        dateTitle: "Today",
-        total: 500,
         chips: [
             HeroDashboardModel.ChipModel(
-                total: 200,
+                amount: 200,
                 category: .groceries
             ),
             HeroDashboardModel.ChipModel(
-                total: 150,
+                amount: 150,
                 category: .lunch
             ),
             HeroDashboardModel.ChipModel(
-                total: 150,
+                amount: 150,
                 category: .clothes
             )
         ]

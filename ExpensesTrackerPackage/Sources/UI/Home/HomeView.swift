@@ -23,13 +23,14 @@ struct HomeView: View {
 
     var body: some View {
         ScrollView {
-            NavigationLink(value: HomeDestination.transactionsHistory) {
-//                SpendingHeroCard(
-//                    model: viewModel.prepareSpendingHeroModel(expenses: expenses)
-//                )
-//                .padding([.horizontal, .top], 16)
-            }
-            .buttonStyle(.plain)
+            HeroDashboardCard(
+                model: viewModel.spendingHeroModel
+            )
+            .background(
+                .white,
+                in: ConcentricRectangle(corners: .concentric(minimum: 24))
+            )
+            .padding(16)
             
             HighlightsStrip(
                 transactions: Array(expenses.map { $0.toEntity() })
@@ -68,6 +69,10 @@ struct HomeView: View {
             .presentationDetents([.large])
             .presentationDragIndicator(.hidden)
         }
+        .onChange(of: expenses, initial: true) {
+            viewModel.prepareSpendingHeroModel(expenses: expenses)
+        }
+        .background(.background.secondary)
     }
 }
 

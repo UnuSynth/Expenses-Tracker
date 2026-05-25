@@ -27,7 +27,7 @@ extension Calendar.Period {
         case .year:
             "This year"
         case .custom:
-            "Custom period"
+            "Period"
         }
     }
 
@@ -37,8 +37,8 @@ extension Calendar.Period {
             return "Today"
         case .month:
             return dates.start.formatted(.dateTime.month())
-        case .week, .custom:
-            guard !dates.start.matches(dates.end, by: .year) else { fallthrough }
+        case .week where !dates.start.matches(dates.end, by: .year),
+                .custom where !dates.start.matches(dates.end, by: .year):
             return "\(dates.start.formatted(.dateTime.day().month().year())) - \(dates.end.formatted(.dateTime.day().month().year()))"
         default:
             return "\(dates.start.formatted(.dateTime.day().month())) - \(dates.end.formatted(.dateTime.day().month().year()))"
