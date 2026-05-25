@@ -12,15 +12,22 @@ struct HeroDashboardCard: View {
     
     @State private var showDateRangePicker = false
     @State private var selectedPeriod: Calendar.Period = .day
+    @State private var selectedCategory: ExpenseModel.Category?
     
     var availablePickerPeriods: [Calendar.Period] { [.day, .week, .month, .year] }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 8) {
             HStack {
-                Text(selectedPeriod.description.uppercased())
-                    .font(.headline.bold())
-                    .foregroundStyle(.secondary)
+                if let selectedCategory {
+                    Label(selectedCategory.displayName.uppercased(), systemImage: selectedCategory.icon)
+                        .font(.headline.bold())
+                        .foregroundStyle(selectedCategory.color)
+                } else {
+                    Text(selectedPeriod.description.uppercased())
+                        .font(.headline.bold())
+                        .foregroundStyle(.secondary)
+                }
                 
                 Spacer()
                 
@@ -47,18 +54,24 @@ struct HeroDashboardCard: View {
             
             TotalMoney(
                 money: .init(
-                    amount: model.total,
+                    amount: model.chips.first { $0.category == selectedCategory }?.amount ?? model.total,
                     currency: .usd
                 )
             )
+            .contentTransition(.numericText())
             
             SpendingProportionalBar(
                 segments: model.chips.map { $0.toSpendingBarSegment() },
-                total: model.total
+                total: model.total,
+                selectedIndex: model.chips.firstIndex(where: { $0.category == selectedCategory })
             )
             .frame(height: 10)
             
             ExpenseCategoryGrid(chips: model.chips)
+                .onCategorySelect { category in
+                    selectedCategory = category
+                }
+                .padding(.top, 8)
         }
         .padding(16)
         .sheet(isPresented: $showDateRangePicker) {
@@ -70,10 +83,21 @@ struct HeroDashboardCard: View {
             )
             .presentationDetents([.medium])
         }
+        .preference(key: SelectedCategoryPreferenceKey.self, value: selectedCategory)
+        .animation(.easeInOut(duration: 0.3), value: selectedCategory)
+        .background(.white, in: ConcentricRectangle(corners: .concentric(minimum: 24)))
     }
     
     init(model: HeroDashboardModel) {
         self.model = model
+    }
+}
+
+extension HeroDashboardCard {
+    func onCategorySelect(action: @escaping (ExpenseModel.Category?) -> Void) -> some View {
+        onPreferenceChange(SelectedCategoryPreferenceKey.self) { category in
+            action(category)
+        }
     }
 }
 

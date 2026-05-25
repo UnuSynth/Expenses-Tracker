@@ -17,28 +17,31 @@ struct SpendingBarSegment: Identifiable {
 struct SpendingProportionalBar: View {
     private let segments: [SpendingBarSegment]
     private let total: Double
-    
-    private let gap: Double = 2
+    private let selectedIndex: Int?
+
+    private let gap: Double = 1
     private var totalGap: Double {
         gap * Double(segments.count - 1)
     }
-    
-    init(segments: [SpendingBarSegment], total: Double) {
+
+    init(segments: [SpendingBarSegment], total: Double, selectedIndex: Int? = nil) {
         self.segments = segments
         self.total = total
+        self.selectedIndex = selectedIndex
     }
-    
+
     var body: some View {
         GeometryReader { geo in
             let availableWidth = geo.size.width - totalGap
             let cornerRadius = geo.size.height / 2
-            
+
             HStack(spacing: gap) {
                 ForEach(Array(segments.enumerated()), id: \.element.id) { index, segment in
                     let width = availableWidth * (segment.value / total)
                     let isFirst = index == 0
                     let isLast = index == segments.count - 1
-                    
+                    let opacity: Double = selectedIndex == nil || selectedIndex == index ? 1 : 0.25
+
                     ZStack {
                         if isFirst, isLast {
                             RoundedRectangle(cornerRadius: cornerRadius)
@@ -63,6 +66,8 @@ struct SpendingProportionalBar: View {
                                 .fill(segment.color)
                         }
                     }
+                    .opacity(opacity)
+                    .animation(.easeInOut(duration: 2), value: selectedIndex)
                     .frame(
                         width: width,
                         height: geo.size.height

@@ -21,7 +21,7 @@ class HomeMockViewModel: HomeViewModel {
     private let mockExpenses: [ExpenseDBModel] = {
         let calendar = Calendar.current
         let now = Date.now
-        let categories: [ExpenseModel.Category] = [.groceries, .lunch, .clothes, .sport]
+        let categories: [ExpenseModel.Category] = [.groceries, .lunch, .clothes, .sport, .transport, .entertainment, .health, .utilities]
         let amounts: [Double] = [
             1250.43, 480.13, 3200.75, 890.20, 1560.55,
             210.41, 6750.90, 990.35, 430.60, 1880.15,

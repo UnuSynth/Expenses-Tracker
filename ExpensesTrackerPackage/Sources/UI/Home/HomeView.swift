@@ -8,6 +8,8 @@
 import SwiftUI
 import SwiftData
 
+import Charts
+
 private enum HomeDestination: Hashable {
     case transactionsHistory
 }
@@ -26,17 +28,8 @@ struct HomeView: View {
             HeroDashboardCard(
                 model: viewModel.spendingHeroModel
             )
-            .background(
-                .white,
-                in: ConcentricRectangle(corners: .concentric(minimum: 24))
-            )
-            .padding(16)
-            
-            HighlightsStrip(
-                transactions: Array(expenses.map { $0.toEntity() })
-            )
-            .padding(.top, 24)
         }
+        .padding(.horizontal, 16)
         .navigationDestination(for: HomeDestination.self) { destination in
             if case .transactionsHistory = destination {
                 HistoryView(viewModel: viewModel.prepareTransactionsHistoryViewModel())
