@@ -11,12 +11,28 @@ struct HeroDashboardCard: View {
     private let model: HeroDashboardModel
     
     @State private var showDateRangePicker = false
-    @State private var selectedPeriod: Calendar.Period = .day
+    @Binding private var selectedPeriod: Calendar.Period
     @State private var selectedCategory: ExpenseModel.Category?
     
     var availablePickerPeriods: [Calendar.Period] { [.day, .week, .month, .year] }
     
     var body: some View {
+        if #available(iOS 26.0, *) {
+            content
+                .background(
+                    .white,
+                    in: ConcentricRectangle(corners: .concentric(minimum: 24))
+                )
+        } else {
+            content
+                .background(
+                    .white,
+                    in: RoundedRectangle(cornerRadius: 24)
+                )
+        }
+    }
+    
+    private var content: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 if let selectedCategory {
@@ -30,26 +46,12 @@ struct HeroDashboardCard: View {
                 }
                 
                 Spacer()
-                
-                Menu {
-                    Picker("", selection: $selectedPeriod) {
-                        ForEach(availablePickerPeriods, id: \.self) { period in
-                            Text(period.description)
-                        }
-                    }
-                    
-                    Button("Custom period") {
-                        showDateRangePicker = true
-                    }
-                } label: {
-                    Button(selectedPeriod.datesDescription, systemImage: selectedPeriod.systemImage) { }
+                if #available(iOS 26.0, *) {
+                    upperMenu
+                        .glassEffect()
+                } else {
+                    upperMenu
                 }
-                .font(.callout.weight(.medium))
-                .foregroundStyle(.indigo)
-                .padding(.vertical, 8)
-                .padding(.horizontal, 12)
-                .background(.indigo.opacity(0.15), in: .capsule)
-                .glassEffect()
             }
             
             TotalMoney(
@@ -85,10 +87,31 @@ struct HeroDashboardCard: View {
         }
         .preference(key: SelectedCategoryPreferenceKey.self, value: selectedCategory)
         .animation(.easeInOut(duration: 0.3), value: selectedCategory)
-        .background(.white, in: ConcentricRectangle(corners: .concentric(minimum: 24)))
     }
     
-    init(model: HeroDashboardModel) {
+    private var upperMenu: some View {
+        Menu {
+            Picker("", selection: $selectedPeriod) {
+                ForEach(availablePickerPeriods, id: \.self) { period in
+                    Text(period.description)
+                }
+            }
+            
+            Button("Custom period") {
+                showDateRangePicker = true
+            }
+        } label: {
+            Button(selectedPeriod.datesDescription, systemImage: selectedPeriod.systemImage) { }
+        }
+        .font(.footnote.weight(.medium))
+        .foregroundStyle(.indigo)
+        .padding(.vertical, 8)
+        .padding(.horizontal, 12)
+        .background(.indigo.opacity(0.15), in: .capsule)
+    }
+    
+    init(selectedPeriod: Binding<Calendar.Period>, model: HeroDashboardModel) {
+        self._selectedPeriod = selectedPeriod
         self.model = model
     }
 }
@@ -102,6 +125,8 @@ extension HeroDashboardCard {
 }
 
 #Preview {
+    @Previewable @State var selectedPeriod: Calendar.Period = .day
+    
     let model = HeroDashboardModel(
         chips: [
             HeroDashboardModel.ChipModel(
@@ -118,6 +143,9 @@ extension HeroDashboardCard {
             )
         ]
     )
-    HeroDashboardCard(model: model)
+    HeroDashboardCard(
+        selectedPeriod: $selectedPeriod,
+        model: model
+    )
         .padding(16)
 }

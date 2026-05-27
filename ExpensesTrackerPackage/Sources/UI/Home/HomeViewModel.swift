@@ -9,22 +9,25 @@ import Foundation
 
 @MainActor
 protocol HomeViewModel: AnyObject, Observable {
+    var selectedPeriod: Calendar.Period { get set }
     var spendingHeroModel: HeroDashboardModel { get }
     var showPartnerSheet: Bool { get set }
     var showingAddExpenseSheet: Bool { get set }
-    
+    var searchText: String { get set }
+    var selectedCategoryFilter: ExpenseModel.Category? { get set }
+    var groupedExpenses: [(date: Date, items: [ExpenseDBModel], total: Double)] { get }
+
     func partnerButtonTapped()
     func addExpenseButtonTapped()
-    func prepareSpendingHeroModel(expenses: [ExpenseDBModel])
+    func updateExpenses(_ expenses: [ExpenseDBModel])
     func prepareAddExpenseViewModel() -> AddExpenseViewModel
-    func prepareTransactionsHistoryViewModel() -> HistoryViewModel
 }
 
 extension HomeViewModel {
     func partnerButtonTapped() {
         showPartnerSheet = true
     }
-    
+
     func addExpenseButtonTapped() {
         showingAddExpenseSheet = true
     }

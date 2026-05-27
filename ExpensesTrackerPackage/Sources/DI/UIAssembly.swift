@@ -13,17 +13,12 @@ final class UIAssembly: @preconcurrency Assembly {
     func assemble(container: Container) {
         container.autoregister(
             HomeViewModel.self,
-            initializer: HomeMockViewModel.init
+            initializer: HomeViewModelImpl.init
         )
         
         container.autoregister(
             AddExpenseViewModel.self,
             initializer: AddExpenseViewModelImpl.init
-        )
-        
-        container.autoregister(
-            HistoryViewModel.self,
-            initializer: HistoryMockViewModel.init
         )
     }
 }

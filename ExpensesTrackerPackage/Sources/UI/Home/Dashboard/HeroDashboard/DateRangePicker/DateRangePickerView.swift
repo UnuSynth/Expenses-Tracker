@@ -58,11 +58,24 @@ struct DateRangePicker: View {
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
-                        Button(role: .close) { dismiss() }
+                        if #available(iOS 26.0, *) {
+                            Button(role: .close) { dismiss() }
+                        } else {
+                            Button("Close", systemImage: "xmark") { dismiss() }
+                        }
                     }
                     ToolbarItem(placement: .confirmationAction) {
-                        Button(role: .confirm) { apply() }
+                        if #available(iOS 26.0, *) {
+                            Button(role: .confirm, action: apply)
+                                .disabled(datesBinding.wrappedValue.isEmpty)
+                        } else {
+                            Button(
+                                "Done",
+                                systemImage: "checkmark",
+                                action: apply
+                            )
                             .disabled(datesBinding.wrappedValue.isEmpty)
+                        }
                     }
                 }
         }
