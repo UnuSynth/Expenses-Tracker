@@ -8,7 +8,7 @@
 import Foundation
 
 extension Calendar {
-    enum Period {
+    enum Period: Hashable {
         case day
         case week
         case month
@@ -45,7 +45,7 @@ extension Calendar {
                         from: .now
                     )
                 ) ?? .now // it will never be nil
-                return (startOfYear, .now)
+                return (startOfYear, endOfToday)
             case .custom(let start, let end):
                 return (start, end)
             }
@@ -53,6 +53,10 @@ extension Calendar {
     }
     
     func endOfDay(for date: Date) -> Date {
-        dateInterval(of: .day, for: date)?.end ?? date
+        dateInterval(
+            of: .day,
+            for: date
+        )?.end.addingTimeInterval(-0.01) // 00:00:00.00 (tomorrow) -> 23:59:59.99 (today)
+        ?? date
     }
 }

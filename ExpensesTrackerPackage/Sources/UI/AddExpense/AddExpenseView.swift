@@ -27,17 +27,37 @@ struct AddExpenseView: View {
                 .task { focus = .amount }
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
-                        Button(role: .close) {
-                            dismiss()
+                        if #available(iOS 26.0, *) {
+                            Button(role: .close) {
+                                dismiss()
+                            }
+                        } else {
+                            Button("Close", systemImage: "xmark") {
+                                dismiss()
+                            }
                         }
                     }
                     
                     ToolbarItem(placement: .confirmationAction) {
-                        Button(role: .confirm) {
+                        let confirmAction = {
                             viewModel.saveExpense()
                             dismiss()
                         }
-                        .disabled(!viewModel.isValid)
+                        
+                        if #available(iOS 26.0, *) {
+                            Button(
+                                role: .confirm,
+                                action: confirmAction
+                            )
+                            .disabled(!viewModel.isValid)
+                        } else {
+                            Button(
+                                "Done",
+                                systemImage: "checkmark",
+                                action: confirmAction
+                            )
+                            .disabled(!viewModel.isValid)
+                        }
                     }
                 }
         }

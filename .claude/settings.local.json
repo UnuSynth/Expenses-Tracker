@@ -3,7 +3,10 @@
     "allow": [
       "mcp__ide__getDiagnostics",
       "Bash(tar *)",
-      "Bash(gh label *)"
+      "Bash(gh label *)",
+      "Bash(xcodebuild -scheme \"Expenses Tracker\" -destination \"platform=iOS Simulator,name=iPhone 16\" build)",
+      "Bash(xcodebuild -list)",
+      "Bash(xcodebuild -target ExpensesTracker -destination \"platform=iOS Simulator,name=iPhone 16\" build)"
     ]
   },
   "spinnerTipsEnabled": false

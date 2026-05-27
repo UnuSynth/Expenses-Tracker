@@ -39,6 +39,9 @@ extension Date {
         case .month:
             return calendar.dateComponents([.year, .month], from: self)
                 == calendar.dateComponents([.year, .month], from: other)
+        case .year:
+            return calendar.dateComponents([.year], from: self)
+                == calendar.dateComponents([.year], from: other)
         default:
             return calendar.startOfDay(for: self) == calendar.startOfDay(for: other)
         }

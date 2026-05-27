@@ -20,10 +20,5 @@ final class UIAssembly: @preconcurrency Assembly {
             AddExpenseViewModel.self,
             initializer: AddExpenseViewModelImpl.init
         )
-        
-        container.autoregister(
-            HistoryViewModel.self,
-            initializer: HistoryMockViewModel.init
-        )
     }
 }
