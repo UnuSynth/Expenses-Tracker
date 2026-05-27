@@ -23,11 +23,6 @@ extension String {
         }
     }
     
-    static func getSymbol(for code: String) -> String? {
-        let locale = NSLocale(localeIdentifier: code)
-        return locale.displayName(forKey: NSLocale.Key.currencySymbol, value: code)
-    }
-    
     func toDouble() -> Double? {
         guard last != "," else { return nil } // ensure that user finished number input
         
