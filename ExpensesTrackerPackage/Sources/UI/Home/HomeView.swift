@@ -48,7 +48,7 @@ struct HomeView: View {
                                 }
                             }
                             .background(.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .clipShape(RoundedRectangle(cornerRadius: 20))
                             .padding(.bottom, 8)
                         } header: {
                             ExpenseListSectionHeader(
