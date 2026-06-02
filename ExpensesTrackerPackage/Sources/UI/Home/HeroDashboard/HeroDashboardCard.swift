@@ -37,11 +37,13 @@ struct HeroDashboardCard: View {
             HStack {
                 if let selectedCategory {
                     Label(selectedCategory.displayName.uppercased(), systemImage: selectedCategory.icon)
-                        .font(.headline.bold())
+                        .font(.footnote.bold())
                         .foregroundStyle(selectedCategory.color)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
                 } else {
                     Text(selectedPeriod.description.uppercased())
-                        .font(.headline.bold())
+                        .font(.footnote.bold())
                         .foregroundStyle(.secondary)
                 }
                 
@@ -57,7 +59,7 @@ struct HeroDashboardCard: View {
             TotalMoney(
                 money: .init(
                     amount: model.chips.first { $0.category == selectedCategory }?.amount ?? model.total,
-                    currency: .usd
+                    currency: .kgs
                 )
             )
             .contentTransition(.numericText())
@@ -108,6 +110,7 @@ struct HeroDashboardCard: View {
         .padding(.vertical, 8)
         .padding(.horizontal, 12)
         .background(.indigo.opacity(0.15), in: .capsule)
+        .fixedSize(horizontal: true, vertical: false)
     }
     
     init(selectedPeriod: Binding<Calendar.Period>, model: HeroDashboardModel) {

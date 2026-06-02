@@ -74,8 +74,14 @@ class HomeViewModelImpl: HomeViewModel {
     private var filteredByDateExpenses: [ExpenseDBModel] = []
     private(set) var groupedExpenses: [(date: Date, items: [ExpenseDBModel], total: Double)] = []
 
+    private let repository: ExpensesRepositoryProtocol
+
     private var displayCurrency: String {
         "KGS"
+    }
+
+    init(repository: ExpensesRepositoryProtocol) {
+        self.repository = repository
     }
 
     func updateExpenses(_ expenses: [ExpenseDBModel]) {
@@ -87,6 +93,10 @@ class HomeViewModelImpl: HomeViewModel {
 
     func prepareAddExpenseViewModel() -> AddExpenseViewModel {
         SharedContainer.resolve(AddExpenseViewModel.self) ?? AddExpenseMockViewModel()
+    }
+
+    func deleteExpense(_ expense: ExpenseDBModel) {
+        repository.delete(expenseID: expense.id)
     }
     
     private func recomputeFilteredByDateExpenses() {

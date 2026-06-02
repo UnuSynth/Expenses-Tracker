@@ -12,8 +12,9 @@ public struct ExpensesTrackerViewer: View {
     
     public var body: some View {
         NavigationStack {
-            HomeView(viewModel: SharedContainer.resolve(HomeViewModel.self) ?? HomeViewModelImpl())
+            HomeView(viewModel: SharedContainer.resolve(HomeViewModel.self) ?? HomeViewModelImpl(repository: ExpensesRepositoryMock()))
                 .navigationTitle("Expenses Tracker AI")
+                .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

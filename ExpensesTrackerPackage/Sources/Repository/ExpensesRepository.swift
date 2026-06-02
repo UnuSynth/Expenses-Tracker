@@ -13,6 +13,9 @@ protocol ExpensesRepositoryProtocol {
     
     @MainActor
     func fetchAll() throws -> [ExpenseModel]
+    
+    @MainActor
+    func delete(expenseID: UUID)
 }
 
 final class ExpensesRepository: ExpensesRepositoryProtocol {
@@ -29,9 +32,14 @@ final class ExpensesRepository: ExpensesRepositoryProtocol {
     func fetchAll() throws -> [ExpenseModel] {
         try expensesDBManager.fetchAllExpenses()
     }
+    
+    func delete(expenseID: UUID) {
+        expensesDBManager.deleteExpense(withID: expenseID)
+    }
 }
 
 final class ExpensesRepositoryMock: ExpensesRepositoryProtocol {
     func save(expense: ExpenseModel) { }
     func fetchAll() throws -> [ExpenseModel] { [] }
+    func delete(expenseID: UUID) { }
 }

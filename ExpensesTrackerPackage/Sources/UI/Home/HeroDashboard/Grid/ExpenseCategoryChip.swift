@@ -28,7 +28,7 @@ struct ExpenseCategoryChip: View {
                     .lineLimit(1)
                     .padding(.leading, 4)
 
-                Text(chipModel.amount.formatted(currency: "USD"))
+                Text(chipModel.amount.formatted(currency: Currency.kgs.rawValue.uppercased()))
                     .font(.footnote.bold())
                     .foregroundStyle(isSelected ? .white.opacity(0.75) : .secondary)
                     .lineLimit(1)
