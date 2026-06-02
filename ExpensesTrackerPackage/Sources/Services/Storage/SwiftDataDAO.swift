@@ -16,6 +16,7 @@ protocol SwiftDataDAOProtocol {
         predicate: Predicate<T>?,
         sortBy: [SortDescriptor<T>]
     ) throws -> [T]
+    func delete<T: PersistentModel>(model: T)
 }
 
 extension SwiftDataDAOProtocol {
@@ -64,5 +65,10 @@ final class SwiftDataDAO: SwiftDataDAOProtocol {
                 sortBy: sortBy
             )
         )
+    }
+    
+    func delete<T: PersistentModel>(model: T) {
+        context.delete(model)
+        try? context.save()
     }
 }

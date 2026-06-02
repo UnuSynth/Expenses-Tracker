@@ -9,9 +9,9 @@ import Foundation
 
 extension BinaryFloatingPoint {
     // incorrect unicode symbol render fix
-    func formatted(currency: String) -> String {
-        guard currency == "KGS" else {
-            return self.formatted(.currency(code: currency)
+    func formatted(currency: Currency) -> String {
+        guard case .kgs = currency else {
+            return self.formatted(.currency(code: currency.rawValue.uppercased())
                 .locale(Locale(identifier: "en_US"))
                 .presentation(.narrow))
         }

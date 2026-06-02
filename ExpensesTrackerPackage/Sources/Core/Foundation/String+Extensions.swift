@@ -8,6 +8,8 @@
 import Foundation
 
 extension String {
+    static let decimalSeparator = "."
+    
     static let som = "c̲"
     
     static func currencySymbol(for code: String) -> String {

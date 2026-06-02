@@ -30,6 +30,7 @@ extension AddExpenseViewModel {
     var isValid: Bool {
         amountString.isEmpty == false
         && amountDouble != nil
+        && amountDouble != 0
     }
     
     var datesRange: ClosedRange<Date> {

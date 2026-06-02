@@ -13,7 +13,7 @@ struct ExpenseCategoryGrid: View {
     @State private var selectedCategory: ExpenseModel.Category?
     @State private var isExpanded = false
 
-    private let collapsedLimit = 4
+    private let collapsedLimit = UIApplication.screenHeight > 667 ? 3 : 1
 
     private var needsToggle: Bool {
         chips.count > collapsedLimit
@@ -32,7 +32,7 @@ struct ExpenseCategoryGrid: View {
                     isSelected: selectedCategory == chipModel.category,
                     backgroundOpacity: backgroundOpacity(for: chipModel.category),
                     onTap: {
-                        withAnimation {
+                        withAnimation(.bouncy) {
                             toggleSelection(chipModel.category)
                         }
                     }

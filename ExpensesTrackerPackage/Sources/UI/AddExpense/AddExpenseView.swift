@@ -8,14 +8,10 @@
 import SwiftUI
 
 struct AddExpenseView: View {
-    private enum FocusField {
-        case amount
-    }
-    
     @Environment(\.dismiss) var dismiss
     
     @State var viewModel: AddExpenseViewModel
-    @FocusState private var focus: FocusField?
+    @State private var showCalendar = false
     
     init(viewModel: AddExpenseViewModel) {
         self.viewModel = viewModel
@@ -23,94 +19,93 @@ struct AddExpenseView: View {
     
     var body: some View {
         NavigationStack {
-            form
-                .task { focus = .amount }
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        if #available(iOS 26.0, *) {
-                            Button(role: .close) {
-                                dismiss()
-                            }
-                        } else {
-                            Button("Close", systemImage: "xmark") {
-                                dismiss()
-                            }
-                        }
-                    }
-                    
-                    ToolbarItem(placement: .confirmationAction) {
-                        let confirmAction = {
-                            viewModel.saveExpense()
+            VStack(alignment: .center, spacing: 8) {
+                Spacer()
+                Button("\(viewModel.date.relativeLabel), \(viewModel.date.formatted(.dateTime.hour().minute()))", systemImage: "calendar") {
+                    showCalendar = true
+                }
+                .popover(
+                    isPresented: $showCalendar,
+                    arrowEdge: .top
+                ) {
+                    DatePicker(
+                        "",
+                        selection: $viewModel.date,
+                        in: viewModel.datesRange
+                    )
+                    .datePickerStyle(.wheel)
+                    .presentationCompactAdaptation(.popover)
+                }
+                .font(.subheadline.bold())
+                .foregroundStyle(.indigo)
+                .padding(.vertical, 8)
+                .padding(.horizontal, 12)
+                .modifier(CapsuleButtonBehaviorModifier())
+                
+                CurrencyTextField(
+                    currency: .current,
+                    text: $viewModel.amountString
+                )
+                
+                CategorySelector(
+                    categories: viewModel.categories,
+                    selection: $viewModel.category
+                )
+                
+                HStack(spacing: 6) {
+                    Image(systemName: "pencil")
+                    TextField("Add a note", text: $viewModel.notes)
+                        .lineLimit(1...2)
+                        .fixedSize(horizontal: true, vertical: false)
+                        .font(.subheadline.bold())
+                        .foregroundStyle(.secondary)
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 12)
+                        .modifier(CapsuleButtonBehaviorModifier())
+                }
+                
+                NumberPad(
+                    text: $viewModel.amountString
+                )
+                
+                Spacer()
+            }
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    if #available(iOS 26.0, *) {
+                        Button(role: .close) {
                             dismiss()
                         }
-                        
-                        if #available(iOS 26.0, *) {
-                            Button(
-                                role: .confirm,
-                                action: confirmAction
-                            )
-                            .disabled(!viewModel.isValid)
-                        } else {
-                            Button(
-                                "Done",
-                                systemImage: "checkmark",
-                                action: confirmAction
-                            )
-                            .disabled(!viewModel.isValid)
+                    } else {
+                        Button("Close", systemImage: "xmark") {
+                            dismiss()
                         }
                     }
                 }
-        }
-    }
-    
-    private var form: some View {
-        Form {
-            Section {
-                DatePicker(
-                    "Date",
-                    selection: $viewModel.date,
-                    in: viewModel.datesRange,
-                    displayedComponents: .date
-                )
                 
-                DatePicker(
-                    "Time",
-                    selection: $viewModel.date,
-                    displayedComponents: .hourAndMinute
-                )
-                
-                LabeledContent {
-                    TextField("", text: $viewModel.amountString)
-                        .foregroundStyle(.primary)
-                        .keyboardType(.decimalPad)
-                        .multilineTextAlignment(.trailing)
-                        .focused($focus, equals: .amount)
-                } label: {
-                    Text("Amount")
-                }
-                
-                Picker("Category", selection: $viewModel.category) {
-                    ForEach(viewModel.categories) { category in
-                        Text(category.displayName)
-                            .tag(category)
+                ToolbarItem(placement: .confirmationAction) {
+                    let confirmAction = {
+                        viewModel.saveExpense()
+                        dismiss()
+                    }
+                    
+                    if #available(iOS 26.0, *) {
+                        Button(
+                            role: .confirm,
+                            action: confirmAction
+                        )
+                        .disabled(!viewModel.isValid)
+                    } else {
+                        Button(
+                            "Done",
+                            systemImage: "checkmark",
+                            action: confirmAction
+                        )
+                        .disabled(!viewModel.isValid)
                     }
                 }
-                .pickerStyle(.menu)
-                
-                LabeledContent {
-                    TextEditor(text: $viewModel.notes)
-                        .foregroundStyle(.primary)
-                        .multilineTextAlignment(.trailing)
-                } label: {
-                    Text("Notes")
-                }
-            }
-            header: {
-                header
             }
         }
-        .foregroundStyle(.secondary)
-        .font(.callout)
     }
     
     private var header: some View {
