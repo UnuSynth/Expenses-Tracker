@@ -76,10 +76,6 @@ class HomeViewModelImpl: HomeViewModel {
 
     private let repository: ExpensesRepositoryProtocol
 
-    private var displayCurrency: String {
-        "KGS"
-    }
-
     init(repository: ExpensesRepositoryProtocol) {
         self.repository = repository
     }

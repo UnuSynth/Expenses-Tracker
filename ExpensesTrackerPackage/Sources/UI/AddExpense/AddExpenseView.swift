@@ -43,7 +43,7 @@ struct AddExpenseView: View {
                 .modifier(CapsuleButtonBehaviorModifier())
                 
                 CurrencyTextField(
-                    currency: .kgs,
+                    currency: .current,
                     text: $viewModel.amountString
                 )
                 

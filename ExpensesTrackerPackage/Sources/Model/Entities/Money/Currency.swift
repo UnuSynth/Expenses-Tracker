@@ -1,6 +1,9 @@
 import Foundation
 
 enum Currency: String {
+    // mock for test purposes
+    static let current: Currency = .kgs
+    
     case usd
     case eur
     case gbp

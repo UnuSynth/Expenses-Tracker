@@ -19,7 +19,7 @@ struct ExpenseListSectionHeader: View {
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(.secondary)
             Spacer()
-            Text(total, format: .currency(code: Currency.kgs.rawValue.lowercased()))
+            Text(total.formatted(currency: Currency.current))
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(.secondary)
         }
@@ -76,7 +76,7 @@ struct ExpenseListRow: View {
 
             Spacer()
 
-            Text(expense.amount, format: .currency(code: Currency.kgs.rawValue.lowercased()))
+            Text(expense.amount.formatted(currency: Currency.current))
                 .font(.body.weight(.medium))
                 .foregroundStyle(.primary)
         }

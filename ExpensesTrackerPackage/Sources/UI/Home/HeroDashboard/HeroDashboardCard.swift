@@ -59,7 +59,7 @@ struct HeroDashboardCard: View {
             TotalMoney(
                 money: .init(
                     amount: model.chips.first { $0.category == selectedCategory }?.amount ?? model.total,
-                    currency: .kgs
+                    currency: .current
                 )
             )
             .contentTransition(.numericText())
