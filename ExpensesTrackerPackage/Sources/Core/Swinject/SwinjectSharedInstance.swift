@@ -15,8 +15,8 @@ public enum SwinjectSharedInstance {
     
     @MainActor
     public static func setupDIContainer(with modelContainer: ModelContainer) {
-        diContainer.register(ModelContainer.self) { _ in
-            modelContainer
+        diContainer.register(ModelContext.self) { _ in
+            .init(modelContainer)
         }
         
         setup(container: diContainer)

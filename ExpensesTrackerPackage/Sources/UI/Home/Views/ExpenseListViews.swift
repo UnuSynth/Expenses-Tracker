@@ -16,15 +16,14 @@ struct ExpenseListSectionHeader: View {
     var body: some View {
         HStack {
             Text(label.uppercased())
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .font(.footnote.bold())
+                .foregroundStyle(.primary)
             Spacer()
             Text(total.formatted(currency: Currency.current))
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .font(.footnote.bold())
+                .foregroundStyle(.primary)
         }
         .padding(.horizontal, 4)
-        .padding(.vertical, 8)
         .background(.clear)
     }
 }

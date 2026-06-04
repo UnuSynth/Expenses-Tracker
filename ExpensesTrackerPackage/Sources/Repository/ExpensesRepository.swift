@@ -12,10 +12,13 @@ protocol ExpensesRepositoryProtocol {
     func save(expense: ExpenseModel)
     
     @MainActor
-    func fetchAll() throws -> [ExpenseModel]
+    func edit(expenseID: UUID, newValue: ExpenseModel)
     
     @MainActor
     func delete(expenseID: UUID)
+    
+    @MainActor
+    func deleteExpense(_ expense: ExpenseDBModel)
 }
 
 final class ExpensesRepository: ExpensesRepositoryProtocol {
@@ -29,17 +32,23 @@ final class ExpensesRepository: ExpensesRepositoryProtocol {
         expensesDBManager.saveExpense(expense)
     }
     
-    func fetchAll() throws -> [ExpenseModel] {
-        try expensesDBManager.fetchAllExpenses()
+    func edit(expenseID: UUID, newValue: ExpenseModel) {
+        expensesDBManager.editExpense(withID: expenseID, newValue: newValue)
     }
     
     func delete(expenseID: UUID) {
         expensesDBManager.deleteExpense(withID: expenseID)
+    }
+    
+    func deleteExpense(_ expense: ExpenseDBModel) {
+        expensesDBManager.deleteExpense(expense)
     }
 }
 
 final class ExpensesRepositoryMock: ExpensesRepositoryProtocol {
     func save(expense: ExpenseModel) { }
     func fetchAll() throws -> [ExpenseModel] { [] }
+    func edit(expenseID: UUID, newValue: ExpenseModel) { }
     func delete(expenseID: UUID) { }
+    func deleteExpense(_ expense: ExpenseDBModel) { }
 }

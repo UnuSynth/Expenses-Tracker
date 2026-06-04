@@ -9,6 +9,10 @@ import Foundation
 
 extension Calendar.Period {
     var systemImage: String {
+        guard #available(iOS 26.0, *) else {
+            return "calendar"
+        }
+        
         guard case .day = self else {
             return "calendar"
         }

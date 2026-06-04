@@ -11,17 +11,17 @@ import SwiftData
 @MainActor
 protocol ExpensesDBManagerProtocol {
     func saveExpense(_ expense: ExpenseModel)
-    func fetchAllExpenses() throws -> [ExpenseModel]
+    func editExpense(withID id: UUID, newValue: ExpenseModel)
     func deleteExpense(withID id: UUID)
+    func deleteExpense(_ expense: ExpenseDBModel)
 }
 
 @MainActor
 final class ExpensesDBManager: ExpensesDBManagerProtocol {
     private let dao: SwiftDataDAOProtocol
     
-    init(container: ModelContainer) {
-        let context = ModelContext(container)
-        self.dao = SwiftDataDAO(context: context)
+    init(dao: SwiftDataDAOProtocol) {
+        self.dao = dao
     }
     
     func saveExpense(_ expense: ExpenseModel) {
@@ -31,14 +31,22 @@ final class ExpensesDBManager: ExpensesDBManagerProtocol {
         )
     }
     
-    func fetchAllExpenses() throws -> [ExpenseModel] {
-        let dbModels: [ExpenseDBModel] = try dao.get(model: ExpenseDBModel.self)
-        return dbModels.map { $0.toEntity() }
+    func editExpense(withID id: UUID, newValue: ExpenseModel) {
+        deleteExpense(withID: id)
+        saveExpense(newValue)
     }
     
     func deleteExpense(withID id: UUID) {
+        guard let model = fetchExpense(withID: id) else { return }
+        deleteExpense(model)
+    }
+    
+    func deleteExpense(_ expense: ExpenseDBModel) {
+        dao.delete(model: expense)
+    }
+    
+    private func fetchExpense(withID id: UUID) -> ExpenseDBModel? {
         let predicate = #Predicate<ExpenseDBModel> { $0.id == id }
-        guard let model = try? dao.get(model: ExpenseDBModel.self, predicate: predicate).first else { return }
-        dao.delete(model: model)
+        return try? dao.get(model: ExpenseDBModel.self, predicate: predicate).first
     }
 }

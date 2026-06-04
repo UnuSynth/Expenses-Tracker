@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-struct AddExpenseView: View {
+struct ExpenseEditorView: View {
     @Environment(\.dismiss) var dismiss
     
-    @State var viewModel: AddExpenseViewModel
+    @State var viewModel: ExpenseEditorViewModel
     @State private var showCalendar = false
     
-    init(viewModel: AddExpenseViewModel) {
+    init(viewModel: ExpenseEditorViewModel) {
         self.viewModel = viewModel
     }
     
@@ -77,8 +77,19 @@ struct AddExpenseView: View {
                             dismiss()
                         }
                     } else {
-                        Button("Close", systemImage: "xmark") {
+                        Button("Close") {
                             dismiss()
+                        }
+                    }
+                }
+                
+                if let viewModel = viewModel as? EditExpenseViewModel {
+                    ToolbarItem(placement: .destructiveAction) {
+                        Button(role: .destructive) {
+                            viewModel.deleteExpense()
+                            dismiss()
+                        } label: {
+                            Label("Delete expense", systemImage: "trash")
                         }
                     }
                 }
@@ -98,7 +109,6 @@ struct AddExpenseView: View {
                     } else {
                         Button(
                             "Done",
-                            systemImage: "checkmark",
                             action: confirmAction
                         )
                         .disabled(!viewModel.isValid)
@@ -126,10 +136,4 @@ struct AddExpenseView: View {
         .containerRelativeFrame(.horizontal)
         .padding()
     }
-}
-
-#Preview {
-    AddExpenseView(
-        viewModel: AddExpenseMockViewModel()
-    )
 }

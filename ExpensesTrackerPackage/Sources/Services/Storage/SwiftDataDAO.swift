@@ -69,6 +69,8 @@ final class SwiftDataDAO: SwiftDataDAOProtocol {
     
     func delete<T: PersistentModel>(model: T) {
         context.delete(model)
-        try? context.save()
+        if context.hasChanges {
+            try? context.save()
+        }
     }
 }

@@ -52,6 +52,16 @@ struct HomeView: View {
                                         } label: {
                                             Label("Delete", systemImage: "trash")
                                         }
+                                        
+                                        Button {
+                                            viewModel.editExpenese(expense)
+                                        } label: {
+                                            VStack {
+                                                Image(systemName: "pencil")
+                                                Text("Edit")
+                                            }
+                                        }
+                                        .tint(.blue)
                                     }
                                     .listRowInsets(EdgeInsets())
                                     .alignmentGuide(.listRowSeparatorLeading) { _ in 68 }
@@ -62,6 +72,7 @@ struct HomeView: View {
                                 total: group.total
                             )
                         }
+                        .listSectionSpacing(8)
                     }
                 }
             }
@@ -81,11 +92,19 @@ struct HomeView: View {
             PartnerLinkView()
         }
         .sheet(isPresented: $viewModel.showingAddExpenseSheet) {
-            let detent: PresentationDetent = UIApplication.screenHeight >= 840 ? .fraction(0.8) : .large
-            AddExpenseView(
+            let detents: Set<PresentationDetent> = UIApplication.screenHeight >= 840 ? [.fraction(0.85), .large] : [.large]
+            ExpenseEditorView(
                 viewModel: viewModel.prepareAddExpenseViewModel()
             )
-            .presentationDetents([detent])
+            .presentationDetents(detents)
+            .presentationDragIndicator(.hidden)
+        }
+        .sheet(isPresented: $viewModel.showingEditExpenseSheet) {
+            let detents: Set<PresentationDetent> = UIApplication.screenHeight >= 840 ? [.fraction(0.85), .large] : [.large]
+            ExpenseEditorView(
+                viewModel: viewModel.prepareEditExpenseViewModel()
+            )
+            .presentationDetents(detents)
             .presentationDragIndicator(.hidden)
         }
         .onChange(of: expenses, initial: true) {
