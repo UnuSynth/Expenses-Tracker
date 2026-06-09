@@ -20,7 +20,6 @@ extension String {
         case "RUB": return "₽"
         case "KGS": return .som
         case "KZT": return "₸"
-        case "UZS": return "so'm"
         default:    return code
         }
     }

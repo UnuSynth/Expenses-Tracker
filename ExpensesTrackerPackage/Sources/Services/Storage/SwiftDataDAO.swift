@@ -10,31 +10,14 @@ import SwiftData
 
 @MainActor
 protocol SwiftDataDAOProtocol {
-    func save<T: PersistentModel>(model: T, force: Bool)
-    func get<T: PersistentModel>(
-        model: T.Type,
-        predicate: Predicate<T>?,
-        sortBy: [SortDescriptor<T>]
-    ) throws -> [T]
-    func delete<T: PersistentModel>(model: T)
+    func save<T>(model: T, force: Bool) throws where T : PersistentModel
+    func getCount<T>(type: T.Type, predicate: Predicate<T>?) throws -> Int where T : PersistentModel
+    func delete<T>(type: T.Type, predicate: Predicate<T>) throws where T : PersistentModel
 }
 
 extension SwiftDataDAOProtocol {
-    func save<T: PersistentModel>(model: T) {
-        save(model: model, force: false)
-    }
-}
-
-extension SwiftDataDAOProtocol {
-    func get<T: PersistentModel>(model: T.Type) throws -> [T] {
-        return try get(model: model, predicate: nil)
-    }
-    
-    func get<T: PersistentModel>(
-        model: T.Type,
-        predicate: Predicate<T>?
-    ) throws -> [T] {
-        return try get(model: model, predicate: predicate, sortBy: [])
+    func save<T: PersistentModel>(model: T) throws {
+        try save(model: model, force: false)
     }
 }
 
@@ -46,31 +29,34 @@ final class SwiftDataDAO: SwiftDataDAOProtocol {
         self.context = context
     }
     
-    func save<T: PersistentModel>(model: T, force: Bool) {
+    func save<T>(model: T, force: Bool) throws where T : PersistentModel {
         context.insert(model)
         
         if force, context.hasChanges {
-            try? context.save()
+            try context.save()
         }
     }
     
-    func get<T: PersistentModel>(
-        model: T.Type,
-        predicate: Predicate<T>?,
-        sortBy: [SortDescriptor<T>]
-    ) throws -> [T] {
-        return try context.fetch(
+    func getCount<T>(
+        type: T.Type,
+        predicate: Predicate<T>?
+    ) throws -> Int where T : PersistentModel {
+        return try context.fetchCount(
             .init(
-                predicate: predicate,
-                sortBy: sortBy
+                predicate: predicate
             )
         )
     }
     
-    func delete<T: PersistentModel>(model: T) {
-        context.delete(model)
+    func delete<T>(type: T.Type, predicate: Predicate<T>) throws where T : PersistentModel {
+        try context.delete(
+            model: type,
+            where: predicate,
+            includeSubclasses: false
+        )
+        
         if context.hasChanges {
-            try? context.save()
+            try context.save()
         }
     }
 }

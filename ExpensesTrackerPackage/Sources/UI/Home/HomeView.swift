@@ -46,25 +46,17 @@ struct HomeView: View {
                         Section {
                             ForEach(group.items) { expense in
                                 ExpenseListRow(expense: expense)
-                                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                        Button(role: .destructive) {
-                                            viewModel.deleteExpense(expense)
-                                        } label: {
-                                            Label("Delete", systemImage: "trash")
-                                        }
-                                        
-                                        Button {
-                                            viewModel.editExpenese(expense)
-                                        } label: {
-                                            VStack {
-                                                Image(systemName: "pencil")
-                                                Text("Edit")
-                                            }
-                                        }
-                                        .tint(.blue)
+                                    .swipeActions(
+                                        edge: .trailing,
+                                        allowsFullSwipe: true
+                                    ) {
+                                        deleteAction(expense: expense)
+                                        editAction(expense: expense)
                                     }
                                     .listRowInsets(EdgeInsets())
-                                    .alignmentGuide(.listRowSeparatorLeading) { _ in 68 }
+                                    .alignmentGuide(.listRowSeparatorLeading) { _ in
+                                        return 68
+                                    }
                             }
                         } header: {
                             ExpenseListSectionHeader(
@@ -87,9 +79,22 @@ struct HomeView: View {
                     .modifier(AddExpenseButtonBehaviorModifier())
                 Spacer()
             }
+            
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    viewModel.settingsButtonTapped()
+                } label: {
+                    Image(systemName: "person.crop.circle.fill")
+                        .font(.system(size: 22))
+                        .foregroundStyle(.secondary)
+                        .frame(width: 28, height: 28)
+                        .clipShape(.circle)
+                }
+                .accessibilityLabel("View partner")
+            }
         }
-        .sheet(isPresented: $viewModel.showPartnerSheet) {
-            PartnerLinkView()
+        .sheet(isPresented: $viewModel.showSettingsSheet) {
+            SettingsView()
         }
         .sheet(isPresented: $viewModel.showingAddExpenseSheet) {
             let detents: Set<PresentationDetent> = UIApplication.screenHeight >= 840 ? [.fraction(0.85), .large] : [.large]
@@ -111,6 +116,23 @@ struct HomeView: View {
             viewModel.updateExpenses(expenses)
         }
         .background(.background.secondary)
+    }
+    
+    private func deleteAction(expense: ExpenseDBModel) -> some View {
+        Button(role: .destructive) {
+            viewModel.deleteExpense(expense)
+        } label: {
+            Label("Delete", systemImage: "trash")
+        }
+    }
+    
+    private func editAction(expense: ExpenseDBModel) -> some View {
+        Button {
+            viewModel.editExpenese(expense)
+        } label: {
+            Label("Edit", systemImage: "pencil")
+        }
+        .tint(.orange)
     }
 }
 

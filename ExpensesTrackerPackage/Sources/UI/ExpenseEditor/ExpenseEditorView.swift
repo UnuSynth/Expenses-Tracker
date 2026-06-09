@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ExpenseEditorView: View {
     @Environment(\.dismiss) var dismiss
+    @AppStorage("selectedCurrency") private var selectedCurrencyRaw: String = Currency.usd.rawValue
     
     @State var viewModel: ExpenseEditorViewModel
     @State private var showCalendar = false
@@ -43,7 +44,7 @@ struct ExpenseEditorView: View {
                 .modifier(CapsuleButtonBehaviorModifier())
                 
                 CurrencyTextField(
-                    currency: .current,
+                    currency: .initialize(rawValue: selectedCurrencyRaw),
                     text: $viewModel.amountString
                 )
                 

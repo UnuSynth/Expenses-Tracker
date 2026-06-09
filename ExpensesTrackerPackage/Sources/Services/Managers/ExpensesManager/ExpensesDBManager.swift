@@ -11,9 +11,9 @@ import SwiftData
 @MainActor
 protocol ExpensesDBManagerProtocol {
     func saveExpense(_ expense: ExpenseModel)
+    func getCount(in category: ExpenseModel.Category) -> Int
     func editExpense(withID id: UUID, newValue: ExpenseModel)
     func deleteExpense(withID id: UUID)
-    func deleteExpense(_ expense: ExpenseDBModel)
 }
 
 @MainActor
@@ -25,10 +25,23 @@ final class ExpensesDBManager: ExpensesDBManagerProtocol {
     }
     
     func saveExpense(_ expense: ExpenseModel) {
-        dao.save(
+        let status: ()? = try? dao.save(
             model: ExpenseDBModel(model: expense),
             force: true
         )
+        
+        assert(status != nil, "saveExpense finished unsuccessfully")
+    }
+    
+    func getCount(in category: ExpenseModel.Category) -> Int {
+        let count = try? dao.getCount(
+            type: ExpenseDBModel.self,
+            predicate: #Predicate { $0.category == category }
+        )
+        
+        assert(count != nil, "saveExpense finished unsuccessfully")
+        
+        return count ?? 0
     }
     
     func editExpense(withID id: UUID, newValue: ExpenseModel) {
@@ -37,16 +50,11 @@ final class ExpensesDBManager: ExpensesDBManagerProtocol {
     }
     
     func deleteExpense(withID id: UUID) {
-        guard let model = fetchExpense(withID: id) else { return }
-        deleteExpense(model)
-    }
-    
-    func deleteExpense(_ expense: ExpenseDBModel) {
-        dao.delete(model: expense)
-    }
-    
-    private func fetchExpense(withID id: UUID) -> ExpenseDBModel? {
-        let predicate = #Predicate<ExpenseDBModel> { $0.id == id }
-        return try? dao.get(model: ExpenseDBModel.self, predicate: predicate).first
+        let status: ()? = try? dao.delete(
+            type: ExpenseDBModel.self,
+            predicate: #Predicate { $0.id == id }
+        )
+        
+        assert(status != nil, "saveExpense finished unsuccessfully")
     }
 }

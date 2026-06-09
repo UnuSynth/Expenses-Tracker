@@ -26,5 +26,10 @@ final class UIAssembly: @preconcurrency Assembly {
             argument: ExpenseDBModel.self,
             initializer: EditExpenseViewModel.init
         )
+
+        container.autoregister(
+            CategoriesSettingsViewModel.self,
+            initializer: CategoriesSettingsViewModelImpl.init
+        )
     }
 }

@@ -13,6 +13,7 @@ struct HeroDashboardCard: View {
     @State private var showDateRangePicker = false
     @Binding private var selectedPeriod: Calendar.Period
     @State private var selectedCategory: ExpenseModel.Category?
+    @AppStorage("selectedCurrency") private var selectedCurrencyRaw: String = Currency.usd.rawValue
     
     var availablePickerPeriods: [Calendar.Period] { [.day, .week, .month, .year] }
     
@@ -59,7 +60,7 @@ struct HeroDashboardCard: View {
             TotalMoney(
                 money: .init(
                     amount: model.chips.first { $0.category == selectedCategory }?.amount ?? model.total,
-                    currency: .current
+                    currency: .initialize(rawValue: selectedCurrencyRaw)
                 )
             )
             .contentTransition(.numericText())

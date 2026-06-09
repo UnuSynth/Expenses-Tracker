@@ -61,7 +61,7 @@ class HomeViewModelImpl: HomeViewModel {
         }
     }
     var spendingHeroModel: HeroDashboardModel = .init(chips: [])
-    var showPartnerSheet: Bool = false
+    var showSettingsSheet: Bool = false
     var showingAddExpenseSheet: Bool = false
     var showingEditExpenseSheet: Bool = false
     var searchText: String = "" {

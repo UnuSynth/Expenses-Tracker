@@ -20,13 +20,13 @@ protocol HomeViewModel: AnyObject, Observable {
     func updateExpenses(_ expenses: [ExpenseDBModel])
     
     // MARK: - Sheet States
-    var showPartnerSheet: Bool { get set }
+    var showSettingsSheet: Bool { get set }
     var showingAddExpenseSheet: Bool { get set }
     var showingEditExpenseSheet: Bool { get set }
     
     // MARK: - Button Tap Handlers
     func addExpenseButtonTapped()
-    func partnerButtonTapped()
+    func settingsButtonTapped()
     
     // MARK: - Prepare View Model Methods
     func prepareAddExpenseViewModel() -> ExpenseEditorViewModel
@@ -46,8 +46,8 @@ extension HomeViewModel {
         }
     }
     
-    func partnerButtonTapped() {
-        showPartnerSheet = true
+    func settingsButtonTapped() {
+        showSettingsSheet = true
     }
 
     func addExpenseButtonTapped() {

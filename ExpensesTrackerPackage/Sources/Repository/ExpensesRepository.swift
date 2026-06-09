@@ -12,13 +12,13 @@ protocol ExpensesRepositoryProtocol {
     func save(expense: ExpenseModel)
     
     @MainActor
+    func getCount(in category: ExpenseModel.Category) -> Int
+    
+    @MainActor
     func edit(expenseID: UUID, newValue: ExpenseModel)
     
     @MainActor
     func delete(expenseID: UUID)
-    
-    @MainActor
-    func deleteExpense(_ expense: ExpenseDBModel)
 }
 
 final class ExpensesRepository: ExpensesRepositoryProtocol {
@@ -26,6 +26,10 @@ final class ExpensesRepository: ExpensesRepositoryProtocol {
     
     init(expensesDBManager: ExpensesDBManagerProtocol) {
         self.expensesDBManager = expensesDBManager
+    }
+    
+    func getCount(in category: ExpenseModel.Category) -> Int {
+        expensesDBManager.getCount(in: category)
     }
     
     func save(expense: ExpenseModel) {
@@ -39,16 +43,12 @@ final class ExpensesRepository: ExpensesRepositoryProtocol {
     func delete(expenseID: UUID) {
         expensesDBManager.deleteExpense(withID: expenseID)
     }
-    
-    func deleteExpense(_ expense: ExpenseDBModel) {
-        expensesDBManager.deleteExpense(expense)
-    }
 }
 
 final class ExpensesRepositoryMock: ExpensesRepositoryProtocol {
     func save(expense: ExpenseModel) { }
+    func getCount(in category: ExpenseModel.Category) -> Int { 0 }
     func fetchAll() throws -> [ExpenseModel] { [] }
     func edit(expenseID: UUID, newValue: ExpenseModel) { }
     func delete(expenseID: UUID) { }
-    func deleteExpense(_ expense: ExpenseDBModel) { }
 }
