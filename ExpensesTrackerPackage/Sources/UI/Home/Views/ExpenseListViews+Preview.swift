@@ -9,14 +9,25 @@ import SwiftUI
 
 // MARK: - Previews
 
-private extension ExpenseModel {
+private extension CategoryModel {
+    nonisolated(unsafe) static let groceries = CategoryModel(name: "groceries", displayName: "Groceries", icon: "cart.fill", color: .green)
+    nonisolated(unsafe) static let lunch = CategoryModel(name: "lunch", displayName: "Lunch", icon: "fork.knife", color: .orange)
+    nonisolated(unsafe) static let transport = CategoryModel(name: "transport", displayName: "Transport", icon: "car.fill", color: .blue)
+    nonisolated(unsafe) static let clothes = CategoryModel(name: "clothes", displayName: "Clothes", icon: "tshirt.fill", color: .purple)
+    nonisolated(unsafe) static let entertainment = CategoryModel(name: "entertainment", displayName: "Entertainment", icon: "popcorn.fill", color: .purple)
+    nonisolated(unsafe) static let health = CategoryModel(name: "health", displayName: "Health", icon: "heart.fill", color: .red)
+    nonisolated(unsafe) static let utilities = CategoryModel(name: "utilities", displayName: "Utilities", icon: "bolt.fill", color: .yellow)
+    nonisolated(unsafe) static let sport = CategoryModel(name: "sport", displayName: "Sport", icon: "figure.run", color: .indigo)
+}
+
+private extension ExpenseDBModel {
     static func mock(
         amount: Double,
-        category: Category,
+        category: CategoryModel,
         hoursAgo: Double = 0,
         notes: Notes? = nil
-    ) -> ExpenseModel {
-        ExpenseModel(
+    ) -> ExpenseDBModel {
+        ExpenseDBModel(
             date: Date(timeIntervalSinceNow: -hoursAgo * 3600),
             amount: amount,
             category: category,
@@ -28,31 +39,31 @@ private extension ExpenseModel {
 #Preview("Expense Rows") {
     let groups: [(String, [ExpenseDBModel])] = [
         ("Today", [
-            ExpenseDBModel(model: .mock(amount: 42.50, category: .groceries, hoursAgo: 1, notes: .init(desc: "Weekly groceries"))),
-            ExpenseDBModel(model: .mock(amount: 18.00, category: .lunch, hoursAgo: 3, notes: .init(desc: "Sushi lunch"))),
-            ExpenseDBModel(model: .mock(amount: 6.50, category: .transport, hoursAgo: 5))
+            .mock(amount: 42.50, category: .groceries, hoursAgo: 1, notes: .init(desc: "Weekly groceries")),
+            .mock(amount: 18.00, category: .lunch, hoursAgo: 3, notes: .init(desc: "Sushi lunch")),
+            .mock(amount: 6.50, category: .transport, hoursAgo: 5)
         ]),
         ("Yesterday", [
-            ExpenseDBModel(model: .mock(amount: 120.00, category: .clothes, hoursAgo: 26, notes: .init(desc: "New jacket"))),
-            ExpenseDBModel(model: .mock(amount: 35.00, category: .entertainment, hoursAgo: 28)),
-            ExpenseDBModel(model: .mock(amount: 50.00, category: .health, hoursAgo: 30, notes: .init(desc: "Pharmacy"))),
-            ExpenseDBModel(model: .mock(amount: 80.00, category: .utilities, hoursAgo: 32))
+            .mock(amount: 120.00, category: .clothes, hoursAgo: 26, notes: .init(desc: "New jacket")),
+            .mock(amount: 35.00, category: .entertainment, hoursAgo: 28),
+            .mock(amount: 50.00, category: .health, hoursAgo: 30, notes: .init(desc: "Pharmacy")),
+            .mock(amount: 80.00, category: .utilities, hoursAgo: 32)
         ]),
         ("Monday", [
-            ExpenseDBModel(model: .mock(amount: 22.00, category: .lunch, hoursAgo: 50)),
-            ExpenseDBModel(model: .mock(amount: 67.00, category: .groceries, hoursAgo: 52)),
-            ExpenseDBModel(model: .mock(amount: 30.00, category: .sport, hoursAgo: 54, notes: .init(desc: "Gym membership")))
+            .mock(amount: 22.00, category: .lunch, hoursAgo: 50),
+            .mock(amount: 67.00, category: .groceries, hoursAgo: 52),
+            .mock(amount: 30.00, category: .sport, hoursAgo: 54, notes: .init(desc: "Gym membership"))
         ]),
         ("Last Week", [
-            ExpenseDBModel(model: .mock(amount: 15.00, category: .transport, hoursAgo: 100)),
-            ExpenseDBModel(model: .mock(amount: 95.00, category: .utilities, hoursAgo: 104, notes: .init(desc: "Internet bill")))
+            .mock(amount: 15.00, category: .transport, hoursAgo: 100),
+            .mock(amount: 95.00, category: .utilities, hoursAgo: 104, notes: .init(desc: "Internet bill"))
         ]),
         ("Earlier", [
-            ExpenseDBModel(model: .mock(amount: 200.00, category: .clothes, hoursAgo: 200)),
-            ExpenseDBModel(model: .mock(amount: 45.00, category: .lunch, hoursAgo: 202, notes: .init(desc: "Team dinner"))),
-            ExpenseDBModel(model: .mock(amount: 60.00, category: .entertainment, hoursAgo: 204)),
-            ExpenseDBModel(model: .mock(amount: 30.00, category: .health, hoursAgo: 206)),
-            ExpenseDBModel(model: .mock(amount: 88.00, category: .groceries, hoursAgo: 208))
+            .mock(amount: 200.00, category: .clothes, hoursAgo: 200),
+            .mock(amount: 45.00, category: .lunch, hoursAgo: 202, notes: .init(desc: "Team dinner")),
+            .mock(amount: 60.00, category: .entertainment, hoursAgo: 204),
+            .mock(amount: 30.00, category: .health, hoursAgo: 206),
+            .mock(amount: 88.00, category: .groceries, hoursAgo: 208)
         ])
     ]
     List {

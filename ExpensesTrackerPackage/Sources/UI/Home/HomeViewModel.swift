@@ -13,7 +13,7 @@ protocol HomeViewModel: AnyObject, Observable {
     var selectedPeriod: Calendar.Period { get set }
     var spendingHeroModel: HeroDashboardModel { get }
     var searchText: String { get set }
-    var selectedCategoryFilter: ExpenseModel.Category? { get set }
+    var selectedCategoryFilter: CategoryModel? { get set }
     var groupedExpenses: [(date: Date, items: [ExpenseDBModel], total: Double)] { get }
     var addButtonPlacement: ToolbarItemPlacement { get }
     
@@ -23,17 +23,13 @@ protocol HomeViewModel: AnyObject, Observable {
     var showSettingsSheet: Bool { get set }
     var showingAddExpenseSheet: Bool { get set }
     var showingEditExpenseSheet: Bool { get set }
+    var toEditExpense: ExpenseDBModel? { get }
     
     // MARK: - Button Tap Handlers
     func addExpenseButtonTapped()
     func settingsButtonTapped()
     
-    // MARK: - Prepare View Model Methods
-    func prepareAddExpenseViewModel() -> ExpenseEditorViewModel
-    func prepareEditExpenseViewModel() -> ExpenseEditorViewModel
-    
     // MARK: - Delete/Edit expense Methods
-    func deleteExpense(_ expense: ExpenseDBModel)
     func editExpenese(_ expense: ExpenseDBModel)
 }
 
@@ -52,9 +48,5 @@ extension HomeViewModel {
 
     func addExpenseButtonTapped() {
         showingAddExpenseSheet = true
-    }
-    
-    func prepareAddExpenseViewModel() -> ExpenseEditorViewModel {
-        SharedContainer.resolve(ExpenseEditorViewModel.self) ?? ExpenseEditorViewModelMock()
     }
 }

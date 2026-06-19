@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "000000000000000100000000"
-               BuildableName = "ExpensesTracker.app"
-               ReferencedContainer = "container:ExpensesTracker.xcodeproj">
+               BlueprintIdentifier = "ExpensesTrackerPackage"
+               BuildableName = "ExpensesTrackerPackage"
+               ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -40,15 +40,6 @@
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES"
       queueDebuggingEnabled = "No">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "000000000000000100000000"
-            BuildableName = "ExpensesTracker.app"
-            ReferencedContainer = "container:ExpensesTracker.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -56,15 +47,14 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "000000000000000100000000"
-            BuildableName = "ExpensesTracker.app"
-            ReferencedContainer = "container:ExpensesTracker.xcodeproj">
+            BlueprintIdentifier = "ExpensesTrackerPackage"
+            BuildableName = "ExpensesTrackerPackage"
+            ReferencedContainer = "container:">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

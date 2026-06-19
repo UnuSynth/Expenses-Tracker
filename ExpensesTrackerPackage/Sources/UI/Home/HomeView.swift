@@ -11,6 +11,7 @@ import SwiftData
 struct HomeView: View {
     @State private var viewModel: HomeViewModel
 
+    @Environment(\.modelContext) private var context
     @Query(sort: \ExpenseDBModel.date, order: .reverse) private var expenses: [ExpenseDBModel]
 
     init(viewModel: HomeViewModel) {
@@ -98,29 +99,29 @@ struct HomeView: View {
         }
         .sheet(isPresented: $viewModel.showingAddExpenseSheet) {
             let detents: Set<PresentationDetent> = UIApplication.screenHeight >= 840 ? [.fraction(0.85), .large] : [.large]
-            ExpenseEditorView(
-                viewModel: viewModel.prepareAddExpenseViewModel()
-            )
+            ExpenseEditorView()
             .presentationDetents(detents)
             .presentationDragIndicator(.hidden)
         }
         .sheet(isPresented: $viewModel.showingEditExpenseSheet) {
             let detents: Set<PresentationDetent> = UIApplication.screenHeight >= 840 ? [.fraction(0.85), .large] : [.large]
-            ExpenseEditorView(
-                viewModel: viewModel.prepareEditExpenseViewModel()
-            )
+            ExpenseEditorView(expense: viewModel.toEditExpense)
             .presentationDetents(detents)
             .presentationDragIndicator(.hidden)
         }
         .onChange(of: expenses, initial: true) {
             viewModel.updateExpenses(expenses)
         }
+        .onReceive(NotificationCenter.default.publisher(for: ModelContext.didSave), perform: { output in
+            guard (output.userInfo?["updated"] as? [PersistentIdentifier])?.contains(where: { $0.entityName == String(describing: ExpenseDBModel.self) }) == true else { return }
+            viewModel.updateExpenses(expenses)
+        })
         .background(.background.secondary)
     }
     
     private func deleteAction(expense: ExpenseDBModel) -> some View {
         Button(role: .destructive) {
-            viewModel.deleteExpense(expense)
+            context.delete(expense)
         } label: {
             Label("Delete", systemImage: "trash")
         }
@@ -138,7 +139,7 @@ struct HomeView: View {
 
 #Preview {
     NavigationStack {
-        HomeView(viewModel: HomeViewModelImpl(repository: ExpensesRepositoryMock()))
+        HomeView(viewModel: HomeViewModelImpl())
     }
 }
  

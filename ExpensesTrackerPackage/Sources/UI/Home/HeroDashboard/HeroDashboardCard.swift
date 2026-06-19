@@ -12,7 +12,7 @@ struct HeroDashboardCard: View {
     
     @State private var showDateRangePicker = false
     @Binding private var selectedPeriod: Calendar.Period
-    @State private var selectedCategory: ExpenseModel.Category?
+    @State private var selectedCategory: CategoryModel?
     @AppStorage("selectedCurrency") private var selectedCurrencyRaw: String = Currency.usd.rawValue
     
     var availablePickerPeriods: [Calendar.Period] { [.day, .week, .month, .year] }
@@ -90,6 +90,13 @@ struct HeroDashboardCard: View {
         }
         .preference(key: SelectedCategoryPreferenceKey.self, value: selectedCategory)
         .animation(.easeInOut(duration: 0.3), value: selectedCategory)
+        .onChange(of: model) { _, newValue in
+            let hasChangesInCategories = !newValue.chips.contains { $0.category == selectedCategory }
+            
+            if hasChangesInCategories {
+                selectedCategory = nil
+            }
+        }
     }
     
     private var upperMenu: some View {
@@ -121,7 +128,7 @@ struct HeroDashboardCard: View {
 }
 
 extension HeroDashboardCard {
-    func onCategorySelect(action: @escaping (ExpenseModel.Category?) -> Void) -> some View {
+    func onCategorySelect(action: @escaping (CategoryModel?) -> Void) -> some View {
         onPreferenceChange(SelectedCategoryPreferenceKey.self) { category in
             action(category)
         }
@@ -130,20 +137,20 @@ extension HeroDashboardCard {
 
 #Preview {
     @Previewable @State var selectedPeriod: Calendar.Period = .day
-    
+
     let model = HeroDashboardModel(
         chips: [
             HeroDashboardModel.ChipModel(
                 amount: 200,
-                category: .groceries
+                category: CategoryModel(name: "groceries", displayName: "Groceries", icon: "cart.fill", color: .green)
             ),
             HeroDashboardModel.ChipModel(
                 amount: 150,
-                category: .lunch
+                category: CategoryModel(name: "lunch", displayName: "Lunch", icon: "fork.knife", color: .orange)
             ),
             HeroDashboardModel.ChipModel(
                 amount: 150,
-                category: .clothes
+                category: CategoryModel(name: "clothes", displayName: "Clothes", icon: "tshirt.fill", color: .purple)
             )
         ]
     )

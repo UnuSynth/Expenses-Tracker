@@ -91,7 +91,7 @@ struct ExpenseListRow: View {
 // MARK: - Empty State
 
 struct ExpenseListEmptyState: View {
-    let category: ExpenseModel.Category?
+    let category: CategoryModel?
     let period: Calendar.Period
 
     private var subtitle: String {

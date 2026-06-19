@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct CategorySelector: View {
-    let categories: [ExpenseModel.Category]
-    @Binding var selection: ExpenseModel.Category
+    let categories: [CategoryModel]
+    @Binding var selection: CategoryModel?
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -33,7 +33,7 @@ struct CategorySelector: View {
 }
 
 private struct CategorySelectorItem: View {
-    let category: ExpenseModel.Category
+    let category: CategoryModel
     let isSelected: Bool
 
     var body: some View {
@@ -64,9 +64,14 @@ private struct CategorySelectorItem: View {
 }
 
 #Preview {
-    @Previewable @State var selection: ExpenseModel.Category = .groceries
+    @Previewable @State var selection: CategoryModel? = nil
+    let categories: [CategoryModel] = [
+        CategoryModel(name: "groceries", displayName: "Groceries", icon: "cart.fill", color: .green),
+        CategoryModel(name: "lunch", displayName: "Lunch", icon: "fork.knife", color: .orange),
+        CategoryModel(name: "transport", displayName: "Transport", icon: "car.fill", color: .blue),
+    ]
     CategorySelector(
-        categories: ExpenseModel.Category.allCases,
+        categories: categories,
         selection: $selection
     )
 }

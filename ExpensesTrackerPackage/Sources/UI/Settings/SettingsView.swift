@@ -19,9 +19,7 @@ struct SettingsView: View {
                     }
                     
                     NavigationLink {
-                        CategoriesSettingsView(
-                            viewModel: SharedContainer.resolve(CategoriesSettingsViewModel.self) ?? CategoriesSettingsViewModelMock()
-                        )
+                        CategoriesSettingsView()
                     } label: {
                         Label("Categories", systemImage: "tag.fill")
                     }

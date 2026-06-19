@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct HeroDashboardModel {
+struct HeroDashboardModel: Equatable {
     let chips: [ChipModel]
     var total: Double {
         chips.reduce(into: 0) { result, chip in
@@ -15,10 +15,16 @@ struct HeroDashboardModel {
         }
     }
     
-    struct ChipModel: Identifiable {
-        var id: ExpenseModel.Category { category }
+    static func == (lhs: borrowing Self, rhs: borrowing Self) -> Bool {
+        return lhs.total == rhs.total
+        && lhs.chips.count == rhs.chips.count
+        && lhs.chips == rhs.chips
+    }
+    
+    struct ChipModel: Equatable, Identifiable {
+        var id: CategoryModel { category }
         let amount: Double
-        let category: ExpenseModel.Category
+        let category: CategoryModel
         
         func toSpendingBarSegment() -> SpendingBarSegment {
             .init(color: category.color, value: amount)

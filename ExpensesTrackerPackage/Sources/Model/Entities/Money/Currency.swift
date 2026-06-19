@@ -1,6 +1,11 @@
 import Foundation
 import SwiftUI
 
+enum SymbolPosition {
+    case leading
+    case trailing
+}
+
 enum Currency: String, CaseIterable {
     case usd
     case eur

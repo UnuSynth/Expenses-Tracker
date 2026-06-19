@@ -6,17 +6,15 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct CategoriesSettingsView: View {
-    @State private var viewModel: CategoriesSettingsViewModel
-
-    init(viewModel: CategoriesSettingsViewModel) {
-        self.viewModel = viewModel
-    }
+    @Query(sort: \CategoryModel.sortOrder) private var categories: [CategoryModel]
+    @Environment(\.modelContext) private var context
 
     var body: some View {
         List {
-            ForEach(viewModel.categories) { category in
+            ForEach(categories) { category in
                 NavigationLink {
                     Text(category.displayName)
                 } label: {
@@ -31,17 +29,21 @@ struct CategoriesSettingsView: View {
                         }
                         Text(category.displayName)
                         Spacer()
-                        Text("\(viewModel.countForCategory(category))")
+                        Text("\(countForCategory(category))")
                             .foregroundStyle(.secondary)
                             .font(.subheadline)
                     }
                 }
             }
             .onDelete { indices in
-                viewModel.deleteCategories(at: indices)
+                indices.forEach { deleteCategory(categories[$0]) }
             }
             .onMove { source, destination in
-                viewModel.moveCategories(from: source, to: destination)
+                var reordered = categories
+                reordered.move(fromOffsets: source, toOffset: destination)
+                for (index, category) in reordered.enumerated() {
+                    category.sortOrder = index
+                }
             }
         }
         .listStyle(.insetGrouped)
@@ -62,10 +64,22 @@ struct CategoriesSettingsView: View {
             }
         }
     }
+    
+    private func deleteCategory(_ category: CategoryModel) {
+        context.delete(category)
+    }
+    
+    private func countForCategory(_ category: CategoryModel) -> Int {
+        let categoryName = category.name
+        let descriptor = FetchDescriptor<ExpenseDBModel>(
+            predicate: #Predicate { $0.category.name == categoryName }
+        )
+        return (try? context.fetchCount(descriptor)) ?? 0
+    }
 }
 
 #Preview {
     NavigationStack {
-        CategoriesSettingsView(viewModel: CategoriesSettingsViewModelMock())
+        CategoriesSettingsView()
     }
 }
