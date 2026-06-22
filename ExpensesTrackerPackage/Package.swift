@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "ExpensesTrackerPackage",
+    defaultLocalization: "en",
     platforms: [.iOS(.v18)],
     products: [
         .library(
@@ -14,7 +15,11 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "ExpensesTrackerPackage"
+            name: "ExpensesTrackerPackage",
+            resources: [],
+            swiftSettings: [
+                .enableUpcomingFeature("StringCatalogSymbols")
+            ]
         ),
     ]
 )

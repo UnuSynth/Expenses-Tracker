@@ -34,7 +34,7 @@ struct SettingsView: View {
                 
                 Section {
                 } header: {
-                    Text("About")
+                    Text(.about)
                 }
             }
             .listStyle(.insetGrouped)

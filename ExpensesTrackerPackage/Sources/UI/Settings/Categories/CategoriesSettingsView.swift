@@ -31,7 +31,7 @@ struct CategoriesSettingsView: View {
                         }
                         Text(category.name)
                         Spacer()
-                        Text("\(countForCategory(category))")
+                        Text(.count(countForCategory(category)))
                             .foregroundStyle(.secondary)
                             .font(.subheadline)
                     }

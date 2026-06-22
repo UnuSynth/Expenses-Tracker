@@ -8,14 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		8B0BBA5F2FE3F7150083DF40 /* ExpensesTrackerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0BBA5D2FE3F7150083DF40 /* ExpensesTrackerApp.swift */; };
-		8B0BBA602FE3F7150083DF40 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8B0BBA592FE3F7150083DF40 /* Localizable.strings */; };
 		8B0BBA612FE3F7150083DF40 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B0BBA5B2FE3F7150083DF40 /* Assets.xcassets */; };
 		8BF3F8452FE3FDFA0078F9D8 /* ExpensesTrackerPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 8BF3F8442FE3FDFA0078F9D8 /* ExpensesTrackerPackage */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		000000000000000000000120 /* ExpensesTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ExpensesTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		8B0BBA582FE3F7150083DF40 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8B0BBA5B2FE3F7150083DF40 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8B0BBA5D2FE3F7150083DF40 /* ExpensesTrackerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpensesTrackerApp.swift; sourceTree = "<group>"; };
 		8BF3F8462FE3FE1B0078F9D8 /* ExpensesTrackerPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ExpensesTrackerPackage; sourceTree = "<group>"; };
@@ -49,18 +47,9 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		8B0BBA5A2FE3F7150083DF40 /* Localizable */ = {
-			isa = PBXGroup;
-			children = (
-				8B0BBA592FE3F7150083DF40 /* Localizable.strings */,
-			);
-			path = Localizable;
-			sourceTree = "<group>";
-		};
 		8B0BBA5C2FE3F7150083DF40 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				8B0BBA5A2FE3F7150083DF40 /* Localizable */,
 				8B0BBA5B2FE3F7150083DF40 /* Assets.xcassets */,
 			);
 			path = Assets;
@@ -124,6 +113,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ru,
 			);
 			mainGroup = 000000000000000000000001;
 			minimizedProjectReferenceProxies = 1;
@@ -141,7 +131,6 @@
 		000000000000000140000000 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
-				8B0BBA602FE3F7150083DF40 /* Localizable.strings in Resources */,
 				8B0BBA612FE3F7150083DF40 /* Assets.xcassets in Resources */,
 			);
 		};
@@ -155,17 +144,6 @@
 			);
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		8B0BBA592FE3F7150083DF40 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				8B0BBA582FE3F7150083DF40 /* Localizable.strings */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		000000000000000011000000 /* Debug configuration for PBXProject "ExpensesTracker" */ = {
@@ -232,6 +210,7 @@
 				PROJECT_UNIQUE_VALUE = R5R8IQPD;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -293,6 +272,7 @@
 				PROJECT_UNIQUE_VALUE = R5R8IQPD;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 			};
 			name = Release;
 		};
