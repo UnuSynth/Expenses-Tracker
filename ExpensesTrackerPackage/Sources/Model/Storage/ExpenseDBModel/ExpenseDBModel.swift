@@ -11,47 +11,33 @@ import SwiftData
 @Model
 public class ExpenseDBModel {
     public var id: UUID = UUID()
-    
+
     var date: Date
     var amount: Double
-    var category: ExpenseModel.Category
-    var notes: ExpenseModel.Notes?
-    
-    init(model: ExpenseModel) {
-        self.date = model.date
-        self.amount = model.amount
-        self.category = model.category
-        self.notes = model.notes
-    }
-    
-    func toEntity() -> ExpenseModel {
-        .init(
-            date: date,
-            amount: amount,
-            category: category,
-            notes: notes
-        )
+    var category: CategoryModel
+    var notes: Notes?
+
+    init(
+        date: Date,
+        amount: Double,
+        category: CategoryModel,
+        notes: Notes? = nil
+    ) {
+        self.date = date
+        self.amount = amount
+        self.category = category
+        self.notes = notes
     }
 }
 
-extension ExpenseModel.Category: Codable { }
+extension ExpenseDBModel {
+    struct Notes: Codable {
+        let desc: String?
+        let image: String?
 
-extension ExpenseModel.Notes: Codable {
-    enum CodingKeys: String, CodingKey {
-        case desc
-        case image
-    }
-    
-    init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        let desc = try container.decodeIfPresent(String.self, forKey: .desc)
-        let image = try container.decodeIfPresent(String.self, forKey: .image)
-        self.init(desc: desc, image: image)
-    }
-
-    func encode(to encoder: any Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encodeIfPresent(self.desc, forKey: .desc)
-        try container.encodeIfPresent(self.image, forKey: .image)
+        init(desc: String? = nil, image: String? = nil) {
+            self.desc = desc
+            self.image = image
+        }
     }
 }

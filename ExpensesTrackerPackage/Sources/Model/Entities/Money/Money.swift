@@ -1,10 +1,5 @@
 import Foundation
 
-enum SymbolPosition {
-    case leading
-    case trailing
-}
-
 struct Money {
     let amount: Double
     let currency: Currency

@@ -11,6 +11,7 @@ import SwiftData
 struct HomeView: View {
     @State private var viewModel: HomeViewModel
 
+    @Environment(\.modelContext) private var context
     @Query(sort: \ExpenseDBModel.date, order: .reverse) private var expenses: [ExpenseDBModel]
 
     init(viewModel: HomeViewModel) {
@@ -46,25 +47,17 @@ struct HomeView: View {
                         Section {
                             ForEach(group.items) { expense in
                                 ExpenseListRow(expense: expense)
-                                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                        Button(role: .destructive) {
-                                            viewModel.deleteExpense(expense)
-                                        } label: {
-                                            Label("Delete", systemImage: "trash")
-                                        }
-                                        
-                                        Button {
-                                            viewModel.editExpenese(expense)
-                                        } label: {
-                                            VStack {
-                                                Image(systemName: "pencil")
-                                                Text("Edit")
-                                            }
-                                        }
-                                        .tint(.blue)
+                                    .swipeActions(
+                                        edge: .trailing,
+                                        allowsFullSwipe: true
+                                    ) {
+                                        deleteAction(expense: expense)
+                                        editAction(expense: expense)
                                     }
                                     .listRowInsets(EdgeInsets())
-                                    .alignmentGuide(.listRowSeparatorLeading) { _ in 68 }
+                                    .alignmentGuide(.listRowSeparatorLeading) { _ in
+                                        return 68
+                                    }
                             }
                         } header: {
                             ExpenseListSectionHeader(
@@ -87,36 +80,66 @@ struct HomeView: View {
                     .modifier(AddExpenseButtonBehaviorModifier())
                 Spacer()
             }
+            
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    viewModel.settingsButtonTapped()
+                } label: {
+                    Image(systemName: "person.crop.circle.fill")
+                        .font(.system(size: 22))
+                        .foregroundStyle(.secondary)
+                        .frame(width: 28, height: 28)
+                        .clipShape(.circle)
+                }
+                .accessibilityLabel("View partner")
+            }
         }
-        .sheet(isPresented: $viewModel.showPartnerSheet) {
-            PartnerLinkView()
+        .sheet(isPresented: $viewModel.showSettingsSheet) {
+            SettingsView()
         }
         .sheet(isPresented: $viewModel.showingAddExpenseSheet) {
             let detents: Set<PresentationDetent> = UIApplication.screenHeight >= 840 ? [.fraction(0.85), .large] : [.large]
-            ExpenseEditorView(
-                viewModel: viewModel.prepareAddExpenseViewModel()
-            )
+            ExpenseEditorView()
             .presentationDetents(detents)
             .presentationDragIndicator(.hidden)
         }
         .sheet(isPresented: $viewModel.showingEditExpenseSheet) {
             let detents: Set<PresentationDetent> = UIApplication.screenHeight >= 840 ? [.fraction(0.85), .large] : [.large]
-            ExpenseEditorView(
-                viewModel: viewModel.prepareEditExpenseViewModel()
-            )
+            ExpenseEditorView(expense: viewModel.toEditExpense)
             .presentationDetents(detents)
             .presentationDragIndicator(.hidden)
         }
         .onChange(of: expenses, initial: true) {
             viewModel.updateExpenses(expenses)
         }
+        .onReceive(NotificationCenter.default.publisher(for: ModelContext.didSave), perform: { output in
+            guard (output.userInfo?["updated"] as? [PersistentIdentifier])?.contains(where: { $0.entityName == String(describing: ExpenseDBModel.self) }) == true else { return }
+            viewModel.updateExpenses(expenses)
+        })
         .background(.background.secondary)
+    }
+    
+    private func deleteAction(expense: ExpenseDBModel) -> some View {
+        Button(role: .destructive) {
+            context.delete(expense)
+        } label: {
+            Label("Delete", systemImage: "trash")
+        }
+    }
+    
+    private func editAction(expense: ExpenseDBModel) -> some View {
+        Button {
+            viewModel.editExpenese(expense)
+        } label: {
+            Label("Edit", systemImage: "pencil")
+        }
+        .tint(.orange)
     }
 }
 
 #Preview {
     NavigationStack {
-        HomeView(viewModel: HomeViewModelImpl(repository: ExpensesRepositoryMock()))
+        HomeView(viewModel: HomeViewModelImpl())
     }
 }
  

@@ -8,7 +8,5 @@
 import SwiftUI
 
 #Preview {
-    ExpenseEditorView(
-        viewModel: ExpenseEditorViewModelMock()
-    )
+    ExpenseEditorView(expense: nil)
 }

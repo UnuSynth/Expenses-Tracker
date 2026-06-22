@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct SelectedCategoryPreferenceKey: PreferenceKey {
-    nonisolated(unsafe) static var defaultValue: ExpenseModel.Category? = nil
-    static func reduce(value: inout ExpenseModel.Category?, nextValue: () -> ExpenseModel.Category?) {
+    nonisolated(unsafe) static var defaultValue: CategoryModel? = nil
+    static func reduce(value: inout CategoryModel?, nextValue: () -> CategoryModel?) {
         value = nextValue()
     }
 }

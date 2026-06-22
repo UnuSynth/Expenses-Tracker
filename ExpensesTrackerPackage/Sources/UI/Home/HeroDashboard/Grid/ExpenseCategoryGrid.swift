@@ -10,7 +10,7 @@ import SwiftUI
 @MainActor
 struct ExpenseCategoryGrid: View {
     let chips: [HeroDashboardModel.ChipModel]
-    @State private var selectedCategory: ExpenseModel.Category?
+    @State private var selectedCategory: CategoryModel?
     @State private var isExpanded = false
 
     private let collapsedLimit = UIApplication.screenHeight > 667 ? 3 : 1
@@ -68,18 +68,18 @@ struct ExpenseCategoryGrid: View {
         .buttonStyle(.plain)
     }
 
-    private func toggleSelection(_ category: ExpenseModel.Category) {
+    private func toggleSelection(_ category: CategoryModel) {
         selectedCategory = selectedCategory == category ? nil : category
     }
 
-    private func backgroundOpacity(for category: ExpenseModel.Category) -> Double {
+    private func backgroundOpacity(for category: CategoryModel) -> Double {
         guard let selected = selectedCategory else { return 0.15 }
         return category == selected ? 0.8 : 0.05
     }
 }
 
 extension ExpenseCategoryGrid {
-    func onCategorySelect(action: @escaping (ExpenseModel.Category?) -> Void) -> some View {
+    func onCategorySelect(action: @escaping (CategoryModel?) -> Void) -> some View {
         self.onPreferenceChange(SelectedCategoryPreferenceKey.self) { category in
             action(category)
         }
@@ -132,12 +132,12 @@ fileprivate struct WrappedHStackLayout: Layout {
 #Preview {
     ExpenseCategoryGrid(
         chips: [
-            .init(amount: 100, category: .clothes),
-            .init(amount: 150, category: .groceries),
-            .init(amount: 200, category: .lunch),
-            .init(amount: 250, category: .sport),
-            .init(amount: 80, category: .transport),
-            .init(amount: 120, category: .entertainment),
+            .init(amount: 100, category: CategoryModel(name: "clothes", displayName: "Clothes", icon: "tshirt.fill", color: .purple)),
+            .init(amount: 150, category: CategoryModel(name: "groceries", displayName: "Groceries", icon: "cart.fill", color: .green)),
+            .init(amount: 200, category: CategoryModel(name: "lunch", displayName: "Lunch", icon: "fork.knife", color: .orange)),
+            .init(amount: 250, category: CategoryModel(name: "sport", displayName: "Sport", icon: "figure.run", color: .indigo)),
+            .init(amount: 80, category: CategoryModel(name: "transport", displayName: "Transport", icon: "car.fill", color: .blue)),
+            .init(amount: 120, category: CategoryModel(name: "entertainment", displayName: "Entertainment", icon: "popcorn.fill", color: .purple)),
         ]
     )
     .padding()

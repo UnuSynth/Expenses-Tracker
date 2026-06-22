@@ -15,12 +15,13 @@ struct ExpensesTrackerApp: App {
         WindowGroup {
             ExpensesTrackerViewer()
         }
-        .modelContainer(for: [ExpenseDBModel.self]) { result in
+        .modelContainer(for: [ExpenseDBModel.self, CategoryModel.self]) { result in
             guard case .success(let modelContainer) = result else {
                 return
             }
             
-            SwinjectSharedInstance.setupDIContainer(with: modelContainer)
+            ExpensesSeeder.seed(into: modelContainer.mainContext)
+            BuiltinCategoriesSeeder.seed(into: modelContainer.mainContext)
         }
     }
 }

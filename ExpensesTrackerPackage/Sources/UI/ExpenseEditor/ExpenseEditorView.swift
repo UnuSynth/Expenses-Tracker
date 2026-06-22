@@ -6,22 +6,47 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ExpenseEditorView: View {
     @Environment(\.dismiss) var dismiss
+    @Query(sort: \CategoryModel.sortOrder) private var categories: [CategoryModel]
+    @AppStorage("selectedCurrency") private var selectedCurrencyRaw: String = Currency.usd.rawValue
+    @Environment(\.modelContext) private var context
     
-    @State var viewModel: ExpenseEditorViewModel
+    @State private var date: Date = .now
+    @State private var amountString: String = ""
+    @State private var category: CategoryModel? = nil
+    @State private var notes: String = ""
     @State private var showCalendar = false
     
-    init(viewModel: ExpenseEditorViewModel) {
-        self.viewModel = viewModel
+    private var expense: ExpenseDBModel?
+    
+    private var datesRange: ClosedRange<Date> {
+        // a date range between 20 years ago and now
+        Date.now.addingTimeInterval(-1*3600*24*365*20)...Date.now
+    }
+    
+    private var amountDouble: Double? {
+        amountString.toDouble()
+    }
+
+    private var isValid: Bool {
+        amountString.isEmpty == false
+        && amountDouble != nil
+        && amountDouble != 0
+        && category != nil
+    }
+    
+    init(expense: ExpenseDBModel? = nil) {
+        self.expense = expense
     }
     
     var body: some View {
         NavigationStack {
             VStack(alignment: .center, spacing: 8) {
                 Spacer()
-                Button("\(viewModel.date.relativeLabel), \(viewModel.date.formatted(.dateTime.hour().minute()))", systemImage: "calendar") {
+                Button("\(date.relativeLabel), \(date.formatted(.dateTime.hour().minute()))", systemImage: "calendar") {
                     showCalendar = true
                 }
                 .popover(
@@ -30,8 +55,8 @@ struct ExpenseEditorView: View {
                 ) {
                     DatePicker(
                         "",
-                        selection: $viewModel.date,
-                        in: viewModel.datesRange
+                        selection: $date,
+                        in: datesRange
                     )
                     .datePickerStyle(.wheel)
                     .presentationCompactAdaptation(.popover)
@@ -43,29 +68,31 @@ struct ExpenseEditorView: View {
                 .modifier(CapsuleButtonBehaviorModifier())
                 
                 CurrencyTextField(
-                    currency: .current,
-                    text: $viewModel.amountString
+                    currency: .initialize(rawValue: selectedCurrencyRaw),
+                    text: $amountString
                 )
                 
                 CategorySelector(
-                    categories: viewModel.categories,
-                    selection: $viewModel.category
+                    categories: categories,
+                    selection: $category
                 )
                 
-                HStack(spacing: 6) {
-                    Image(systemName: "pencil")
-                    TextField("Add a note", text: $viewModel.notes)
-                        .lineLimit(1...2)
-                        .fixedSize(horizontal: true, vertical: false)
-                        .font(.subheadline.bold())
-                        .foregroundStyle(.secondary)
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 12)
-                        .modifier(CapsuleButtonBehaviorModifier())
-                }
+                TextField("Add a note", text: $notes)
+                    .safeAreaInset(edge: .leading) {
+                        Image(systemName: "pencil")
+                            .foregroundColor(.gray)
+                            .padding(.trailing, 4)
+                    }
+                    .lineLimit(1...2)
+                    .fixedSize(horizontal: true, vertical: false)
+                    .font(.subheadline.bold())
+                    .foregroundStyle(.secondary)
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 12)
+                    .modifier(CapsuleButtonBehaviorModifier())
                 
                 NumberPad(
-                    text: $viewModel.amountString
+                    text: $amountString
                 )
                 
                 Spacer()
@@ -83,10 +110,10 @@ struct ExpenseEditorView: View {
                     }
                 }
                 
-                if let viewModel = viewModel as? EditExpenseViewModel {
+                if let expense {
                     ToolbarItem(placement: .destructiveAction) {
                         Button(role: .destructive) {
-                            viewModel.deleteExpense()
+                            context.delete(expense)
                             dismiss()
                         } label: {
                             Label("Delete expense", systemImage: "trash")
@@ -96,7 +123,14 @@ struct ExpenseEditorView: View {
                 
                 ToolbarItem(placement: .confirmationAction) {
                     let confirmAction = {
-                        viewModel.saveExpense()
+                        if let expense {
+                            editExpense(expense)
+                        } else {
+                            saveExpense()
+                        }
+                        
+                        if context.hasChanges { try? context.save() }
+                        
                         dismiss()
                     }
                     
@@ -105,16 +139,23 @@ struct ExpenseEditorView: View {
                             role: .confirm,
                             action: confirmAction
                         )
-                        .disabled(!viewModel.isValid)
+                        .disabled(!isValid)
                     } else {
                         Button(
                             "Done",
                             action: confirmAction
                         )
-                        .disabled(!viewModel.isValid)
+                        .disabled(!isValid)
                     }
                 }
             }
+        }
+        .onAppear {
+            guard let expense else { return }
+            date = expense.date
+            amountString = expense.amount.description
+            category = expense.category
+            notes = expense.notes?.desc ?? ""
         }
     }
     
@@ -135,5 +176,38 @@ struct ExpenseEditorView: View {
         }
         .containerRelativeFrame(.horizontal)
         .padding()
+    }
+    
+    private func saveExpense() {
+        guard let category else { return }
+        
+        let newExpense = ExpenseDBModel(
+            date: date,
+            amount: amountDouble ?? 0,
+            category: category,
+            notes: notes.isEmpty ? nil : .init(desc: notes)
+        )
+        
+        context.insert(newExpense)
+    }
+    
+    private func editExpense(_ expense: ExpenseDBModel) {
+        guard let category else { return }
+        
+        if expense.date != date {
+            expense.date = date
+        }
+        
+        if expense.amount != (amountDouble ?? 0) {
+            expense.amount = amountDouble ?? 0
+        }
+        
+        if expense.category != category {
+            expense.category = category
+        }
+        
+        if notes != expense.notes?.desc {
+            expense.notes = notes.isEmpty ? nil : .init(desc: notes)
+        }
     }
 }
