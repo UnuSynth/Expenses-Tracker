@@ -37,7 +37,7 @@ struct HeroDashboardCard: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 if let selectedCategory {
-                    Label(selectedCategory.displayName.uppercased(), systemImage: selectedCategory.icon)
+                    Label(selectedCategory.name.uppercased(), systemImage: selectedCategory.icon)
                         .font(.footnote.bold())
                         .foregroundStyle(selectedCategory.color)
                         .lineLimit(1)
@@ -142,15 +142,15 @@ extension HeroDashboardCard {
         chips: [
             HeroDashboardModel.ChipModel(
                 amount: 200,
-                category: CategoryModel(name: "groceries", displayName: "Groceries", icon: "cart.fill", color: .green)
+                category: CategoryModel(name: "Groceries", icon: "cart.fill", color: .green)
             ),
             HeroDashboardModel.ChipModel(
                 amount: 150,
-                category: CategoryModel(name: "lunch", displayName: "Lunch", icon: "fork.knife", color: .orange)
+                category: CategoryModel(name: "Lunch", icon: "fork.knife", color: .orange)
             ),
             HeroDashboardModel.ChipModel(
                 amount: 150,
-                category: CategoryModel(name: "clothes", displayName: "Clothes", icon: "tshirt.fill", color: .purple)
+                category: CategoryModel(name: "Clothes", icon: "tshirt.fill", color: .purple)
             )
         ]
     )

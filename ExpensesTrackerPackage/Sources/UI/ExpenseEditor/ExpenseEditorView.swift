@@ -153,7 +153,7 @@ struct ExpenseEditorView: View {
         .onAppear {
             guard let expense else { return }
             date = expense.date
-            amountString = expense.amount.description
+            amountString = expense.amount.formattedDescription
             category = expense.category
             notes = expense.notes?.desc ?? ""
         }

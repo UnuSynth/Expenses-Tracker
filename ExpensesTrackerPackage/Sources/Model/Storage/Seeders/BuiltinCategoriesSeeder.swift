@@ -9,22 +9,21 @@ import SwiftData
 public struct BuiltinCategoriesSeeder {
     private struct BuiltinDefinition {
         let name: String
-        let displayName: String
         let icon: String
         let color: Color
     }
 
     private static let definitions: [BuiltinDefinition] = [
-        BuiltinDefinition(name: "groceries",    displayName: "Groceries",       icon: "cart.fill",              color: .green),
-        BuiltinDefinition(name: "dining",       displayName: "Dining & Cafe",   icon: "fork.knife",             color: .orange),
-        BuiltinDefinition(name: "transport",    displayName: "Transport",        icon: "car.fill",               color: .blue),
-        BuiltinDefinition(name: "shopping",     displayName: "Shopping",         icon: "bag.fill",               color: .pink),
-        BuiltinDefinition(name: "health",       displayName: "Health",           icon: "heart.fill",             color: .red),
-        BuiltinDefinition(name: "housing",      displayName: "Housing",          icon: "building.2.fill",        color: .brown),
-        BuiltinDefinition(name: "entertainment",displayName: "Entertainment",    icon: "popcorn.fill",           color: .purple),
-        BuiltinDefinition(name: "bills",        displayName: "Bills & Utilities",icon: "lightbulb.fill",         color: .gray),
-        BuiltinDefinition(name: "travel",       displayName: "Travel",           icon: "airplane",               color: .cyan),
-        BuiltinDefinition(name: "other",        displayName: "Other",            icon: "ellipsis.circle.fill",   color: .indigo),
+        BuiltinDefinition(name: "Groceries",       icon: "cart.fill",              color: .green),
+        BuiltinDefinition(name: "Dining & Cafe",   icon: "fork.knife",             color: .orange),
+        BuiltinDefinition(name: "Transport",        icon: "car.fill",               color: .blue),
+        BuiltinDefinition(name: "Shopping",         icon: "bag.fill",               color: .pink),
+        BuiltinDefinition(name: "Health",           icon: "heart.fill",             color: .red),
+        BuiltinDefinition(name: "Housing",          icon: "building.2.fill",        color: .brown),
+        BuiltinDefinition(name: "Entertainment",    icon: "popcorn.fill",           color: .purple),
+        BuiltinDefinition(name: "Bills & Utilities",icon: "lightbulb.fill",         color: .gray),
+        BuiltinDefinition(name: "Travel",           icon: "airplane",               color: .cyan),
+        BuiltinDefinition(name: "Other",            icon: "ellipsis.circle.fill",   color: .indigo),
     ]
 
     public static func seed(into context: ModelContext) {
@@ -35,7 +34,6 @@ public struct BuiltinCategoriesSeeder {
         for (i, definition) in definitions.enumerated() {
             context.insert(CategoryModel(
                 name: definition.name,
-                displayName: definition.displayName,
                 icon: definition.icon,
                 color: definition.color,
                 isCustom: false,

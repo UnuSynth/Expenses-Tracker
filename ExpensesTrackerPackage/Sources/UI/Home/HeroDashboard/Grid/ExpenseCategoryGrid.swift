@@ -132,12 +132,12 @@ fileprivate struct WrappedHStackLayout: Layout {
 #Preview {
     ExpenseCategoryGrid(
         chips: [
-            .init(amount: 100, category: CategoryModel(name: "clothes", displayName: "Clothes", icon: "tshirt.fill", color: .purple)),
-            .init(amount: 150, category: CategoryModel(name: "groceries", displayName: "Groceries", icon: "cart.fill", color: .green)),
-            .init(amount: 200, category: CategoryModel(name: "lunch", displayName: "Lunch", icon: "fork.knife", color: .orange)),
-            .init(amount: 250, category: CategoryModel(name: "sport", displayName: "Sport", icon: "figure.run", color: .indigo)),
-            .init(amount: 80, category: CategoryModel(name: "transport", displayName: "Transport", icon: "car.fill", color: .blue)),
-            .init(amount: 120, category: CategoryModel(name: "entertainment", displayName: "Entertainment", icon: "popcorn.fill", color: .purple)),
+            .init(amount: 100, category: CategoryModel(name: "Clothes", icon: "tshirt.fill", color: .purple)),
+            .init(amount: 150, category: CategoryModel(name: "Groceries", icon: "cart.fill", color: .green)),
+            .init(amount: 200, category: CategoryModel(name: "Lunch", icon: "fork.knife", color: .orange)),
+            .init(amount: 250, category: CategoryModel(name: "Sport", icon: "figure.run", color: .indigo)),
+            .init(amount: 80, category: CategoryModel(name: "Transport", icon: "car.fill", color: .blue)),
+            .init(amount: 120, category: CategoryModel(name: "Entertainment", icon: "popcorn.fill", color: .purple)),
         ]
     )
     .padding()

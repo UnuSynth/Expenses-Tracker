@@ -20,8 +20,8 @@ struct ExpensesTrackerApp: App {
                 return
             }
             
-            ExpensesSeeder.seed(into: modelContainer.mainContext)
             BuiltinCategoriesSeeder.seed(into: modelContainer.mainContext)
+            ExpensesSeeder.seed(into: modelContainer.mainContext)
         }
     }
 }

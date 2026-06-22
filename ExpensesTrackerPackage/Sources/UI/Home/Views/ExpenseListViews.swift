@@ -43,7 +43,7 @@ struct ExpenseListRow: View {
     
     private var titleText: String {
         guard let desc = expense.notes?.desc, !desc.isEmpty else {
-            return expense.category.displayName
+            return expense.category.name
         }
         
         return desc
@@ -51,7 +51,7 @@ struct ExpenseListRow: View {
 
     private var subtitleText: String {
         if expense.notes?.desc != nil, expense.notes?.desc?.isEmpty == false {
-            return "\(expense.category.displayName) · \(timeText)"
+            return "\(expense.category.name) · \(timeText)"
         } else {
             return timeText
         }
@@ -97,7 +97,7 @@ struct ExpenseListEmptyState: View {
     private var subtitle: String {
         let periodText = period.description.lowercased()
         if let category {
-            return "No \(category.displayName) expenses in \(periodText)."
+            return "No \(category.name) expenses in \(periodText)."
         } else {
             return "No expenses in \(periodText)."
         }

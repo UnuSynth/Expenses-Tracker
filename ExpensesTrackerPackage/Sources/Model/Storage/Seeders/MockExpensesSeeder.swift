@@ -21,12 +21,10 @@ public enum ExpensesSeeder {
         let oneYearAgo = Calendar.current.date(byAdding: .year, value: -1, to: now)!
         let interval = now.timeIntervalSince(oneYearAgo)
 
-        let amounts: [Double] = [5, 10, 12.5, 15, 20, 25, 30, 45, 50, 75, 100, 120, 150, 200, 250]
-
         for i in 0..<150 {
             let randomOffset = Double(i) / 150.0 * interval + Double(i % 7) * 86400
             let date = oneYearAgo.addingTimeInterval(randomOffset.truncatingRemainder(dividingBy: interval))
-            let amount = amounts[i % amounts.count]
+            let amount = Double(Int.random(in: 1...12_000))
             let category = categories[i % categories.count]
 
             let expense = ExpenseDBModel(date: date, amount: amount, category: category)

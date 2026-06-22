@@ -73,9 +73,8 @@ private extension HomeViewModelImpl {
         let filtered = filteredByDateExpenses.filter { expense in
             if let category = selectedCategoryFilter, expense.category != category { return false }
             if !trimmedSearch.isEmpty {
-                let matchesDesc = expense.notes?.desc?.lowercased().contains(trimmedSearch) ?? false
-                let matchesCategory = expense.category.displayName.lowercased().contains(trimmedSearch)
-                guard matchesDesc || matchesCategory else { return false }
+                return expense.notes?.desc?.lowercased().contains(trimmedSearch) ?? false
+                || expense.category.name.lowercased().contains(trimmedSearch)
             }
             return true
         }

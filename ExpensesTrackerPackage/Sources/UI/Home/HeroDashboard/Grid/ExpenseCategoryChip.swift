@@ -24,7 +24,7 @@ struct ExpenseCategoryChip: View {
                         .frame(width: 9, height: 9)
                 }
 
-                Text(chipModel.category.displayName)
+                Text(chipModel.category.name)
                     .font(.footnote.bold())
                     .foregroundStyle(isSelected ? .white : .primary)
                     .lineLimit(1)
