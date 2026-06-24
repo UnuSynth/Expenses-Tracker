@@ -8,14 +8,17 @@
 import SwiftUI
 
 public struct ExpensesTrackerViewer: View {
+    @AppStorage(AppStorageKeys.languageCode.key) private var languageCode: String = "en"
+
     public init() { }
-    
+
     public var body: some View {
         NavigationStack {
             HomeView(viewModel: HomeViewModelImpl())
-                .navigationTitle("Expenses Tracker AI")
+                .navigationTitle(.expensesTrackerAi)
                 .navigationBarTitleDisplayMode(.inline)
         }
+        .environment(\.locale, Locale(identifier: languageCode))
     }
 }
 

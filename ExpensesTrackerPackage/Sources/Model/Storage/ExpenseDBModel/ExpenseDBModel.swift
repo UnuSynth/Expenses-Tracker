@@ -10,8 +10,7 @@ import SwiftData
 
 @Model
 public class ExpenseDBModel {
-    public var id: UUID = UUID()
-
+    @Attribute(.unique) public var id = UUID()
     var date: Date
     var amount: Double
     var category: CategoryModel

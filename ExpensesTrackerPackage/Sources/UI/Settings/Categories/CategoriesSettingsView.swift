@@ -12,11 +12,13 @@ struct CategoriesSettingsView: View {
     @Query(sort: \CategoryModel.sortOrder) private var categories: [CategoryModel]
     @Environment(\.modelContext) private var context
 
+    @State private var isAddingCategory = false
+
     var body: some View {
         List {
             ForEach(categories) { category in
                 NavigationLink {
-                    Text(category.displayName)
+                    Text(category.name)
                 } label: {
                     HStack(spacing: 12) {
                         ZStack {
@@ -27,9 +29,9 @@ struct CategoriesSettingsView: View {
                                 .foregroundStyle(.white)
                                 .font(.system(size: 15))
                         }
-                        Text(category.displayName)
+                        Text(category.name)
                         Spacer()
-                        Text("\(countForCategory(category))")
+                        Text(.count(countForCategory(category)))
                             .foregroundStyle(.secondary)
                             .font(.subheadline)
                     }
@@ -49,26 +51,29 @@ struct CategoriesSettingsView: View {
         .listStyle(.insetGrouped)
         .scrollContentBackground(.hidden)
         .background(.background.secondary)
-        .navigationTitle("Categories")
+        .navigationTitle(.categories)
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 HStack(spacing: 16) {
                     EditButton()
                     Button {
-                        // TODO: Add category
+                        isAddingCategory = true
                     } label: {
                         Image(systemName: "plus")
                     }
                 }
             }
         }
+        .sheet(isPresented: $isAddingCategory) {
+            AddCategoryView(nextSortOrder: (categories.last?.sortOrder ?? -1) + 1)
+        }
     }
-    
+
     private func deleteCategory(_ category: CategoryModel) {
         context.delete(category)
     }
-    
+
     private func countForCategory(_ category: CategoryModel) -> Int {
         let categoryName = category.name
         let descriptor = FetchDescriptor<ExpenseDBModel>(

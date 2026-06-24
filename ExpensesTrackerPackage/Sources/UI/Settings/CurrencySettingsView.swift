@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CurrencySettingsView: View {
-    @AppStorage("selectedCurrency") private var selectedCurrencyRaw: String = Currency.usd.rawValue
+    @AppStorage(AppStorageKeys.currency.key) private var selectedCurrencyRaw: String = Currency.usd.rawValue
 
     private var selectedCurrency: Currency {
         Currency(rawValue: selectedCurrencyRaw) ?? Currency.usd
@@ -39,7 +39,7 @@ struct CurrencySettingsView: View {
         .listStyle(.insetGrouped)
         .scrollContentBackground(.hidden)
         .background(.background.secondary)
-        .navigationTitle("Currency")
+        .navigationTitle(Text(.currency))
         .navigationBarTitleDisplayMode(.large)
     }
 }

@@ -86,7 +86,7 @@ private struct PadButton: View {
                 .font(.title2.weight(.semibold))
                 .foregroundStyle(.primary)
         case .decimal:
-            Text(".")
+            Text(.dot)
                 .font(.title2.weight(.semibold))
                 .foregroundStyle(.primary)
         case .backspace:

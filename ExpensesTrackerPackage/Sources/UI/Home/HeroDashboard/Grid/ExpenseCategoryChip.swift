@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ExpenseCategoryChip: View {
-    @AppStorage("selectedCurrency") private var selectedCurrencyRaw: String = Currency.usd.rawValue
+    @AppStorage(AppStorageKeys.currency.key) private var selectedCurrencyRaw: String = Currency.usd.rawValue
     
     let chipModel: HeroDashboardModel.ChipModel
     let isSelected: Bool
@@ -24,7 +24,7 @@ struct ExpenseCategoryChip: View {
                         .frame(width: 9, height: 9)
                 }
 
-                Text(chipModel.category.displayName)
+                Text(chipModel.category.name)
                     .font(.footnote.bold())
                     .foregroundStyle(isSelected ? .white : .primary)
                     .lineLimit(1)

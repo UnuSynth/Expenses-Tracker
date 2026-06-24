@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @Environment(\.locale) private var locale
+    
     var body: some View {
         NavigationStack {
             List {
@@ -15,31 +17,37 @@ struct SettingsView: View {
                     NavigationLink {
                         CurrencySettingsView()
                     } label: {
-                        Label("Currency", systemImage: "display")
+                        Label { Text(.currency) } icon: { Image(systemName: "display") }
                     }
-                    
+
                     NavigationLink {
                         CategoriesSettingsView()
                     } label: {
-                        Label("Categories", systemImage: "tag.fill")
+                        Label { Text(.categories) } icon: { Image(systemName: "tag.fill") }
+                    }
+
+                    NavigationLink {
+                        LanguageSettingsView()
+                    } label: {
+                        Label { Text(.language) } icon: { Image(systemName: "globe") }
                     }
                 } header: {
-                    Text("General")
+                    Text(.general)
+                }
+
+                Section {
+                } header: {
+                    Text(.appearance)
                 }
                 
                 Section {
                 } header: {
-                    Text("Appearance")
-                }
-                
-                Section {
-                } header: {
-                    Text("About")
+                    Text(.about)
                 }
             }
             .listStyle(.insetGrouped)
             .scrollContentBackground(.hidden)
-            .navigationTitle("Settings")
+            .localizedNavigationTitle(locale: locale, resource: .settings)
             .navigationBarTitleDisplayMode(.large)
             .background(.background.secondary)
         }

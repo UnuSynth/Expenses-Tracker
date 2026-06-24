@@ -13,7 +13,8 @@ struct HeroDashboardCard: View {
     @State private var showDateRangePicker = false
     @Binding private var selectedPeriod: Calendar.Period
     @State private var selectedCategory: CategoryModel?
-    @AppStorage("selectedCurrency") private var selectedCurrencyRaw: String = Currency.usd.rawValue
+    @AppStorage(AppStorageKeys.currency.key) private var selectedCurrencyRaw: String = Currency.usd.rawValue
+    @Environment(\.locale) private var locale
     
     var availablePickerPeriods: [Calendar.Period] { [.day, .week, .month, .year] }
     
@@ -37,13 +38,14 @@ struct HeroDashboardCard: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 if let selectedCategory {
-                    Label(selectedCategory.displayName.uppercased(), systemImage: selectedCategory.icon)
+                    Label(selectedCategory.name.uppercased(), systemImage: selectedCategory.icon)
                         .font(.footnote.bold())
                         .foregroundStyle(selectedCategory.color)
                         .lineLimit(1)
                         .truncationMode(.middle)
                 } else {
-                    Text(selectedPeriod.description.uppercased())
+                    Text(selectedPeriod.descriptionResource)
+                        .textCase(.uppercase)
                         .font(.footnote.bold())
                         .foregroundStyle(.secondary)
                 }
@@ -101,17 +103,17 @@ struct HeroDashboardCard: View {
     
     private var upperMenu: some View {
         Menu {
-            Picker("", selection: $selectedPeriod) {
+            Picker(.empty, selection: $selectedPeriod) {
                 ForEach(availablePickerPeriods, id: \.self) { period in
-                    Text(period.description)
+                    Text(period.descriptionResource)
                 }
             }
             
-            Button("Custom period") {
+            Button(.customPeriod) {
                 showDateRangePicker = true
             }
         } label: {
-            Button(selectedPeriod.datesDescription, systemImage: selectedPeriod.systemImage) { }
+            Button(selectedPeriod.datesDescription(locale: locale).localizedCapitalized, systemImage: selectedPeriod.systemImage) { }
         }
         .font(.footnote.weight(.medium))
         .foregroundStyle(.indigo)
@@ -142,15 +144,15 @@ extension HeroDashboardCard {
         chips: [
             HeroDashboardModel.ChipModel(
                 amount: 200,
-                category: CategoryModel(name: "groceries", displayName: "Groceries", icon: "cart.fill", color: .green)
+                category: CategoryModel(name: "Groceries", icon: "cart.fill", color: .green)
             ),
             HeroDashboardModel.ChipModel(
                 amount: 150,
-                category: CategoryModel(name: "lunch", displayName: "Lunch", icon: "fork.knife", color: .orange)
+                category: CategoryModel(name: "Lunch", icon: "fork.knife", color: .orange)
             ),
             HeroDashboardModel.ChipModel(
                 amount: 150,
-                category: CategoryModel(name: "clothes", displayName: "Clothes", icon: "tshirt.fill", color: .purple)
+                category: CategoryModel(name: "Clothes", icon: "tshirt.fill", color: .purple)
             )
         ]
     )

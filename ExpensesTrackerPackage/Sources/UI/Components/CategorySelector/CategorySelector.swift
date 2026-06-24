@@ -55,7 +55,7 @@ private struct CategorySelectorItem: View {
                     .foregroundStyle(category.color)
             }
 
-            Text(category.displayName)
+            Text(category.name)
                 .font(.caption)
                 .foregroundStyle(isSelected ? category.color : .secondary)
                 .lineLimit(1)
@@ -66,9 +66,9 @@ private struct CategorySelectorItem: View {
 #Preview {
     @Previewable @State var selection: CategoryModel? = nil
     let categories: [CategoryModel] = [
-        CategoryModel(name: "groceries", displayName: "Groceries", icon: "cart.fill", color: .green),
-        CategoryModel(name: "lunch", displayName: "Lunch", icon: "fork.knife", color: .orange),
-        CategoryModel(name: "transport", displayName: "Transport", icon: "car.fill", color: .blue),
+        CategoryModel(name: "Groceries", icon: "cart.fill", color: .green),
+        CategoryModel(name: "Lunch", icon: "fork.knife", color: .orange),
+        CategoryModel(name: "Transport", icon: "car.fill", color: .blue),
     ]
     CategorySelector(
         categories: categories,

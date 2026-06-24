@@ -35,3 +35,14 @@ extension String {
         )
     }
 }
+
+extension String {
+    init(
+        resource: LocalizedStringResource,
+        locale: Locale = .autoupdatingCurrent
+    ) {
+        var r = resource
+        r.locale = locale
+        self.init(localized: r)
+    }
+}

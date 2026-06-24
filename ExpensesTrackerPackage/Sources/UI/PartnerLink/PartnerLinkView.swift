@@ -27,16 +27,16 @@ struct PartnerLinkView: View {
                 Spacer()
             }
             .padding(.horizontal, 24)
-            .navigationTitle("Partner")
+            .navigationTitle(.partner)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") { dismiss() }
+                    Button(.done) { dismiss() }
                 }
             }
-            .confirmationDialog("Remove partner?", isPresented: $showUnlinkConfirmation, titleVisibility: .visible) {
-                Button("Remove Partner", role: .destructive) { isLinked = false }
-                Button("Cancel", role: .cancel) {}
+            .confirmationDialog(.removePartnerQuestion, isPresented: $showUnlinkConfirmation, titleVisibility: .visible) {
+                Button(.removePartner, role: .destructive) { isLinked = false }
+                Button(.cancel, role: .cancel) {}
             }
         }
     }
@@ -48,17 +48,17 @@ struct PartnerLinkView: View {
                 .foregroundStyle(Color.accentColor)
 
             VStack(spacing: 8) {
-                Text("Share with a partner")
+                Text(.shareWithAPartner)
                     .font(.title3)
                     .bold()
-                Text("Browse each other's spending.\nYour data stays yours.")
+                Text(.browseEachOthersSpendingYourDataStaysYours)
                     .font(.body)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
             }
 
             VStack(spacing: 12) {
-                Button("Send Invite") {
+                Button(.sendInvite) {
                     // Phase 3: initiate CKShare
                 }
                 .font(.headline)
@@ -66,7 +66,7 @@ struct PartnerLinkView: View {
                 .frame(maxWidth: .infinity, minHeight: 50)
                 .background(Color.accentColor, in: .rect(cornerRadius: 12))
 
-                Button("Enter Code") {
+                Button(.enterCode) {
                     // Phase 3: enter invite code
                 }
                 .font(.headline)
@@ -84,22 +84,22 @@ struct PartnerLinkView: View {
                 .foregroundStyle(.secondary)
 
             VStack(spacing: 8) {
-                Text("Linked with Alex")
+                Text(.linkedWith)
                     .font(.title3)
                     .bold()
-                Text("Sharing since April 2026")
+                Text(.sharingSinceApril2026)
                     .font(.body)
                     .foregroundStyle(.secondary)
             }
 
             VStack(spacing: 12) {
-                Button("View Partner Spending") {}
+                Button(.viewPartnerSpending) {}
                     .font(.headline)
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity, minHeight: 50)
                     .background(Color.accentColor, in: .rect(cornerRadius: 12))
 
-                Button("Remove Partner") {
+                Button(.removePartner) {
                     showUnlinkConfirmation = true
                 }
                 .font(.body)

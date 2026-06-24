@@ -12,40 +12,39 @@ extension Calendar.Period {
         guard #available(iOS 26.0, *) else {
             return "calendar"
         }
-        
+
         guard case .day = self else {
             return "calendar"
         }
 
         return "\(dates.start.formatted(.dateTime.day())).calendar"
     }
-
-    var description: String {
+    
+    var descriptionResource: LocalizedStringResource {
         switch self {
-        case .day:
-            "Today"
-        case .week:
-            "This week"
-        case .month:
-            "This month"
-        case .year:
-            "This year"
-        case .custom:
-            "Period"
+        case .day: .today
+        case .week: .thisWeek
+        case .month: .thisMonth
+        case .year: .thisYear
+        case .custom: .period
         }
     }
+    
+    func description(locale: Locale) -> String {
+        .init(resource: descriptionResource, locale: locale)
+    }
 
-    var datesDescription: String {
+    func datesDescription(locale: Locale) -> String {
         switch self {
         case .day:
-            return "Today"
+            return .init(resource: .today, locale: locale)
         case .month:
-            return dates.start.formatted(.dateTime.month())
+            return dates.start.formatted(.dateTime.month().locale(locale))
         case .week where !dates.start.matches(dates.end, by: .year),
                 .custom where !dates.start.matches(dates.end, by: .year):
-            return "\(dates.start.formatted(.dateTime.day().month().year())) - \(dates.end.formatted(.dateTime.day().month().year()))"
+            return "\(dates.start.formatted(.dateTime.day().month().year().locale(locale))) - \(dates.end.formatted(.dateTime.day().month().year().locale(locale)))"
         default:
-            return "\(dates.start.formatted(.dateTime.day().month())) - \(dates.end.formatted(.dateTime.day().month().year()))"
+            return "\(dates.start.formatted(.dateTime.day().month().locale(locale))) - \(dates.end.formatted(.dateTime.day().month().year().locale(locale)))"
         }
     }
 }

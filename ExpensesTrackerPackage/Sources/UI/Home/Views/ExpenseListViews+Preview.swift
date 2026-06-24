@@ -10,14 +10,14 @@ import SwiftUI
 // MARK: - Previews
 
 private extension CategoryModel {
-    nonisolated(unsafe) static let groceries = CategoryModel(name: "groceries", displayName: "Groceries", icon: "cart.fill", color: .green)
-    nonisolated(unsafe) static let lunch = CategoryModel(name: "lunch", displayName: "Lunch", icon: "fork.knife", color: .orange)
-    nonisolated(unsafe) static let transport = CategoryModel(name: "transport", displayName: "Transport", icon: "car.fill", color: .blue)
-    nonisolated(unsafe) static let clothes = CategoryModel(name: "clothes", displayName: "Clothes", icon: "tshirt.fill", color: .purple)
-    nonisolated(unsafe) static let entertainment = CategoryModel(name: "entertainment", displayName: "Entertainment", icon: "popcorn.fill", color: .purple)
-    nonisolated(unsafe) static let health = CategoryModel(name: "health", displayName: "Health", icon: "heart.fill", color: .red)
-    nonisolated(unsafe) static let utilities = CategoryModel(name: "utilities", displayName: "Utilities", icon: "bolt.fill", color: .yellow)
-    nonisolated(unsafe) static let sport = CategoryModel(name: "sport", displayName: "Sport", icon: "figure.run", color: .indigo)
+    nonisolated(unsafe) static let groceries = CategoryModel(name: "Groceries", icon: "cart.fill", color: .green)
+    nonisolated(unsafe) static let lunch = CategoryModel(name: "Lunch", icon: "fork.knife", color: .orange)
+    nonisolated(unsafe) static let transport = CategoryModel(name: "Transport", icon: "car.fill", color: .blue)
+    nonisolated(unsafe) static let clothes = CategoryModel(name: "Clothes", icon: "tshirt.fill", color: .purple)
+    nonisolated(unsafe) static let entertainment = CategoryModel(name: "Entertainment", icon: "popcorn.fill", color: .purple)
+    nonisolated(unsafe) static let health = CategoryModel(name: "Health", icon: "heart.fill", color: .red)
+    nonisolated(unsafe) static let utilities = CategoryModel(name: "Utilities", icon: "bolt.fill", color: .yellow)
+    nonisolated(unsafe) static let sport = CategoryModel(name: "Sport", icon: "figure.run", color: .indigo)
 }
 
 private extension ExpenseDBModel {
