@@ -13,7 +13,7 @@ struct ExpenseListSectionHeader: View {
     let label: String
     let total: Double
     
-    @AppStorage("selectedCurrency") private var selectedCurrencyRaw: String = Currency.usd.rawValue
+    @AppStorage(AppStorageKeys.currency.key) private var selectedCurrencyRaw: String = Currency.usd.rawValue
 
     var body: some View {
         HStack {
@@ -34,11 +34,12 @@ struct ExpenseListSectionHeader: View {
 
 struct ExpenseListRow: View {
     let expense: ExpenseDBModel
-    
-    @AppStorage("selectedCurrency") private var selectedCurrencyRaw: String = Currency.usd.rawValue
+
+    @AppStorage(AppStorageKeys.currency.key) private var selectedCurrencyRaw: String = Currency.usd.rawValue
+    @Environment(\.locale) private var locale
 
     private var timeText: String {
-        expense.date.formatted(.dateTime.hour().minute())
+        expense.date.formatted(.dateTime.hour().minute().locale(locale))
     }
     
     private var titleText: String {
@@ -94,24 +95,24 @@ struct ExpenseListEmptyState: View {
     let category: CategoryModel?
     let period: Calendar.Period
 
-    private var subtitle: String {
-        let periodText = period.description.lowercased()
-        if let category {
-            return "No \(category.name) expenses in \(periodText)."
-        } else {
-            return "No expenses in \(periodText)."
-        }
-    }
+    @Environment(\.locale) private var locale
 
     var body: some View {
         VStack(spacing: 6) {
-            Text("No Results")
+            Text(.noResults)
                 .font(.headline)
                 .foregroundStyle(.primary)
-            Text(subtitle)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
+            if let category {
+                Text(.noExpenses(category.name, in: period.description(locale: locale).lowercased()))
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            } else {
+                Text(.noExpensesIn(period.description(locale: locale).lowercased()))
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 48)

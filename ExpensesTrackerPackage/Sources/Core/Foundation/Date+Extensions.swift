@@ -13,10 +13,12 @@ extension Date {
         return Calendar.current.isDate(self, inSameDayAs: other)
     }
     
-    var relativeLabel: String {
-        if Calendar.current.isDateInToday(self) { return "Today" }
-        if Calendar.current.isDateInYesterday(self) { return "Yesterday" }
-        return self.formatted(.dateTime.weekday(.wide).month(.abbreviated).day())
+    func relativeLabel(locale: Locale) -> String {
+        if Calendar.current.isDateInToday(self) { return .init(resource: .today, locale: locale) }
+        if Calendar.current.isDateInYesterday(self) { return .init(resource: .yesterday, locale: locale) }
+        let isCurrentYear = Calendar.current.isDate(self, equalTo: .now, toGranularity: .year)
+        let base: Date.FormatStyle = .dateTime.weekday(.wide).month(.abbreviated).day().locale(locale)
+        return formatted(isCurrentYear ? base : base.year())
     }
     
     /// Compares two dates based on the specified calendar component

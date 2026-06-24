@@ -51,7 +51,7 @@ struct CategoriesSettingsView: View {
         .listStyle(.insetGrouped)
         .scrollContentBackground(.hidden)
         .background(.background.secondary)
-        .navigationTitle("Categories")
+        .navigationTitle(.categories)
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

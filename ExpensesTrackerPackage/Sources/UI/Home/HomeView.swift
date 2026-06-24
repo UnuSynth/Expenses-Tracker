@@ -12,6 +12,7 @@ struct HomeView: View {
     @State private var viewModel: HomeViewModel
 
     @Environment(\.modelContext) private var context
+    @Environment(\.locale) private var locale
     @Query(sort: \ExpenseDBModel.date, order: .reverse) private var expenses: [ExpenseDBModel]
 
     init(viewModel: HomeViewModel) {
@@ -61,7 +62,7 @@ struct HomeView: View {
                             }
                         } header: {
                             ExpenseListSectionHeader(
-                                label: group.date.relativeLabel,
+                                label: group.date.relativeLabel(locale: locale),
                                 total: group.total
                             )
                         }
@@ -76,7 +77,7 @@ struct HomeView: View {
         .toolbar {
             ToolbarItemGroup(placement: .bottomBar) {
                 Spacer()
-                Button("Add Expense", systemImage: "plus", action: viewModel.addExpenseButtonTapped)
+                Button(.addExpense, systemImage: "plus", action: viewModel.addExpenseButtonTapped)
                     .modifier(AddExpenseButtonBehaviorModifier())
                 Spacer()
             }
@@ -91,7 +92,7 @@ struct HomeView: View {
                         .frame(width: 28, height: 28)
                         .clipShape(.circle)
                 }
-                .accessibilityLabel("View partner")
+                .accessibilityLabel(.viewPartner)
             }
         }
         .sheet(isPresented: $viewModel.showSettingsSheet) {
@@ -123,7 +124,7 @@ struct HomeView: View {
         Button(role: .destructive) {
             context.delete(expense)
         } label: {
-            Label("Delete", systemImage: "trash")
+            Label(.delete, systemImage: "trash")
         }
     }
     
@@ -131,7 +132,7 @@ struct HomeView: View {
         Button {
             viewModel.editExpenese(expense)
         } label: {
-            Label("Edit", systemImage: "pencil")
+            Label(.edit, systemImage: "pencil")
         }
         .tint(.orange)
     }

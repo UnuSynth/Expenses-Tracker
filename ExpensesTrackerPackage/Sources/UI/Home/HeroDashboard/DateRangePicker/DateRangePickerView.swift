@@ -52,16 +52,16 @@ struct DateRangePicker: View {
 
     var body: some View {
         NavigationStack {
-            MultiDatePicker("", selection: datesBinding, in: bounds ?? defaultBounds)
+            MultiDatePicker(.empty, selection: datesBinding, in: bounds ?? defaultBounds)
                 .padding()
-                .navigationTitle("\(startDate?.formatted(date: .abbreviated, time: .omitted) ?? "") - \(endDate?.formatted(date: .abbreviated, time: .omitted) ?? "")")
+                .navigationTitle(.separatedWithDash(startDate?.formatted(date: .abbreviated, time: .omitted) ?? "", endDate?.formatted(date: .abbreviated, time: .omitted) ?? ""))
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
                         if #available(iOS 26.0, *) {
                             Button(role: .close) { dismiss() }
                         } else {
-                            Button("Close", systemImage: "xmark") { dismiss() }
+                            Button(.close, systemImage: "xmark") { dismiss() }
                         }
                     }
                     ToolbarItem(placement: .confirmationAction) {
@@ -70,7 +70,7 @@ struct DateRangePicker: View {
                                 .disabled(datesBinding.wrappedValue.isEmpty)
                         } else {
                             Button(
-                                "Done",
+                                .done,
                                 systemImage: "checkmark",
                                 action: apply
                             )

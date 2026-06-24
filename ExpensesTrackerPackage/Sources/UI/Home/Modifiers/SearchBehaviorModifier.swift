@@ -23,7 +23,7 @@ struct SearchBehaviorModifier: ViewModifier {
                 .searchable(
                     text: $searchText,
                     placement: .automatic,
-                    prompt: "Search expenses"
+                    prompt: .searchExpenses
                 )
                 .searchToolbarBehavior(.minimize)
                 .toolbar {
@@ -39,13 +39,13 @@ struct SearchBehaviorModifier: ViewModifier {
                         text: $searchText,
                         isPresented: $isSearchActive,
                         placement: .automatic,
-                        prompt: "Search expenses"
+                        prompt: .searchExpenses
                     )
             } else {
                 content
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {
-                            Button("Search", systemImage: "magnifyingglass") {
+                            Button(.search, systemImage: "magnifyingglass") {
                                 withAnimation {
                                     isSearchActive = true
                                 }

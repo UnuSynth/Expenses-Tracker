@@ -11,8 +11,9 @@ import SwiftData
 struct ExpenseEditorView: View {
     @Environment(\.dismiss) var dismiss
     @Query(sort: \CategoryModel.sortOrder) private var categories: [CategoryModel]
-    @AppStorage("selectedCurrency") private var selectedCurrencyRaw: String = Currency.usd.rawValue
+    @AppStorage(AppStorageKeys.currency.key) private var selectedCurrencyRaw: String = Currency.usd.rawValue
     @Environment(\.modelContext) private var context
+    @Environment(\.locale) private var locale
     
     @State private var date: Date = .now
     @State private var amountString: String = ""
@@ -46,7 +47,7 @@ struct ExpenseEditorView: View {
         NavigationStack {
             VStack(alignment: .center, spacing: 8) {
                 Spacer()
-                Button("\(date.relativeLabel), \(date.formatted(.dateTime.hour().minute()))", systemImage: "calendar") {
+                Button(.separatedWithComma(date.relativeLabel(locale: locale), date.formatted(.dateTime.hour().minute().locale(locale))), systemImage: "calendar") {
                     showCalendar = true
                 }
                 .popover(
@@ -54,7 +55,7 @@ struct ExpenseEditorView: View {
                     arrowEdge: .top
                 ) {
                     DatePicker(
-                        "",
+                        .empty,
                         selection: $date,
                         in: datesRange
                     )
@@ -77,19 +78,23 @@ struct ExpenseEditorView: View {
                     selection: $category
                 )
                 
-                TextField("Add a note", text: $notes)
-                    .safeAreaInset(edge: .leading) {
-                        Image(systemName: "pencil")
-                            .foregroundColor(.gray)
-                            .padding(.trailing, 4)
-                    }
-                    .lineLimit(1...2)
-                    .fixedSize(horizontal: true, vertical: false)
-                    .font(.subheadline.bold())
-                    .foregroundStyle(.secondary)
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 12)
-                    .modifier(CapsuleButtonBehaviorModifier())
+                TextField(
+                    "Add a note",
+                    text: $notes,
+                    prompt: Text(.addANote)
+                )
+                .safeAreaInset(edge: .leading) {
+                    Image(systemName: "pencil")
+                        .foregroundColor(.gray)
+                        .padding(.trailing, 4)
+                }
+                .lineLimit(1...2)
+                .fixedSize(horizontal: true, vertical: false)
+                .font(.subheadline.bold())
+                .foregroundStyle(.secondary)
+                .padding(.vertical, 8)
+                .padding(.horizontal, 12)
+                .modifier(CapsuleButtonBehaviorModifier())
                 
                 NumberPad(
                     text: $amountString
@@ -104,7 +109,7 @@ struct ExpenseEditorView: View {
                             dismiss()
                         }
                     } else {
-                        Button("Close") {
+                        Button(.close) {
                             dismiss()
                         }
                     }
@@ -116,7 +121,7 @@ struct ExpenseEditorView: View {
                             context.delete(expense)
                             dismiss()
                         } label: {
-                            Label("Delete expense", systemImage: "trash")
+                            Label(.deleteExpense, systemImage: "trash")
                         }
                     }
                 }
@@ -142,7 +147,7 @@ struct ExpenseEditorView: View {
                         .disabled(!isValid)
                     } else {
                         Button(
-                            "Done",
+                            .done,
                             action: confirmAction
                         )
                         .disabled(!isValid)
@@ -169,7 +174,7 @@ struct ExpenseEditorView: View {
                 .padding(.bottom, 16)
             
             
-            Text("Expense")
+            Text(.expense)
                 .font(.title.bold())
                 .foregroundStyle(.primary)
             

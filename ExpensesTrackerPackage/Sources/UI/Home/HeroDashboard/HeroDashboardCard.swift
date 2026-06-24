@@ -13,7 +13,8 @@ struct HeroDashboardCard: View {
     @State private var showDateRangePicker = false
     @Binding private var selectedPeriod: Calendar.Period
     @State private var selectedCategory: CategoryModel?
-    @AppStorage("selectedCurrency") private var selectedCurrencyRaw: String = Currency.usd.rawValue
+    @AppStorage(AppStorageKeys.currency.key) private var selectedCurrencyRaw: String = Currency.usd.rawValue
+    @Environment(\.locale) private var locale
     
     var availablePickerPeriods: [Calendar.Period] { [.day, .week, .month, .year] }
     
@@ -43,7 +44,8 @@ struct HeroDashboardCard: View {
                         .lineLimit(1)
                         .truncationMode(.middle)
                 } else {
-                    Text(selectedPeriod.description.uppercased())
+                    Text(selectedPeriod.descriptionResource)
+                        .textCase(.uppercase)
                         .font(.footnote.bold())
                         .foregroundStyle(.secondary)
                 }
@@ -101,17 +103,17 @@ struct HeroDashboardCard: View {
     
     private var upperMenu: some View {
         Menu {
-            Picker("", selection: $selectedPeriod) {
+            Picker(.empty, selection: $selectedPeriod) {
                 ForEach(availablePickerPeriods, id: \.self) { period in
-                    Text(period.description)
+                    Text(period.descriptionResource)
                 }
             }
             
-            Button("Custom period") {
+            Button(.customPeriod) {
                 showDateRangePicker = true
             }
         } label: {
-            Button(selectedPeriod.datesDescription, systemImage: selectedPeriod.systemImage) { }
+            Button(selectedPeriod.datesDescription(locale: locale).localizedCapitalized, systemImage: selectedPeriod.systemImage) { }
         }
         .font(.footnote.weight(.medium))
         .foregroundStyle(.indigo)

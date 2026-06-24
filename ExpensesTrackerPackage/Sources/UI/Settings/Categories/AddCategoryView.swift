@@ -40,15 +40,15 @@ struct AddCategoryView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Name") {
+                Section(.name) {
                     TextField("Category name", text: $displayName)
                 }
 
-                Section("Color") {
-                    ColorPicker("Color", selection: $selectedColor, supportsOpacity: false)
+                Section(.color) {
+                    ColorPicker(.color, selection: $selectedColor, supportsOpacity: false)
                 }
 
-                Section("Icon") {
+                Section(.icon) {
                     LazyVGrid(columns: columns, spacing: 8) {
                         ForEach(icons, id: \.self) { icon in
                             Button {
@@ -69,10 +69,10 @@ struct AddCategoryView: View {
                     .padding(.vertical, 4)
                 }
             }
-            .navigationTitle("New Category")
+            .navigationTitle(.newCategory)
             .navigationBarTitleDisplayMode(.inline)
-            .alert("Duplicate Category", isPresented: $showDuplicateAlert) {
-                Button("OK", role: .cancel) {}
+            .alert(.duplicateCategory, isPresented: $showDuplicateAlert) {
+                Button(.ok, role: .cancel) {}
             } message: {
                 Text("A category named \"\(trimmedName)\" already exists.")
             }
@@ -83,7 +83,7 @@ struct AddCategoryView: View {
                             dismiss()
                         }
                     } else {
-                        Button("Close") {
+                        Button(.close) {
                             dismiss()
                         }
                     }
@@ -95,7 +95,7 @@ struct AddCategoryView: View {
                         }
                         .disabled(trimmedName.isEmpty)
                     } else {
-                        Button("Done") {
+                        Button(.done) {
                             addCategory()
                             dismiss()
                         }
