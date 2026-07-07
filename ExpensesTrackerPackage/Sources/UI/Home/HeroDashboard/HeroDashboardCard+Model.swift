@@ -27,7 +27,7 @@ struct HeroDashboardModel: Equatable {
         let category: CategoryModel
         
         func toSpendingBarSegment() -> SpendingBarSegment {
-            .init(color: category.color, value: amount)
+            .init(id: category.name, color: category.color, value: amount)
         }
     }
 }

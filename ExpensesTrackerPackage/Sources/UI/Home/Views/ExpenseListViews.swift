@@ -12,8 +12,7 @@ import SwiftUI
 struct ExpenseListSectionHeader: View {
     let label: String
     let total: Double
-    
-    @AppStorage(AppStorageKeys.currency.key) private var selectedCurrencyRaw: String = Currency.usd.rawValue
+    let currency: Currency
 
     var body: some View {
         HStack {
@@ -21,7 +20,7 @@ struct ExpenseListSectionHeader: View {
                 .font(.footnote.bold())
                 .foregroundStyle(.primary)
             Spacer()
-            Text(total.formatted(currency: .initialize(rawValue: selectedCurrencyRaw)))
+            Text(total.formatted(currency: currency))
                 .font(.footnote.bold())
                 .foregroundStyle(.primary)
         }
@@ -34,8 +33,8 @@ struct ExpenseListSectionHeader: View {
 
 struct ExpenseListRow: View {
     let expense: ExpenseDBModel
+    let currency: Currency
 
-    @AppStorage(AppStorageKeys.currency.key) private var selectedCurrencyRaw: String = Currency.usd.rawValue
     @Environment(\.locale) private var locale
 
     private var timeText: String {
@@ -46,7 +45,6 @@ struct ExpenseListRow: View {
         guard let desc = expense.notes?.desc, !desc.isEmpty else {
             return expense.category.name
         }
-        
         return desc
     }
 
@@ -80,7 +78,7 @@ struct ExpenseListRow: View {
 
             Spacer()
 
-            Text(expense.amount.formatted(currency: .initialize(rawValue: selectedCurrencyRaw)))
+            Text(expense.amount.formatted(currency: currency))
                 .font(.body.weight(.medium))
                 .foregroundStyle(.primary)
         }

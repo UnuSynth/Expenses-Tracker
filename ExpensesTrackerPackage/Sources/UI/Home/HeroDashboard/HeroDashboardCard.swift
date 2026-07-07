@@ -7,35 +7,49 @@
 
 import SwiftUI
 
+private func lerp(_ a: CGFloat, _ b: CGFloat, _ t: CGFloat) -> CGFloat { a + (b - a) * t }
+
 struct HeroDashboardCard: View {
     private let model: HeroDashboardModel
-    
+    let progress: CGFloat
+
     @State private var showDateRangePicker = false
     @Binding private var selectedPeriod: Calendar.Period
     @State private var selectedCategory: CategoryModel?
     @AppStorage(AppStorageKeys.currency.key) private var selectedCurrencyRaw: String = Currency.usd.rawValue
     @Environment(\.locale) private var locale
-    
+
+    @State private var headerHeight: CGFloat = 0
+    @State private var upperMenuFrame: CGRect = .zero
+
+    private let cardPadding: CGFloat = 16
+    // At full collapse TotalMoney renders at ~31pt (48pt × 0.55), matching the capsule row height
+    private let collapsedScale: CGFloat = 0.55
+
     var availablePickerPeriods: [Calendar.Period] { [.day, .week, .month, .year] }
-    
+
+    private var clampedProgress: CGFloat { min(max(progress, 0), 1) }
+    private var fadeProgress: CGFloat { min(clampedProgress * 2, 1) }
+
+    private var moneyValue: Money {
+        .init(
+            amount: model.chips.first { $0.category == selectedCategory }?.amount ?? model.total,
+            currency: .initialize(rawValue: selectedCurrencyRaw)
+        )
+    }
+
     var body: some View {
         if #available(iOS 26.0, *) {
             content
-                .background(
-                    .white,
-                    in: ConcentricRectangle(corners: .concentric(minimum: 24))
-                )
+                .background(.white, in: ConcentricRectangle(corners: .concentric(minimum: 24)))
         } else {
             content
-                .background(
-                    .white,
-                    in: RoundedRectangle(cornerRadius: 24)
-                )
+                .background(.white, in: RoundedRectangle(cornerRadius: 24))
         }
     }
-    
+
     private var content: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: lerp(8, 4, clampedProgress)) {
             HStack {
                 if let selectedCategory {
                     Label(selectedCategory.name.uppercased(), systemImage: selectedCategory.icon)
@@ -49,38 +63,49 @@ struct HeroDashboardCard: View {
                         .font(.footnote.bold())
                         .foregroundStyle(.secondary)
                 }
-                
                 Spacer()
-                if #available(iOS 26.0, *) {
-                    upperMenu
-                        .glassEffect()
-                } else {
-                    upperMenu
+                Group {
+                    if #available(iOS 26.0, *) {
+                        upperMenu.glassEffect()
+                    } else {
+                        upperMenu
+                    }
                 }
+                .opacity(1 - fadeProgress)
+                .allowsHitTesting(fadeProgress < 1)
+                .accessibilityHidden(fadeProgress >= 1)
+                .onGeometryChange(for: CGRect.self) { $0.frame(in: .named("card")) } action: { upperMenuFrame = $0 }
             }
-            
-            TotalMoney(
-                money: .init(
-                    amount: model.chips.first { $0.category == selectedCategory }?.amount ?? model.total,
-                    currency: .initialize(rawValue: selectedCurrencyRaw)
-                )
+            .onGeometryChange(for: CGFloat.self, of: { $0.size.height }) { headerHeight = $0 }
+
+            CollapsibleTotalMoney(
+                money: moneyValue,
+                progress: clampedProgress,
+                headerHeight: headerHeight,
+                cardPadding: cardPadding,
+                collapsedScale: collapsedScale,
+                upperMenuFrame: upperMenuFrame
             )
-            .contentTransition(.numericText())
-            
+
             SpendingProportionalBar(
                 segments: model.chips.map { $0.toSpendingBarSegment() },
                 total: model.total,
                 selectedIndex: model.chips.firstIndex(where: { $0.category == selectedCategory })
             )
-            .frame(height: 10)
-            
-            ExpenseCategoryGrid(chips: model.chips)
-                .onCategorySelect { category in
-                    selectedCategory = category
-                }
-                .padding(.top, 8)
+            .frame(height: lerp(10, 5, clampedProgress))
+
+            CollapsibleCategoryGrid(
+                chips: model.chips,
+                progress: clampedProgress,
+                fadeProgress: fadeProgress
+            )
+            .onPreferenceChange(SelectedCategoryPreferenceKey.self) { category in
+                selectedCategory = category
+            }
+            .padding(.top, 8)
         }
-        .padding(16)
+        .padding(cardPadding)
+        .coordinateSpace(.named("card"))
         .sheet(isPresented: $showDateRangePicker) {
             DateRangePicker(
                 selectedPeriod: $selectedPeriod,
@@ -94,13 +119,12 @@ struct HeroDashboardCard: View {
         .animation(.easeInOut(duration: 0.3), value: selectedCategory)
         .onChange(of: model) { _, newValue in
             let hasChangesInCategories = !newValue.chips.contains { $0.category == selectedCategory }
-            
             if hasChangesInCategories {
                 selectedCategory = nil
             }
         }
     }
-    
+
     private var upperMenu: some View {
         Menu {
             Picker(.empty, selection: $selectedPeriod) {
@@ -108,7 +132,7 @@ struct HeroDashboardCard: View {
                     Text(period.descriptionResource)
                 }
             }
-            
+
             Button(.customPeriod) {
                 showDateRangePicker = true
             }
@@ -122,10 +146,11 @@ struct HeroDashboardCard: View {
         .background(.indigo.opacity(0.15), in: .capsule)
         .fixedSize(horizontal: true, vertical: false)
     }
-    
-    init(selectedPeriod: Binding<Calendar.Period>, model: HeroDashboardModel) {
+
+    init(selectedPeriod: Binding<Calendar.Period>, model: HeroDashboardModel, progress: CGFloat = 0) {
         self._selectedPeriod = selectedPeriod
         self.model = model
+        self.progress = progress
     }
 }
 
@@ -134,6 +159,83 @@ extension HeroDashboardCard {
         onPreferenceChange(SelectedCategoryPreferenceKey.self) { category in
             action(category)
         }
+    }
+}
+
+// MARK: - CollapsibleTotalMoney
+
+private struct CollapsibleTotalMoney: View {
+    let money: Money
+    let progress: CGFloat
+    let headerHeight: CGFloat
+    let cardPadding: CGFloat
+    let collapsedScale: CGFloat
+    let upperMenuFrame: CGRect
+
+    @State private var naturalSize: CGSize = .zero
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        // Placeholder: holds vertical space in VStack and collapses it as progress increases.
+        // The visible TotalMoney is in an overlay so it floats freely above the collapsing frame.
+        TotalMoney(money: money)
+            .fixedSize(horizontal: false, vertical: true)
+            .onGeometryChange(for: CGSize.self, of: { $0.size }) { naturalSize = $0 }
+            .frame(height: naturalSize.height > 0 ? lerp(naturalSize.height, 0, progress) : nil)
+            .opacity(0)
+            .clipped()
+            .accessibilityHidden(true)
+            .overlay(alignment: .topLeading) {
+                TotalMoney(money: money)
+                    .contentTransition(.numericText())
+                    .fixedSize(horizontal: false, vertical: true)
+                    .opacity(
+                        reduceMotion
+                            ? (naturalSize.height > 0 && headerHeight > 0 ? 1 - progress : 0)
+                            : (naturalSize.height > 0 && headerHeight > 0 ? 1 : 0)
+                    )
+                    .scaleEffect(
+                        reduceMotion ? 1.0 : lerp(1.0, collapsedScale, progress),
+                        anchor: .topLeading
+                    )
+                    .offset(
+                        x: reduceMotion ? 0 : lerp(0, targetOffsetX, progress),
+                        y: reduceMotion ? 0 : lerp(0, targetOffsetY, progress)
+                    )
+                    .allowsHitTesting(false)
+            }
+    }
+
+    // Offsets are in CollapsibleTotalMoney-local space (origin = placeholder top-leading).
+    // At progress=0 → (0,0): TotalMoney stays at natural position.
+    // At progress=1 → moves to header trailing area where the upper menu sits.
+    private var targetOffsetX: CGFloat {
+        upperMenuFrame.maxX - naturalSize.width * collapsedScale - cardPadding
+    }
+
+    private var targetOffsetY: CGFloat {
+        upperMenuFrame.midY - naturalSize.height * collapsedScale / 2 - cardPadding - headerHeight
+    }
+}
+
+// MARK: - CollapsibleCategoryGrid
+
+private struct CollapsibleCategoryGrid: View {
+    let chips: [HeroDashboardModel.ChipModel]
+    let progress: CGFloat
+    let fadeProgress: CGFloat
+
+    @State private var naturalHeight: CGFloat = 0
+
+    var body: some View {
+        ExpenseCategoryGrid(chips: chips)
+            .opacity(1 - fadeProgress)
+            .allowsHitTesting(fadeProgress < 1)
+            .accessibilityHidden(fadeProgress >= 1)
+            .fixedSize(horizontal: false, vertical: true)
+            .onGeometryChange(for: CGFloat.self, of: { $0.size.height }) { naturalHeight = $0 }
+            .frame(height: naturalHeight > 0 ? lerp(naturalHeight, 0, progress) : nil)
+            .clipped()
     }
 }
 

@@ -70,13 +70,14 @@ private extension ExpenseDBModel {
         ForEach(groups, id: \.0) { label, expenses in
             Section {
                 ForEach(expenses, id: \.id) { expense in
-                    ExpenseListRow(expense: expense)
+                    ExpenseListRow(expense: expense, currency: .usd)
                         .listRowInsets(.init())
                 }
             } header: {
                 ExpenseListSectionHeader(
                     label: label,
-                    total: expenses.reduce(0) { $0 + $1.amount }
+                    total: expenses.reduce(0) { $0 + $1.amount },
+                    currency: .usd
                 )
             }
         }
@@ -96,7 +97,8 @@ private extension ExpenseDBModel {
         ForEach(groups, id: \.0) { label, total in
             ExpenseListSectionHeader(
                 label: label,
-                total: total
+                total: total,
+                currency: .usd
             )
             Divider()
         }

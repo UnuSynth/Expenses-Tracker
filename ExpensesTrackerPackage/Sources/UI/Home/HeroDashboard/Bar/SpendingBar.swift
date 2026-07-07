@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct SpendingBarSegment: Identifiable {
-    let id = UUID()
+    let id: String
     let color: Color
     let value: Double
 }
@@ -32,12 +32,13 @@ struct SpendingProportionalBar: View {
 
     var body: some View {
         GeometryReader { geo in
-            let availableWidth = geo.size.width - totalGap
+            let availableWidth = max(0, geo.size.width - totalGap)
             let cornerRadius = geo.size.height / 2
 
             HStack(spacing: gap) {
-                ForEach(Array(segments.enumerated()), id: \.element.id) { index, segment in
-                    let width = availableWidth * (segment.value / total)
+                ForEach(segments) { segment in
+                    let width = total > 0 ? availableWidth * (segment.value / total) : 0
+                    let index = segments.firstIndex(where: { $0.id == segment.id }) ?? 0
                     let isFirst = index == 0
                     let isLast = index == segments.count - 1
                     let opacity: Double = selectedIndex == nil || selectedIndex == index ? 1 : 0.25
@@ -47,27 +48,24 @@ struct SpendingProportionalBar: View {
                             RoundedRectangle(cornerRadius: cornerRadius)
                                 .fill(segment.color)
                         } else if isFirst {
-                            // Round left corners only
                             UnevenRoundedRectangle(
                                 topLeadingRadius: cornerRadius,
                                 bottomLeadingRadius: cornerRadius
                             )
                             .fill(segment.color)
                         } else if isLast {
-                            // Round right corners only
                             UnevenRoundedRectangle(
                                 bottomTrailingRadius: cornerRadius,
                                 topTrailingRadius: cornerRadius
                             )
                             .fill(segment.color)
                         } else {
-                            // No rounding for middle segments
                             Rectangle()
                                 .fill(segment.color)
                         }
                     }
                     .opacity(opacity)
-                    .animation(.easeInOut(duration: 2), value: selectedIndex)
+                    .animation(.easeInOut(duration: 0.2), value: selectedIndex)
                     .frame(
                         width: width,
                         height: geo.size.height
@@ -80,11 +78,11 @@ struct SpendingProportionalBar: View {
 
 #Preview {
     let segments = [
-        SpendingBarSegment(color: .red, value: 1),
-        SpendingBarSegment(color: .orange, value: 2),
-        SpendingBarSegment(color: .yellow, value: 1),
-        SpendingBarSegment(color: .green, value: 2),
-        SpendingBarSegment(color: .blue, value: 1)
+        SpendingBarSegment(id: "red", color: .red, value: 1),
+        SpendingBarSegment(id: "orange", color: .orange, value: 2),
+        SpendingBarSegment(id: "yellow", color: .yellow, value: 1),
+        SpendingBarSegment(id: "green", color: .green, value: 2),
+        SpendingBarSegment(id: "blue", color: .blue, value: 1)
     ]
     let total = segments.reduce(0) { $0 + $1.value }
     SpendingProportionalBar(segments: segments, total: total)
