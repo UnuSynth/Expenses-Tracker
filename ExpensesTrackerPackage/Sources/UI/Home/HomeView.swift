@@ -10,10 +10,7 @@ import SwiftData
 
 struct HomeView: View {
     @State private var viewModel: HomeViewModel
-    @State private var isTracking = false
     @State private var collapseProgress: CGFloat = 0
-    @State private var collapseDistance: CGFloat = 0
-    @State private var sensitivity: CGFloat = 150
 
     @Environment(\.modelContext) private var context
     @Environment(\.locale) private var locale
@@ -37,12 +34,6 @@ struct HomeView: View {
                 viewModel.selectedCategoryFilter = category
             }
             .padding(.horizontal, 16)
-            .onGeometryChange(for: CGFloat.self, of: { $0.size.height }) { height in
-                // Only capture the expanded height; ignore changes caused by collapse itself.
-                if collapseProgress == 0 {
-                    sensitivity = height
-                }
-            }
 
             List {
                 let groups = viewModel.groupedExpenses
@@ -89,23 +80,15 @@ struct HomeView: View {
             .scrollContentBackground(.hidden)
             .modifier(SearchBehaviorModifier(searchText: $viewModel.searchText))
             .scrollDismissesKeyboard(.interactively)
-            .onScrollGeometryChange(for: CGFloat.self, of: { $0.contentOffset.y }) { oldY, newY in
-                guard isTracking else { return }
-                guard !viewModel.groupedExpenses.isEmpty else { return }
-                let delta = newY - oldY
-                let newProgress = min(1, max(0, collapseProgress + delta / sensitivity))
-                collapseProgress = newProgress
-            }
-            .onScrollPhaseChange { oldPhase, newPhase in
-                isTracking = newPhase == .interacting
-                
-                if !isTracking {
-                    withAnimation(.spring(duration: 0.3)) {
-                        collapseProgress = collapseProgress > 0.5 ? 1 : 0
+        }
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 20)
+                .onEnded { value in
+                    withAnimation(.spring) {
+                        collapseProgress = value.translation.height > 0 ? 0 : 1
                     }
                 }
-            }
-        }
+        )
         .toolbar {
             ToolbarItemGroup(placement: .bottomBar) {
                 Spacer()
