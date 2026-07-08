@@ -82,7 +82,7 @@ struct HomeView: View {
             .scrollDismissesKeyboard(.interactively)
         }
         .simultaneousGesture(
-            DragGesture(minimumDistance: 20)
+            DragGesture(minimumDistance: 50)
                 .onEnded { value in
                     withAnimation(.spring) {
                         collapseProgress = value.translation.height > 0 ? 0 : 1
