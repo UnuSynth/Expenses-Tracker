@@ -10,13 +10,7 @@ import Foundation
 @Observable
 @MainActor
 class HomeViewModelImpl: HomeViewModel {
-    @ObservationIgnored var selectedPeriod: Calendar.Period = .day {
-        didSet {
-            recomputeFilteredByDateExpenses()
-            recomputeSpendingHero()
-            recomputeGroupedExpenses()
-        }
-    }
+    var selectedPeriod: Calendar.Period = .day
     var spendingHeroModel: HeroDashboardModel = .init(chips: [])
     var showSettingsSheet: Bool = false
     var showingAddExpenseSheet: Bool = false
@@ -29,14 +23,12 @@ class HomeViewModelImpl: HomeViewModel {
     }
 
     @ObservationIgnored private var rawExpenses: [ExpenseDBModel] = []
-    @ObservationIgnored private var filteredByDateExpenses: [ExpenseDBModel] = []
     private(set) var groupedExpenses: [(date: Date, items: [ExpenseDBModel], total: Double)] = []
     
     @ObservationIgnored var toEditExpense: ExpenseDBModel? = nil
 
     func updateExpenses(_ expenses: [ExpenseDBModel]) {
         rawExpenses = expenses
-        recomputeFilteredByDateExpenses()
         recomputeSpendingHero()
         recomputeGroupedExpenses()
     }
@@ -48,15 +40,8 @@ class HomeViewModelImpl: HomeViewModel {
 }
 
 private extension HomeViewModelImpl {
-    func recomputeFilteredByDateExpenses() {
-        let range = selectedPeriod.dates
-        filteredByDateExpenses = rawExpenses.filter { expense in
-            return expense.date >= range.start && expense.date <= range.end
-        }
-    }
-
     func recomputeSpendingHero() {
-        let totalsByCategory = filteredByDateExpenses.reduce(into: [CategoryModel: Double]()) { result, expense in
+        let totalsByCategory = rawExpenses.reduce(into: [CategoryModel: Double]()) { result, expense in
             result[expense.category, default: 0] += expense.amount
         }
 
@@ -70,7 +55,7 @@ private extension HomeViewModelImpl {
     func recomputeGroupedExpenses() {
         let trimmedSearch = searchText.trimmingCharacters(in: .whitespaces).lowercased()
 
-        let filtered = filteredByDateExpenses.filter { expense in
+        let filtered = rawExpenses.filter { expense in
             if let category = selectedCategoryFilter, expense.category != category { return false }
             if !trimmedSearch.isEmpty {
                 return expense.notes?.desc?.lowercased().contains(trimmedSearch) ?? false

@@ -14,7 +14,6 @@ struct HomeView: View {
 
     @Environment(\.modelContext) private var context
     @Environment(\.locale) private var locale
-    @Query(sort: \ExpenseDBModel.date, order: .reverse) private var expenses: [ExpenseDBModel]
 
     @AppStorage(AppStorageKeys.currency.key) private var selectedCurrencyRaw: String = Currency.usd.rawValue
     private var currency: Currency { .initialize(rawValue: selectedCurrencyRaw) }
@@ -125,13 +124,9 @@ struct HomeView: View {
             .presentationDetents(detents)
             .presentationDragIndicator(.hidden)
         }
-        .onChange(of: expenses, initial: true) {
-            viewModel.updateExpenses(expenses)
+        .background {
+            ExpenseFetcher(period: viewModel.selectedPeriod, onExpensesChange: viewModel.updateExpenses)
         }
-        .onReceive(NotificationCenter.default.publisher(for: ModelContext.didSave), perform: { output in
-            guard (output.userInfo?["updated"] as? [PersistentIdentifier])?.contains(where: { $0.entityName == String(describing: ExpenseDBModel.self) }) == true else { return }
-            viewModel.updateExpenses(expenses)
-        })
         .background(.background.secondary)
     }
 
