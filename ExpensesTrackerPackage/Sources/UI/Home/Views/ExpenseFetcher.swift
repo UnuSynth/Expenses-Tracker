@@ -27,5 +27,9 @@ struct ExpenseFetcher: View {
             .onChange(of: expenses, initial: true) { _, newExpenses in
                 onExpensesChange(newExpenses)
             }
+            .onReceive(NotificationCenter.default.publisher(for: ModelContext.didSave), perform: { output in
+                guard (output.userInfo?["updated"] as? [PersistentIdentifier])?.contains(where: { $0.entityName == String(describing: ExpenseDBModel.self) }) == true else { return }
+                onExpensesChange(expenses)
+            })
     }
 }

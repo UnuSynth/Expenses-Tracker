@@ -32,9 +32,7 @@ struct ExpenseCategoryGrid: View {
                     isSelected: selectedCategory == chipModel.category,
                     backgroundOpacity: backgroundOpacity(for: chipModel.category),
                     onTap: {
-                        withAnimation(.bouncy) {
-                            toggleSelection(chipModel.category)
-                        }
+                        toggleSelection(chipModel.category)
                     }
                 )
             }
@@ -44,19 +42,18 @@ struct ExpenseCategoryGrid: View {
             }
         }
         .preference(key: SelectedCategoryPreferenceKey.self, value: selectedCategory)
+        .animation(.default, value: chips)
     }
 
     private var expandToggleChip: some View {
         let hiddenCount = chips.count - collapsedLimit
         let label = isExpanded ? "Show less" : "+\(hiddenCount) more"
         return Button {
-            withAnimation(.spring(duration: 0.3)) {
-                if isExpanded == true, let selected = selectedCategory,
-                   !Array(chips.prefix(collapsedLimit)).contains(where: { $0.category == selected }) {
-                    selectedCategory = nil
-                }
-                isExpanded.toggle()
+            if isExpanded, let selected = selectedCategory,
+               !Array(chips.prefix(collapsedLimit)).contains(where: { $0.category == selected }) {
+                selectedCategory = nil
             }
+            isExpanded.toggle()
         } label: {
             Text(label)
                 .font(.footnote.bold())
@@ -80,7 +77,7 @@ struct ExpenseCategoryGrid: View {
 
 extension ExpenseCategoryGrid {
     func onCategorySelect(action: @escaping (CategoryModel?) -> Void) -> some View {
-        self.onPreferenceChange(SelectedCategoryPreferenceKey.self) { category in
+        onPreferenceChange(SelectedCategoryPreferenceKey.self) { category in
             action(category)
         }
     }

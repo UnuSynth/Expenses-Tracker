@@ -11,7 +11,7 @@ import SwiftData
 struct ExpenseEditorView: View {
     @Environment(\.dismiss) var dismiss
     @Query(sort: \CategoryModel.sortOrder) private var categories: [CategoryModel]
-    @AppStorage(AppStorageKeys.currency.key) private var selectedCurrencyRaw: String = Currency.usd.rawValue
+    @SelectedCurrency private var currency: Currency
     @Environment(\.modelContext) private var context
     @Environment(\.locale) private var locale
     
@@ -47,29 +47,19 @@ struct ExpenseEditorView: View {
         NavigationStack {
             VStack(alignment: .center, spacing: 8) {
                 Spacer()
-                Button(.separatedWithComma(date.relativeLabel(locale: locale), date.formatted(.dateTime.hour().minute().locale(locale))), systemImage: "calendar") {
-                    showCalendar = true
-                }
-                .popover(
-                    isPresented: $showCalendar,
-                    arrowEdge: .top
-                ) {
-                    DatePicker(
-                        .empty,
-                        selection: $date,
-                        in: datesRange
-                    )
-                    .datePickerStyle(.wheel)
-                    .presentationCompactAdaptation(.popover)
-                }
-                .font(.subheadline.bold())
-                .foregroundStyle(.indigo)
-                .padding(.vertical, 8)
-                .padding(.horizontal, 12)
-                .modifier(CapsuleButtonBehaviorModifier())
+                
+                datePeriodButton
+                    .popover(isPresented: $showCalendar, arrowEdge: .top) {
+                        datePicker
+                    }
+                    .font(.subheadline.bold())
+                    .foregroundStyle(.indigo)
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 12)
+                    .modifier(CapsuleButtonBehaviorModifier())
                 
                 CurrencyTextField(
-                    currency: .initialize(rawValue: selectedCurrencyRaw),
+                    currency: currency,
                     text: $amountString
                 )
                 
@@ -103,56 +93,15 @@ struct ExpenseEditorView: View {
                 Spacer()
             }
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    if #available(iOS 26.0, *) {
-                        Button(role: .close) {
-                            dismiss()
-                        }
-                    } else {
-                        Button(.close) {
-                            dismiss()
-                        }
-                    }
-                }
-                
+                cancelButtonToolbarItem
+            }
+            .toolbar {
                 if let expense {
-                    ToolbarItem(placement: .destructiveAction) {
-                        Button(role: .destructive) {
-                            context.delete(expense)
-                            dismiss()
-                        } label: {
-                            Label(.deleteExpense, systemImage: "trash")
-                        }
-                    }
+                    deleteButtonToolbarItem(expense: expense)
                 }
-                
-                ToolbarItem(placement: .confirmationAction) {
-                    let confirmAction = {
-                        if let expense {
-                            editExpense(expense)
-                        } else {
-                            saveExpense()
-                        }
-                        
-                        if context.hasChanges { try? context.save() }
-                        
-                        dismiss()
-                    }
-                    
-                    if #available(iOS 26.0, *) {
-                        Button(
-                            role: .confirm,
-                            action: confirmAction
-                        )
-                        .disabled(!isValid)
-                    } else {
-                        Button(
-                            .done,
-                            action: confirmAction
-                        )
-                        .disabled(!isValid)
-                    }
-                }
+            }
+            .toolbar {
+                confirmButtonToolbarItem
             }
         }
         .onAppear {
@@ -213,6 +162,89 @@ struct ExpenseEditorView: View {
         
         if notes != expense.notes?.desc {
             expense.notes = notes.isEmpty ? nil : .init(desc: notes)
+        }
+    }
+}
+
+// MARK: - Views
+private extension ExpenseEditorView {
+    var datePeriodButton: some View {
+        let buttonTitle = LocalizedStringResource
+            .separatedWithComma(
+                date.relativeLabel(locale: locale),
+                date.formatted(.dateTime.hour().minute().locale(locale))
+            )
+        
+        return Button(buttonTitle, systemImage: "calendar") {
+            showCalendar = true
+        }
+    }
+    
+    var datePicker: some View {
+        DatePicker(
+            .empty,
+            selection: $date,
+            in: datesRange
+        )
+        .datePickerStyle(.wheel)
+        .presentationCompactAdaptation(.popover)
+    }
+}
+
+// MARK: - Toolbars
+private extension ExpenseEditorView {
+    var cancelButtonToolbarItem: some ToolbarContent {
+        ToolbarItem(placement: .cancellationAction) {
+            if #available(iOS 26.0, *) {
+                Button(role: .close) {
+                    dismiss()
+                }
+            } else {
+                Button(.close) {
+                    dismiss()
+                }
+            }
+        }
+    }
+    
+    var confirmButtonToolbarItem: some ToolbarContent {
+        ToolbarItem(placement: .confirmationAction) {
+            let confirmAction = {
+                if let expense {
+                    editExpense(expense)
+                } else {
+                    saveExpense()
+                }
+                
+                if context.hasChanges { try? context.save() }
+                
+                dismiss()
+            }
+            
+            if #available(iOS 26.0, *) {
+                Button(
+                    role: .confirm,
+                    action: confirmAction
+                )
+                .disabled(!isValid)
+            } else {
+                Button(
+                    .done,
+                    action: confirmAction
+                )
+                .disabled(!isValid)
+            }
+        }
+    }
+    
+    func deleteButtonToolbarItem(expense: ExpenseDBModel) -> some ToolbarContent {
+        ToolbarItem(placement: .destructiveAction) {
+            Button(role: .destructive) {
+                context.delete(expense)
+                dismiss()
+            } label: {
+                Label(.deleteExpense, systemImage: "trash")
+            }
         }
     }
 }

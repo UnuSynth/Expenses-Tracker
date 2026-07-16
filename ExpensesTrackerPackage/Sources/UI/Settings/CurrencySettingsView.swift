@@ -8,16 +8,12 @@
 import SwiftUI
 
 struct CurrencySettingsView: View {
-    @AppStorage(AppStorageKeys.currency.key) private var selectedCurrencyRaw: String = Currency.usd.rawValue
-
-    private var selectedCurrency: Currency {
-        Currency(rawValue: selectedCurrencyRaw) ?? Currency.usd
-    }
+    @SelectedCurrency private var selectedCurrency: Currency
 
     var body: some View {
         List(Currency.allCases, id: \.rawValue) { currency in
             Button {
-                selectedCurrencyRaw = currency.rawValue
+                selectedCurrency = currency
             } label: {
                 HStack {
                     Text(currency.symbol)
@@ -34,7 +30,7 @@ struct CurrencySettingsView: View {
                 }
             }
             .foregroundStyle(.primary)
-            
+
         }
         .listStyle(.insetGrouped)
         .scrollContentBackground(.hidden)

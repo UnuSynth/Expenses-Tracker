@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 @Observable
 @MainActor
@@ -15,6 +16,10 @@ class HomeViewModelImpl: HomeViewModel {
     var showSettingsSheet: Bool = false
     var showingAddExpenseSheet: Bool = false
     var showingEditExpenseSheet: Bool = false
+    var collapseProgress: CGFloat = 0
+    @ObservationIgnored var currency: Currency = .usd {
+        didSet { recomputeSpendingHero() }
+    }
     @ObservationIgnored var searchText: String = "" {
         didSet { recomputeGroupedExpenses() }
     }
@@ -37,6 +42,12 @@ class HomeViewModelImpl: HomeViewModel {
         toEditExpense = expense
         showingEditExpenseSheet = true
     }
+    
+    func handleShowHideDashboard(drag: DragGesture.Value) {
+        guard !groupedExpenses.isEmpty else { return }
+        guard abs(drag.velocity.height) > 1250 else { return }
+        collapseProgress = drag.translation.height < 0 ? 1 : 0
+    }
 }
 
 private extension HomeViewModelImpl {
@@ -44,12 +55,18 @@ private extension HomeViewModelImpl {
         let totalsByCategory = rawExpenses.reduce(into: [CategoryModel: Double]()) { result, expense in
             result[expense.category, default: 0] += expense.amount
         }
-
+        
         let chips = totalsByCategory
             .sorted { $0.value > $1.value }
             .map { HeroDashboardModel.ChipModel(amount: $0.value, category: $0.key) }
 
-        spendingHeroModel = .init(chips: chips)
+        spendingHeroModel = .init(chips: chips, currency: currency)
+
+        // Reconcile: drop the filter if its category no longer exists in the new data.
+        if let selectedCategoryFilter,
+            !chips.contains(where: { $0.category == selectedCategoryFilter }) {
+            self.selectedCategoryFilter = nil
+        }
     }
 
     func recomputeGroupedExpenses() {

@@ -11,13 +11,16 @@ private func lerp(_ a: CGFloat, _ b: CGFloat, _ t: CGFloat) -> CGFloat { a + (b 
 
 struct HeroDashboardCard: View {
     private let model: HeroDashboardModel
+    private let selectedCategory: CategoryModel?
+    private let onSelect: (CategoryModel?) -> Void
     let progress: CGFloat
 
     @State private var showDateRangePicker = false
     @Binding private var selectedPeriod: Calendar.Period
-    @State private var selectedCategory: CategoryModel?
-    @AppStorage(AppStorageKeys.currency.key) private var selectedCurrencyRaw: String = Currency.usd.rawValue
     @Environment(\.locale) private var locale
+
+    private var money: Money { model.money(for: selectedCategory) }
+    private var selectedIndex: Int? { model.chips.firstIndex { $0.category == selectedCategory } }
 
     @State private var headerHeight: CGFloat = 0
     @State private var upperMenuFrame: CGRect = .zero
@@ -30,13 +33,6 @@ struct HeroDashboardCard: View {
 
     private var clampedProgress: CGFloat { min(max(progress, 0), 1) }
     private var fadeProgress: CGFloat { min(clampedProgress * 2, 1) }
-
-    private var moneyValue: Money {
-        .init(
-            amount: model.chips.first { $0.category == selectedCategory }?.amount ?? model.total,
-            currency: .initialize(rawValue: selectedCurrencyRaw)
-        )
-    }
 
     var body: some View {
         if #available(iOS 26.0, *) {
@@ -79,7 +75,7 @@ struct HeroDashboardCard: View {
             .onGeometryChange(for: CGFloat.self, of: { $0.size.height }) { headerHeight = $0 }
 
             CollapsibleTotalMoney(
-                money: moneyValue,
+                money: money,
                 progress: clampedProgress,
                 headerHeight: headerHeight,
                 cardPadding: cardPadding,
@@ -90,7 +86,7 @@ struct HeroDashboardCard: View {
             SpendingProportionalBar(
                 segments: model.chips.map { $0.toSpendingBarSegment() },
                 total: model.total,
-                selectedIndex: model.chips.firstIndex(where: { $0.category == selectedCategory })
+                selectedIndex: selectedIndex
             )
             .frame(height: lerp(10, 5, clampedProgress))
 
@@ -100,7 +96,7 @@ struct HeroDashboardCard: View {
                 fadeProgress: fadeProgress
             )
             .onPreferenceChange(SelectedCategoryPreferenceKey.self) { category in
-                selectedCategory = category
+                onSelect(category)
             }
             .padding(.top, 8)
         }
@@ -115,14 +111,8 @@ struct HeroDashboardCard: View {
             )
             .presentationDetents([.medium])
         }
-        .preference(key: SelectedCategoryPreferenceKey.self, value: selectedCategory)
-        .animation(.easeInOut(duration: 0.3), value: selectedCategory)
-        .onChange(of: model) { _, newValue in
-            let hasChangesInCategories = !newValue.chips.contains { $0.category == selectedCategory }
-            if hasChangesInCategories {
-                selectedCategory = nil
-            }
-        }
+        .animation(.easeInOut(duration: 0.3), value: money.amount)
+        .animation(.bouncy(duration: 0.3), value: clampedProgress)
     }
 
     private var upperMenu: some View {
@@ -147,18 +137,18 @@ struct HeroDashboardCard: View {
         .fixedSize(horizontal: true, vertical: false)
     }
 
-    init(selectedPeriod: Binding<Calendar.Period>, model: HeroDashboardModel, progress: CGFloat = 0) {
-        self._selectedPeriod = selectedPeriod
+    init(
+        model: HeroDashboardModel,
+        selectedCategory: CategoryModel?,
+        selectedPeriod: Binding<Calendar.Period>,
+        progress: CGFloat = 0,
+        onSelect: @escaping (CategoryModel?) -> Void
+    ) {
         self.model = model
+        self.selectedCategory = selectedCategory
+        self._selectedPeriod = selectedPeriod
         self.progress = progress
-    }
-}
-
-extension HeroDashboardCard {
-    func onCategorySelect(action: @escaping (CategoryModel?) -> Void) -> some View {
-        onPreferenceChange(SelectedCategoryPreferenceKey.self) { category in
-            action(category)
-        }
+        self.onSelect = onSelect
     }
 }
 
@@ -187,7 +177,6 @@ private struct CollapsibleTotalMoney: View {
             .accessibilityHidden(true)
             .overlay(alignment: .topLeading) {
                 TotalMoney(money: money)
-                    .contentTransition(.numericText())
                     .fixedSize(horizontal: false, vertical: true)
                     .opacity(
                         reduceMotion
@@ -234,6 +223,7 @@ private struct CollapsibleCategoryGrid: View {
             .accessibilityHidden(fadeProgress >= 1)
             .fixedSize(horizontal: false, vertical: true)
             .onGeometryChange(for: CGFloat.self, of: { $0.size.height }) { naturalHeight = $0 }
+            .animation(.bouncy(duration: 0.3), value: progress)
             .frame(height: naturalHeight > 0 ? lerp(naturalHeight, 0, progress) : nil)
             .clipped()
     }
@@ -255,12 +245,35 @@ private struct CollapsibleCategoryGrid: View {
             HeroDashboardModel.ChipModel(
                 amount: 150,
                 category: CategoryModel(name: "Clothes", icon: "tshirt.fill", color: .purple)
+            ),
+            HeroDashboardModel.ChipModel(
+                amount: 90,
+                category: CategoryModel(name: "Transport", icon: "car.fill", color: .blue)
+            ),
+            HeroDashboardModel.ChipModel(
+                amount: 120,
+                category: CategoryModel(name: "Coffee", icon: "cup.and.saucer.fill", color: .brown)
+            ),
+            HeroDashboardModel.ChipModel(
+                amount: 300,
+                category: CategoryModel(name: "Rent", icon: "house.fill", color: .red)
+            ),
+            HeroDashboardModel.ChipModel(
+                amount: 60,
+                category: CategoryModel(name: "Health", icon: "cross.fill", color: .pink)
+            ),
+            HeroDashboardModel.ChipModel(
+                amount: 75,
+                category: CategoryModel(name: "Entertainment", icon: "gamecontroller.fill", color: .indigo)
             )
         ]
     )
+
     HeroDashboardCard(
+        model: model,
+        selectedCategory: nil,
         selectedPeriod: $selectedPeriod,
-        model: model
+        onSelect: { _ in }
     )
         .padding(16)
 }
