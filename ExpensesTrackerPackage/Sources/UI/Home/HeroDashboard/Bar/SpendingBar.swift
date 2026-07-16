@@ -65,7 +65,7 @@ struct SpendingProportionalBar: View {
                         }
                     }
                     .opacity(opacity)
-                    .animation(.easeInOut(duration: 0.2), value: selectedIndex)
+                    .animation(.easeInOut(duration: 0.3), value: selectedIndex)
                     .frame(
                         width: width,
                         height: geo.size.height

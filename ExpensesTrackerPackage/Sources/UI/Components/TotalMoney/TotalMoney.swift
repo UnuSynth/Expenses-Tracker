@@ -13,6 +13,7 @@ struct TotalMoney: View {
             Text(money.integerPart)
                 .font(.system(size: 48, weight: .bold))
                 .lineLimit(1)
+                .contentTransition(.numericText())
 
             if money.fractionalPart != ".00" {
                 Text(money.fractionalPart)
@@ -20,6 +21,7 @@ struct TotalMoney: View {
                     .offset(y: money.currency.position == .leading ? -12 : 0)
                     .font(.system(size: money.currency.position == .leading ? 24 : 48, weight: .semibold))
                     .foregroundStyle(.tertiary)
+                    .contentTransition(.numericText())
             }
 
             if money.currency.position == .trailing {

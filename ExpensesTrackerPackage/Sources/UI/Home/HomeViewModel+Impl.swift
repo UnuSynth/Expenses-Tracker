@@ -6,21 +6,20 @@
 //
 
 import Foundation
+import SwiftUI
 
 @Observable
 @MainActor
 class HomeViewModelImpl: HomeViewModel {
-    @ObservationIgnored var selectedPeriod: Calendar.Period = .day {
-        didSet {
-            recomputeFilteredByDateExpenses()
-            recomputeSpendingHero()
-            recomputeGroupedExpenses()
-        }
-    }
+    var selectedPeriod: Calendar.Period = .day
     var spendingHeroModel: HeroDashboardModel = .init(chips: [])
     var showSettingsSheet: Bool = false
     var showingAddExpenseSheet: Bool = false
     var showingEditExpenseSheet: Bool = false
+    var collapseProgress: CGFloat = 0
+    @ObservationIgnored var currency: Currency = .usd {
+        didSet { recomputeSpendingHero() }
+    }
     @ObservationIgnored var searchText: String = "" {
         didSet { recomputeGroupedExpenses() }
     }
@@ -29,14 +28,12 @@ class HomeViewModelImpl: HomeViewModel {
     }
 
     @ObservationIgnored private var rawExpenses: [ExpenseDBModel] = []
-    @ObservationIgnored private var filteredByDateExpenses: [ExpenseDBModel] = []
     private(set) var groupedExpenses: [(date: Date, items: [ExpenseDBModel], total: Double)] = []
     
     @ObservationIgnored var toEditExpense: ExpenseDBModel? = nil
 
     func updateExpenses(_ expenses: [ExpenseDBModel]) {
         rawExpenses = expenses
-        recomputeFilteredByDateExpenses()
         recomputeSpendingHero()
         recomputeGroupedExpenses()
     }
@@ -45,32 +42,37 @@ class HomeViewModelImpl: HomeViewModel {
         toEditExpense = expense
         showingEditExpenseSheet = true
     }
+    
+    func handleShowHideDashboard(drag: DragGesture.Value) {
+        guard !groupedExpenses.isEmpty else { return }
+        guard abs(drag.velocity.height) > 1250 else { return }
+        collapseProgress = drag.translation.height < 0 ? 1 : 0
+    }
 }
 
 private extension HomeViewModelImpl {
-    func recomputeFilteredByDateExpenses() {
-        let range = selectedPeriod.dates
-        filteredByDateExpenses = rawExpenses.filter { expense in
-            return expense.date >= range.start && expense.date <= range.end
-        }
-    }
-
     func recomputeSpendingHero() {
-        let totalsByCategory = filteredByDateExpenses.reduce(into: [CategoryModel: Double]()) { result, expense in
+        let totalsByCategory = rawExpenses.reduce(into: [CategoryModel: Double]()) { result, expense in
             result[expense.category, default: 0] += expense.amount
         }
-
+        
         let chips = totalsByCategory
             .sorted { $0.value > $1.value }
             .map { HeroDashboardModel.ChipModel(amount: $0.value, category: $0.key) }
 
-        spendingHeroModel = .init(chips: chips)
+        spendingHeroModel = .init(chips: chips, currency: currency)
+
+        // Reconcile: drop the filter if its category no longer exists in the new data.
+        if let selectedCategoryFilter,
+            !chips.contains(where: { $0.category == selectedCategoryFilter }) {
+            self.selectedCategoryFilter = nil
+        }
     }
 
     func recomputeGroupedExpenses() {
         let trimmedSearch = searchText.trimmingCharacters(in: .whitespaces).lowercased()
 
-        let filtered = filteredByDateExpenses.filter { expense in
+        let filtered = rawExpenses.filter { expense in
             if let category = selectedCategoryFilter, expense.category != category { return false }
             if !trimmedSearch.isEmpty {
                 return expense.notes?.desc?.lowercased().contains(trimmedSearch) ?? false

@@ -20,7 +20,7 @@ struct CategorySelector: View {
                         isSelected: selection == category
                     )
                     .onTapGesture {
-                        withAnimation(.interactiveSpring) {
+                        withAnimation(.bouncy(duration: 0.3)) {
                             selection = category
                         }
                     }

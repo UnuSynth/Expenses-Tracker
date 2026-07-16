@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct ExpenseCategoryChip: View {
-    @AppStorage(AppStorageKeys.currency.key) private var selectedCurrencyRaw: String = Currency.usd.rawValue
-    
+    @SelectedCurrency private var currency: Currency
+
     let chipModel: HeroDashboardModel.ChipModel
     let isSelected: Bool
     let backgroundOpacity: Double
@@ -30,7 +30,7 @@ struct ExpenseCategoryChip: View {
                     .lineLimit(1)
                     .padding(.leading, 4)
 
-                Text(chipModel.amount.formatted(currency: .initialize(rawValue: selectedCurrencyRaw)))
+                Text(chipModel.amount.formatted(currency: currency))
                     .font(.footnote.bold())
                     .foregroundStyle(isSelected ? .white.opacity(0.75) : .secondary)
                     .lineLimit(1)
@@ -58,5 +58,6 @@ struct ExpenseCategoryChip: View {
             in: .capsule
         )
         .buttonStyle(.plain)
+        .animation(.bouncy(duration: 0.3), value: isSelected)
     }
 }

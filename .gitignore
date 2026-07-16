@@ -1,0 +1,18 @@
+# macOS
+.DS_Store
+
+# Xcode
+build/
+DerivedData/
+*.xcuserstate
+**/xcuserdata/
+
+# Xcode build server (machine-specific, regenerated locally)
+buildServer.json
+
+# Swift Package Manager
+.build/
+**/.swiftpm/xcode/**/xcuserdata/
+
+# Local concept/documentation draft
+ExpensesTracker_Concept_Simplicity_v2_EN.md
