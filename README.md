@@ -1,6 +1,6 @@
 # ExpensesTrackerAI
 
-Simple native iOS personal finance app for couples, inspired by the Apple Health app — tracking that feels natural, insightful, and unmistakably Apple.
+Simple native iOS personal finance app. We are launching to App Store soon!
 
 ## Requirements
 
