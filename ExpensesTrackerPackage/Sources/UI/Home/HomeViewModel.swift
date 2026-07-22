@@ -13,6 +13,7 @@ protocol HomeViewModel: AnyObject, Observable {
     var selectedPeriod: Calendar.Period { get set }
     var spendingHeroModel: HeroDashboardModel { get }
     var currency: Currency { get set }
+    var locale: Locale { get set }
     var searchText: String { get set }
     var selectedCategoryFilter: CategoryModel? { get set }
     var groupedExpenses: [(date: Date, items: [ExpenseDBModel], total: Double)] { get }

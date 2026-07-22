@@ -36,6 +36,8 @@ private struct CategorySelectorItem: View {
     let category: CategoryModel
     let isSelected: Bool
 
+    @Environment(\.locale) private var locale
+
     var body: some View {
         VStack(spacing: 4) {
             ZStack {
@@ -55,7 +57,7 @@ private struct CategorySelectorItem: View {
                     .foregroundStyle(category.color)
             }
 
-            Text(category.name)
+            Text(category.displayName(locale: locale))
                 .font(.caption)
                 .foregroundStyle(isSelected ? category.color : .secondary)
                 .lineLimit(1)

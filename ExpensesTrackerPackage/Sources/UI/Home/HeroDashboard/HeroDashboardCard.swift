@@ -48,7 +48,7 @@ struct HeroDashboardCard: View {
         VStack(alignment: .leading, spacing: lerp(8, 4, clampedProgress)) {
             HStack {
                 if let selectedCategory {
-                    Label(selectedCategory.name.uppercased(), systemImage: selectedCategory.icon)
+                    Label(selectedCategory.displayName(locale: locale).uppercased(), systemImage: selectedCategory.icon)
                         .font(.footnote.bold())
                         .foregroundStyle(selectedCategory.color)
                         .lineLimit(1)

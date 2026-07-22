@@ -43,14 +43,14 @@ struct ExpenseListRow: View {
     
     private var titleText: String {
         guard let desc = expense.notes?.desc, !desc.isEmpty else {
-            return expense.category.name
+            return expense.category.displayName(locale: locale)
         }
         return desc
     }
 
     private var subtitleText: String {
         if expense.notes?.desc != nil, expense.notes?.desc?.isEmpty == false {
-            return "\(expense.category.name) · \(timeText)"
+            return "\(expense.category.displayName(locale: locale)) · \(timeText)"
         } else {
             return timeText
         }
@@ -101,7 +101,7 @@ struct ExpenseListEmptyState: View {
                 .font(.headline)
                 .foregroundStyle(.primary)
             if let category {
-                Text(.noExpenses(category.name, in: period.description(locale: locale).lowercased()))
+                Text(.noExpenses(category.displayName(locale: locale), in: period.description(locale: locale).lowercased()))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)

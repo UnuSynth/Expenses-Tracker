@@ -20,6 +20,9 @@ class HomeViewModelImpl: HomeViewModel {
     @ObservationIgnored var currency: Currency = .usd {
         didSet { recomputeSpendingHero() }
     }
+    @ObservationIgnored var locale: Locale = .autoupdatingCurrent {
+        didSet { recomputeGroupedExpenses() }
+    }
     @ObservationIgnored var searchText: String = "" {
         didSet { recomputeGroupedExpenses() }
     }
@@ -75,8 +78,9 @@ private extension HomeViewModelImpl {
         let filtered = rawExpenses.filter { expense in
             if let category = selectedCategoryFilter, expense.category != category { return false }
             if !trimmedSearch.isEmpty {
+                // ponytail: linear scan resolving displayName per row; fine at expense counts here.
                 return expense.notes?.desc?.lowercased().contains(trimmedSearch) ?? false
-                || expense.category.name.lowercased().contains(trimmedSearch)
+                || expense.category.displayName(locale: locale).lowercased().contains(trimmedSearch)
             }
             return true
         }

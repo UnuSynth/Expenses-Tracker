@@ -190,6 +190,186 @@
         }
       }
     },
+    "categoryBills" : {
+      "comment" : "Built-in expense category display name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bills & Utilities"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Счета и коммунальные услуги"
+          }
+        }
+      }
+    },
+    "categoryDining" : {
+      "comment" : "Built-in expense category display name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dining & Cafe"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Кафе и рестораны"
+          }
+        }
+      }
+    },
+    "categoryEntertainment" : {
+      "comment" : "Built-in expense category display name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entertainment"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Развлечения"
+          }
+        }
+      }
+    },
+    "categoryGroceries" : {
+      "comment" : "Built-in expense category display name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Groceries"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Продукты"
+          }
+        }
+      }
+    },
+    "categoryHealth" : {
+      "comment" : "Built-in expense category display name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Health"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Здоровье"
+          }
+        }
+      }
+    },
+    "categoryHousing" : {
+      "comment" : "Built-in expense category display name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Housing"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Жильё"
+          }
+        }
+      }
+    },
+    "categoryOther" : {
+      "comment" : "Built-in expense category display name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Other"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Другое"
+          }
+        }
+      }
+    },
+    "categoryShopping" : {
+      "comment" : "Built-in expense category display name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shopping"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Покупки"
+          }
+        }
+      }
+    },
+    "categoryTransport" : {
+      "comment" : "Built-in expense category display name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transport"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Транспорт"
+          }
+        }
+      }
+    },
+    "categoryTravel" : {
+      "comment" : "Built-in expense category display name.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Travel"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Путешествия"
+          }
+        }
+      }
+    },
     "Close" : {
       "comment" : "A button that dismisses the current view.",
       "extractionState" : "manual",
@@ -266,6 +446,114 @@
         }
       }
     },
+    "euroMember" : {
+      "comment" : "Display name for a currency, shown when selecting a currency.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Euro"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Евро"
+          }
+        }
+      }
+    },
+    "kazakhstan" : {
+      "comment" : "Display name for a currency, shown when selecting a currency.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kazakhstan"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Казахстан"
+          }
+        }
+      }
+    },
+    "kyrgyzstan" : {
+      "comment" : "Display name for a currency, shown when selecting a currency.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kyrgyzstan"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Кыргызстан"
+          }
+        }
+      }
+    },
+    "russia" : {
+      "comment" : "Display name for a currency, shown when selecting a currency.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Russia"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Россия"
+          }
+        }
+      }
+    },
+    "unitedKingdom" : {
+      "comment" : "Display name for a currency, shown when selecting a currency.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "United Kingdom"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Великобритания"
+          }
+        }
+      }
+    },
+    "unitedStates" : {
+      "comment" : "Display name for a currency, shown when selecting a currency.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "United States"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "США"
+          }
+        }
+      }
+    },
     "Custom period" : {
       "comment" : "A button that opens a sheet for selecting a custom date range.",
       "extractionState" : "manual",
@@ -319,6 +607,42 @@
           "stringUnit" : {
             "state" : "machine_translated",
             "value" : "Удалить расход"
+          }
+        }
+      }
+    },
+    "deleteCategoryMessage" : {
+      "comment" : "Warning shown before deleting a category. Argument is the number of expenses that will also be deleted.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This will also delete %lld expenses in it."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Это также удалит %lld расходов из нее."
+          }
+        }
+      }
+    },
+    "deleteCategoryTitle" : {
+      "comment" : "Alert title shown before deleting a category and its expenses.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete category?"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Удалить категорию?"
           }
         }
       }

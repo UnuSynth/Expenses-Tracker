@@ -248,3 +248,7 @@ private extension ExpenseEditorView {
         }
     }
 }
+
+#Preview {
+    ExpenseEditorView()
+}

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ExpenseCategoryChip: View {
     @SelectedCurrency private var currency: Currency
+    @Environment(\.locale) private var locale
 
     let chipModel: HeroDashboardModel.ChipModel
     let isSelected: Bool
@@ -24,7 +25,7 @@ struct ExpenseCategoryChip: View {
                         .frame(width: 9, height: 9)
                 }
 
-                Text(chipModel.category.name)
+                Text(chipModel.category.displayName(locale: locale))
                     .font(.footnote.bold())
                     .foregroundStyle(isSelected ? .white : .primary)
                     .lineLimit(1)

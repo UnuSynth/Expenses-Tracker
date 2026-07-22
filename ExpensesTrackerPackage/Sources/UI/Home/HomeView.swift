@@ -32,6 +32,9 @@ struct HomeView: View {
             .onChange(of: currency, initial: true) { _, newCurrency in
                 viewModel.currency = newCurrency
             }
+            .onChange(of: locale, initial: true) { _, newLocale in
+                viewModel.locale = newLocale
+            }
             .padding(.horizontal, 16)
             
             expensesList

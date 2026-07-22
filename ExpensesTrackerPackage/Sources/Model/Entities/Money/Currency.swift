@@ -31,14 +31,14 @@ enum Currency: String, CaseIterable {
         }
     }
 
-    var displayName: String {
+    var displayName: LocalizedStringResource {
         switch self {
-        case .usd: return "United States"
-        case .eur: return "Euro Member"
-        case .gbp: return "United Kingdom"
-        case .rub: return "Russia"
-        case .kgs: return "Kyrgyzstan"
-        case .kzt: return "Kazakhstan"
+        case .usd: return .unitedStates
+        case .eur: return .euroMember
+        case .gbp: return .unitedKingdom
+        case .rub: return .russia
+        case .kgs: return .kyrgyzstan
+        case .kzt: return .kazakhstan
         }
     }
 }
