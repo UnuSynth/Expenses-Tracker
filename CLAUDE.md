@@ -17,21 +17,6 @@ The Xcode project (`ExpensesTracker.xcodeproj`, scheme `ExpensesTracker`) is a t
 
 There is no test target in this repo currently.
 
-## Commands
-
-Build/run is normally driven through Xcode or the SweetPad VS Code extension (see `.vscode/launch.json`), not raw `xcodebuild`, since this is an iOS app requiring a simulator. If you need CLI:
-
-```bash
-xcodebuild -project ExpensesTracker.xcodeproj -scheme ExpensesTracker \
-  -destination 'platform=iOS Simulator,name=iPhone 16' build
-```
-
-Swift package alone (SwiftUI-only code will fail to type-check outside an iOS destination target since it depends on iOS 18 APIs):
-
-```bash
-cd ExpensesTrackerPackage && swift build
-```
-
 ## Architecture notes
 
 - **ViewModel pattern**: each screen defines a `@MainActor protocol` ViewModel (e.g. `HomeViewModel.swift`) plus an `@Observable` implementation in a separate `+Impl.swift` file (e.g. `HomeViewModel+Impl.swift`). Views take the protocol type via init injection, not the concrete class — keep this split when adding new screens.
